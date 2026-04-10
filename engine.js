@@ -116,6 +116,10 @@ function translate({x, y, z}, dz) {
 let dz = 0;
 let theta = 0
 
+function draw_single_line(p1, p2, line_width) {
+  draw_line(p1, p2, line_width, LINES_FOREGROUND)
+}
+
 function draw_lines(dz, theta, vertices, lines) {
   for (const line of lines) {
     for (let i = 0; i < line.length; i++) {
@@ -129,7 +133,7 @@ function draw_lines(dz, theta, vertices, lines) {
           project_3d_to_2d(
               translate(
                   rotate(end, theta), dz)));
-      draw_line(p1, p2, line_pixels_width, LINES_FOREGROUND)
+      draw_single_line(p1, p2, line_pixels_width)
     }
   }
 }
@@ -143,10 +147,6 @@ function draw_vertices(dz, theta, vertices) {
     draw_point(point, point_pixels_width, VERTICES_FOREGROUND)
     add_text(100, point.x, point.y)
   }
-}
-
-function draw_single_line(p1, p2, line_width) {
-  draw_line(p1, p2, line_width, LINES_FOREGROUND)
 }
 
 function main__draw_rotating_cube_with_vertices() {
@@ -175,12 +175,13 @@ function main__draw_line(lines, line_width) {
 }
 
 const data_single_lines = [
-  [10, 10, 100, 100],
-  [20, 10, 150, 100]
+  [0, 0, 100, 100],
+  [50, 0, 200, 150],
+  [100, 0, 300, 200]
 ]
 
 setTimeout(main__draw_rotating_cube_with_vertices, 1000 / FPS)
-// main__draw_line(data_single_lines, point_pixels_width)
+// main__draw_line(data_single_lines, point_pixels_width/10)
 
 // vertices for square
 const data_vertices = [
