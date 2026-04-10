@@ -3,6 +3,7 @@ canvas.width = 800
 canvas.height = 800
 const ctx = canvas.getContext("2d")
 console.log(ctx)
+const canvasHalfWidth = canvas.width / 2
 
 const BACKGROUND = "#101010"
 const VERTICES_FOREGROUND = "#11FF50"
@@ -13,24 +14,26 @@ const DT_FPS = 1 / FPS
 
 const point_pixels_width = 1
 const line_pixels_width = 1
-const point_half = point_pixels_width / 2
+const vertexPixelWidth = point_pixels_width * 10;
+const textWidth = 50;
 
+const point_half = point_pixels_width / 2
 function clear() {
   ctx.fillStyle = BACKGROUND
   ctx.fillRect(0, 0, canvas.width, canvas.height)
-}
 
+}
 function draw_point({x, y}, pixels_width, foreground) {
   ctx.fillStyle = foreground
   ctx.fillRect(x - point_half, y - point_half, pixels_width, pixels_width)
+
 }
 
 function add_text(text, x, y, foreground) {
-  let text_width = 100 / 2
-  ctx.font = text_width + "px monospace";
-  
+  ctx.font = textWidth + "px monospace";
+
   ctx.fillStyle = foreground
-  ctx.fillText(text, x, y, text_width)
+  ctx.fillText(text, x, y, textWidth)
 
   // ctx.strokeStyle = foreground
   // ctx.strokeText(text, x, y, text_width)
@@ -134,12 +137,11 @@ function draw_rotating_vertices(dz, theta, vertices) {
     let point = convertCenteredCoordinatesToCanvasCoordinates(
         project_3d_to_2d(
             translate(
-                rotate(vertex, theta), dz)));
-
-    let decrement = point.x <= canvas.width / 2
-    let color = decrement ? VERTICES_FOREGROUND : VERTICES_TEXT
-    let text = decrement ? "+" : "-"
-    draw_point(point, point_pixels_width * 10, color)
+                rotate(vertex, theta), dz)))
+    let negative_bound = point.x <= canvasHalfWidth
+    let color = negative_bound ? VERTICES_FOREGROUND : VERTICES_TEXT
+    let text = negative_bound ? "+" : "-"
+    draw_point(point, vertexPixelWidth, color)
     add_text(text, point.x, point.y, color)
   }
 }
@@ -175,10 +177,11 @@ let theta = 0
 
 function display_theta_legend(theta) {
   add_text(String.fromCharCode(0x0398) + " =", 680, 50, LINES_FOREGROUND)
+  let theta_precision = Math.cos(theta).toPrecision(2);
   add_text(
-      Math.cos(theta).toPrecision(2),
-       740, 50,
-      Math.cos(theta).toPrecision(2) <= 0 ? VERTICES_FOREGROUND : VERTICES_TEXT)
+      theta_precision,
+      740, 50,
+      theta_precision <= 0 ? VERTICES_FOREGROUND : VERTICES_TEXT)
 }
 
 function generateRandomLines(num_lines) {
@@ -196,6 +199,7 @@ function generateRandomLines(num_lines) {
   return array
 }
 
+let timeout = 500 / FPS;
 function main() {
   dz += DT_FPS
   theta += 2 * Math.PI * DT_FPS // rotation speed
@@ -205,10 +209,10 @@ function main() {
   draw_lines(data_single_lines, point_pixels_width)
   draw_rotating_vertices(dz, theta, data_vertices);
   draw_rotating_lines(dz, theta, data_vertices, data_lines);
-  setTimeout(main, 500 / FPS)
+  setTimeout(main, timeout)
 }
 
-setTimeout(main, 1000 / FPS)
+setTimeout(main, 2*timeout)
 // draw_lines(data_single_lines, point_pixels_width/10)
 
 const data_single_lines = [
