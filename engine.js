@@ -116,11 +116,7 @@ function translate({x, y, z}, dz) {
 let dz = 0;
 let theta = 0
 
-function draw_single_line(p1, p2, line_width) {
-  draw_line(p1, p2, line_width, LINES_FOREGROUND)
-}
-
-function draw_lines(dz, theta, vertices, lines) {
+function draw_rotating_lines(dz, theta, vertices, lines) {
   for (const line of lines) {
     for (let i = 0; i < line.length; i++) {
       const start = vertices[line[i]] // first vertex
@@ -133,12 +129,12 @@ function draw_lines(dz, theta, vertices, lines) {
           project_3d_to_2d(
               translate(
                   rotate(end, theta), dz)));
-      draw_single_line(p1, p2, line_pixels_width)
+      draw_line(p1, p2, line_pixels_width, LINES_FOREGROUND)
     }
   }
 }
 
-function draw_vertices(dz, theta, vertices) {
+function draw_rotating_vertices(dz, theta, vertices) {
   for (const vertex of vertices) {
     let point = centeredCoordinatesToCanvasCoordinates(
         project_3d_to_2d(
@@ -153,8 +149,8 @@ function main__draw_rotating_cube_with_vertices() {
   dz += dt_fps
   theta += 2 * Math.PI * dt_fps // rotation speed
   clear()
-  draw_vertices(dz, theta, data_vertices);
-  draw_lines(dz, theta, data_vertices, data_lines);
+  draw_rotating_vertices(dz, theta, data_vertices);
+  draw_rotating_lines(dz, theta, data_vertices, data_lines);
   setTimeout(main__draw_rotating_cube_with_vertices, 500 / FPS)
 }
 
@@ -162,14 +158,13 @@ function main__draw_line(lines, line_width) {
   clear()
   for (const line of lines) {
     for (let i = 0; i < line.length; i++) {
-      draw_single_line(
-          {
-            x: line[i],
-            y: line[i + 1]},
-          {
-            x: line[i + 2],
-            y: line[i + 3]},
-          line_width)
+      draw_line({
+        x: line[i],
+        y: line[i + 1]
+      }, {
+        x: line[i + 2],
+        y: line[i + 3]
+      }, line_width, LINES_FOREGROUND)
     }
   }
 }
