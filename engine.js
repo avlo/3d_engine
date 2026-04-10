@@ -64,7 +64,7 @@ function normalize(positivized_point) {
   }
 }
 
-function getCanvasPoint(normalized_point) {
+function canvasIze(normalized_point) {
 // yields
 //   -1..1 => 0..2 => 0..1 => 0..w/h
   return {
@@ -76,16 +76,16 @@ function getCanvasPoint(normalized_point) {
 
 // translate point (x,y) from screen center coordinates (0, 0) to HTML canvas top left coordinates (0, w/h), i.e,
 //    -1..1 => 0..w/h
-function canvasCoordinate(point) {
+function translateCenterPointToCanvasPoint(centered_point) {
 // (1of3) translate negative coord to positive coord
-  let positiveCoordinatePoint = positivize(point);
+  let positivized_point = positivize(centered_point);
 // (2of3) divide by 2 normalizes the result
-  let normalizedPoint = normalize(positiveCoordinatePoint)
+  let normalized_point = normalize(positivized_point)
 // (3of3) multiply by width & height gives HTML canvas w/h coordinate
-  let canvasPoint = getCanvasPoint(normalizedPoint)
+  let canvas_point = canvasIze(normalized_point)
   return {
-    x: canvasPoint.x,
-    y: canvasPoint.y
+    x: canvas_point.x,
+    y: canvas_point.y
   }
 }
 
@@ -150,11 +150,11 @@ function draw_lines(dz, theta) {
       const start = vertices[line[i]] // first vertex
       const end = vertices[line[(i + 1) % line.length]] // % == last vertex wrap around 
       draw_line(
-          canvasCoordinate(
+          translateCenterPointToCanvasPoint(
               project_3d_to_2d(
                   translate(
                       rotate(start, theta), dz))),
-          canvasCoordinate(
+          translateCenterPointToCanvasPoint(
               project_3d_to_2d(
                   translate(
                       rotate(end, theta), dz))),
@@ -167,7 +167,7 @@ function draw_lines(dz, theta) {
 function draw_vertices(dz, theta) {
   for (const vertex of vertices) {
     draw_point(
-        canvasCoordinate(
+        translateCenterPointToCanvasPoint(
             project_3d_to_2d(
                 translate(
                     rotate(vertex, theta), dz))),
