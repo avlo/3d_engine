@@ -1,7 +1,7 @@
-console.log(game)
-game.width = 800
-game.height = 800
-const ctx = game.getContext("2d")
+console.log(engine)
+engine.width = 800
+engine.height = 800
+const ctx = engine.getContext("2d")
 console.log(ctx)
 
 const BACKGROUND = "#101010"
@@ -15,7 +15,7 @@ const point_half = point_pixels_width / 2
 
 function clear() {
   ctx.fillStyle = BACKGROUND
-  ctx.fillRect(0, 0, game.width, game.height)
+  ctx.fillRect(0, 0, engine.width, engine.height)
 }
 
 function draw_point({x, y}) {
@@ -59,9 +59,9 @@ function screen_coordinate(point) {
 
 // then multiply by width and/or height gives screen w/h coordinate
 // -1..1 => 0..2 => 0..1 => 0..w
-//   (point.x + 1)/2  * game.width
-  let x = x_normalized * game.width
-  let y = y_normalized * game.height
+//   (point.x + 1)/2  * engine.width
+  let x = x_normalized * engine.width
+  let y = y_normalized * engine.height
 
   return {
     x: x,
