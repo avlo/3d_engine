@@ -5,12 +5,14 @@ const ctx = canvas.getContext("2d")
 console.log(ctx)
 
 const BACKGROUND = "#101010"
-const FOREGROUND = "#FFFF50"
+const VERTICES_FOREGROUND = "#11FF50"
+const LINES_FOREGROUND = "#FFFF50"
 
 const FPS = 600;
 let dt_fps = 1 / FPS;
 
-const point_pixels_width = 1
+const point_pixels_width = 10
+const line_pixels_width = 1
 const point_half = point_pixels_width / 2
 
 function clear() {
@@ -18,50 +20,44 @@ function clear() {
   ctx.fillRect(0, 0, canvas.width, canvas.height)
 }
 
-function draw_point({x, y}) {
-  let width = point_pixels_width;
-  ctx.fillStyle = FOREGROUND
+function draw_point({x, y}, pixels_width, foreground) {
+  let width = pixels_width;
+  ctx.fillStyle = foreground
   x = x - point_half
   y = y - point_half
   ctx.fillRect(x, y, width, width)
 }
 
-function draw_line(p1, p2) {
-  ctx.lineWidth = point_pixels_width
-  ctx.strokeStyle = FOREGROUND
+function draw_line(p1, p2, pixels_width, foreground) {
+  ctx.lineWidth = pixels_width
+  ctx.strokeStyle = foreground
   ctx.beginPath()
   ctx.moveTo(p1.x, p1.y)
   ctx.lineTo(p2.x, p2.y)
   ctx.stroke()
 }
 
-// coordinate translation system from:
-//    0,0 at screen center & x/y directions -1,1
-// to 
-//    HTML canvas coordinates w/h
+// translate point (x,y) from screen center coordinates (0, 0) to HTML canvas top left coordinates (0, w/h), i.e,
+//    -1..1 => 0..w/h
 function canvas_coordinate(point) {
-// -1..1 => 0..w/h
-//   translate coordinate system from center: -1,1
-//   to HTML canvas coordinates top left 0,w/h
-
-// conceptual step 1
-// translate from negative coord to positive
+// (1of4) translate negative coord to positive coord
   let x_canvas_coord = point.x + 1;
   let y_canvas_coord = point.y + 1;
-// yields HTML canvas coordinates
-//   -1..1 => 0..2 => 0..w/h
+// yields
+//   -1..1 => 0..2
 
-// dividing by 2 normalizes the result
+// (2of4) dividing by 2 normalizes the result
   let x_normalized = x_canvas_coord / 2;
   let y_normalized = y_canvas_coord / 2;
 // yields
-//   -1..1 => 0..2 => 0..1 => 0..w/h
+//   -1..1 => 0..2 => 0..1
 
-// then multiply by width and/or height gives HTML canvas w/h coordinate
-// -1..1 => 0..2 => 0..1 => 0..w
-//   (point.x + 1)/2  * canvas.width
+// (3of4) multiply by width & height gives HTML canvas w/h coordinate
+//   -1..1 => 0..2 => 0..1 => 0..w/h  
   let x = x_normalized * canvas.width
-  let y = y_normalized * canvas.height
+  
+// (4of4) reorient y axis
+  let y = (1 - y_normalized) * canvas.height
 
   return {
     x: x,
@@ -76,7 +72,7 @@ function project_3d_to_2d({x, y, z}) {
   }
 }
 
-function rotate_xz_shape({x, y, z}, theta) {
+function rotate({x, y, z}, theta) {
   // theta *= .01 * theta // rotation speed
   let cos_theta = Math.cos(theta);
   let sin_theta = Math.sin(theta);
@@ -122,33 +118,44 @@ const lines = [
 let dz = 0;
 let theta = 0
 
-function draw_dynamic() {
-  dz += dt_fps
-  theta += 2 * Math.PI * dt_fps // rotation speed
-  clear()
-  // for (const shape of shapes) {
-  //   draw_point(
-  //       canvas_coordinate(
-  //           project_3d_to_2d(
-  //               translate(
-  //                   rotate_xz_shape(shape, theta), dz))))
-  // }
-
+function draw_lines(dz, theta) {
   for (const line of lines) {
     for (let i = 0; i < line.length; i++) {
       const start = shapes[line[i]]
-      const end = shapes[line[(i + 1) % line.length]]
+      const end = shapes[line[(i + 1) % line.length]] // % 
       draw_line(
           canvas_coordinate(
               project_3d_to_2d(
                   translate(
-                      rotate_xz_shape(start, theta), dz))),
+                      rotate(start, theta), dz))),
           canvas_coordinate(
               project_3d_to_2d(
                   translate(
-                      rotate_xz_shape(end, theta), dz))))
+                      rotate(end, theta), dz))),
+          line_pixels_width,
+          LINES_FOREGROUND)
     }
   }
+}
+
+function draw_vertices(dz, theta) {
+  for (const shape of shapes) {
+    draw_point(
+        canvas_coordinate(
+            project_3d_to_2d(
+                translate(
+                    rotate(shape, theta), dz))),
+        point_pixels_width,
+        VERTICES_FOREGROUND)
+  }
+}
+
+function draw_dynamic() {
+  dz += dt_fps
+  theta += 2 * Math.PI * dt_fps // rotation speed
+  clear()
+  draw_vertices(dz, theta);
+  draw_lines(dz, theta);
   setTimeout(draw_dynamic, 500 / FPS)
 }
 
