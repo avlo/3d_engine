@@ -8,8 +8,8 @@ const BACKGROUND = "#101010"
 const VERTICES_FOREGROUND = "#11FF50"
 const VERTICES_TEXT = "#996666"
 const LINES_FOREGROUND = "#FFFF50"
-const FPS = 600;
-const DT_FPS = 1 / FPS;
+const FPS = 600
+const DT_FPS = 1 / FPS
 
 const point_pixels_width = 1
 const line_pixels_width = 1
@@ -25,15 +25,15 @@ function draw_point({x, y}, pixels_width, foreground) {
   ctx.fillRect(x - point_half, y - point_half, pixels_width, pixels_width)
 }
 
-function add_text(text, text_height, x, y, foreground) {
+function add_text(text, x, y, foreground) {
+  let text_width = 100 / 2
+  ctx.font = text_width + "px monospace";
+  
   ctx.fillStyle = foreground
-  let heightPx = text_height / 2
-  ctx.font = heightPx + "px verdana";
+  ctx.fillText(text, x, y, text_width)
 
-  ctx.fillText(text, x, y, heightPx)
-  // ctx.strokeText("test", x, y, heightPx)
-  // ctx.fillText("x: "+ ~~(p1.x-(p1.x*.88)), 2, 50, 300)
-  // ctx.fillText("y: "+ ~~p1.y, 2, 100, 300)  
+  // ctx.strokeStyle = foreground
+  // ctx.strokeText(text, x, y, text_width)
 }
 
 function draw_line(p1, p2, pixels_width, foreground) {
@@ -139,8 +139,8 @@ function draw_rotating_vertices(dz, theta, vertices) {
     let decrement = point.x <= canvas.width / 2
     let color = decrement ? VERTICES_FOREGROUND : VERTICES_TEXT
     let text = decrement ? "+" : "-"
-    draw_point(point, point_pixels_width * 10, VERTICES_FOREGROUND)
-    add_text(text, 100, point.x, point.y, color)
+    draw_point(point, point_pixels_width * 10, color)
+    add_text(text, point.x, point.y, color)
   }
 }
 
@@ -174,10 +174,10 @@ let dz = 0;
 let theta = 0
 
 function display_theta_legend(theta) {
-  add_text("θ =", 70, 700, 50, LINES_FOREGROUND)
+  add_text(String.fromCharCode(0x0398) + " =", 680, 50, LINES_FOREGROUND)
   add_text(
       Math.cos(theta).toPrecision(2),
-      85, 740, 50,
+       740, 50,
       Math.cos(theta).toPrecision(2) <= 0 ? VERTICES_FOREGROUND : VERTICES_TEXT)
 }
 
