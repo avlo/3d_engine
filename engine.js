@@ -28,6 +28,16 @@ function draw_point({x, y}, pixels_width, foreground) {
   ctx.fillRect(x, y, width, width)
 }
 
+function add_text(text_height, x, y) {
+  let heightPx = text_height / 2
+  ctx.font = heightPx + "px verdana";
+
+  // ctx.fillText("test", p1.x, p1.y, maxWidth)
+  ctx.strokeText("test", x, y, heightPx)
+  // ctx.fillText("x: "+ ~~(p1.x-(p1.x*.88)), 2, 50, 300)
+  // ctx.fillText("y: "+ ~~p1.y, 2, 100, 300)  
+}
+
 function draw_line(p1, p2, pixels_width, foreground) {
   ctx.lineWidth = pixels_width
   ctx.strokeStyle = foreground
@@ -35,15 +45,6 @@ function draw_line(p1, p2, pixels_width, foreground) {
   ctx.moveTo(p1.x, p1.y)
   ctx.lineTo(p2.x, p2.y)
   ctx.stroke()
-
-  let height = p2.x
-  let heightPx = height/4
-  ctx.font = heightPx + "px verdana";
-
-  // ctx.fillText("test", p1.x, p1.y, maxWidth)
-  ctx.strokeText("test", p2.x, p2.y, heightPx)
-  // ctx.fillText("x: "+ ~~(p1.x-(p1.x*.88)), 2, 50, 300)
-  // ctx.fillText("y: "+ ~~p1.y, 2, 100, 300)
 }
 
 function positivize(centered_point) {
@@ -76,7 +77,7 @@ function canvasIze(normalized_point) {
 
 // translate point (x,y) from screen center coordinates (0, 0) to HTML canvas top left coordinates (0, w/h), i.e,
 //    -1..1 => 0..w/h
-function translateCenterPointToCanvasPoint(centered_point) {
+function centeredCoordinatesToCanvasCoordinates(centered_point) {
 // (1of3) translate negative coord to positive coord
   let positivized_point = positivize(centered_point);
 // (2of3) divide by 2 normalizes the result
@@ -120,47 +121,66 @@ function draw_lines(dz, theta, vertices, lines) {
     for (let i = 0; i < line.length; i++) {
       const start = vertices[line[i]] // first vertex
       const end = vertices[line[(i + 1) % line.length]] // % == last vertex wrap around 
-      draw_line(
-          translateCenterPointToCanvasPoint(
-              project_3d_to_2d(
-                  translate(
-                      rotate(start, theta), dz))),
-          translateCenterPointToCanvasPoint(
-              project_3d_to_2d(
-                  translate(
-                      rotate(end, theta), dz))),
-          line_pixels_width,
-          LINES_FOREGROUND)
+      let p1 = centeredCoordinatesToCanvasCoordinates(
+          project_3d_to_2d(
+              translate(
+                  rotate(start, theta), dz)));
+      let p2 = centeredCoordinatesToCanvasCoordinates(
+          project_3d_to_2d(
+              translate(
+                  rotate(end, theta), dz)));
+      draw_line(p1, p2, line_pixels_width, LINES_FOREGROUND)
     }
   }
 }
 
 function draw_vertices(dz, theta, vertices) {
   for (const vertex of vertices) {
-    draw_point(
-        translateCenterPointToCanvasPoint(
-            project_3d_to_2d(
-                translate(
-                    rotate(vertex, theta), dz))),
-        point_pixels_width,
-        VERTICES_FOREGROUND)
+    let point = centeredCoordinatesToCanvasCoordinates(
+        project_3d_to_2d(
+            translate(
+                rotate(vertex, theta), dz)));
+    draw_point(point, point_pixels_width, VERTICES_FOREGROUND)
+    add_text(100, point.x, point.y)
   }
 }
 
-function draw_line_2() {
-  draw_line(p1, p2, pixels_width, foreground)
+function draw_single_line(p1, p2, line_width) {
+  draw_line(p1, p2, line_width, LINES_FOREGROUND)
 }
 
-function draw_rotating_cube_with_vertices() {
+function main__draw_rotating_cube_with_vertices() {
   dz += dt_fps
   theta += 2 * Math.PI * dt_fps // rotation speed
   clear()
   draw_vertices(dz, theta, data_vertices);
   draw_lines(dz, theta, data_vertices, data_lines);
-  setTimeout(draw_rotating_cube_with_vertices, 500 / FPS)
+  setTimeout(main__draw_rotating_cube_with_vertices, 500 / FPS)
 }
 
-setTimeout(draw_rotating_cube_with_vertices, 1000 / FPS)
+function main__draw_line(lines, line_width) {
+  clear()
+  for (const line of lines) {
+    for (let i = 0; i < line.length; i++) {
+      draw_single_line(
+          {
+            x: line[i],
+            y: line[i + 1]},
+          {
+            x: line[i + 2],
+            y: line[i + 3]},
+          line_width)
+    }
+  }
+}
+
+const data_single_lines = [
+  [10, 10, 100, 100],
+  [20, 10, 150, 100]
+]
+
+setTimeout(main__draw_rotating_cube_with_vertices, 1000 / FPS)
+// main__draw_line(data_single_lines, point_pixels_width)
 
 // vertices for square
 const data_vertices = [
