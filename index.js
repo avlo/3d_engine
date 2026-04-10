@@ -7,10 +7,10 @@ console.log(ctx)
 const BACKGROUND = "#101010"
 const FOREGROUND = "#FFFF50"
 
-const FPS = 30;
-const dt = .25 / FPS;
+const FPS = 600;
+let dt_fps = 1 / FPS;
 
-const point_pixels_width = 20
+const point_pixels_width = 1
 const point_half = point_pixels_width / 2
 
 function clear() {
@@ -24,6 +24,15 @@ function draw_point({x, y}) {
   x = x - point_half
   y = y - point_half
   ctx.fillRect(x, y, width, width)
+}
+
+function draw_line(p1, p2) {
+  ctx.lineWidth = point_pixels_width
+  ctx.strokeStyle = FOREGROUND
+  ctx.beginPath()
+  ctx.moveTo(p1.x, p1.y)
+  ctx.lineTo(p2.x, p2.y)
+  ctx.stroke()
 }
 
 // coordinate translation system from:
@@ -54,9 +63,6 @@ function screen_coordinate(point) {
   let x = x_normalized * game.width
   let y = y_normalized * game.height
 
-//   (point.x + 1)/2  * game.height
-
-  y_coord_inv = (1 - y_normalized) // invert y
   return {
     x: x,
     y: y
@@ -70,7 +76,8 @@ function project_3d_to_2d({x, y, z}) {
   }
 }
 
-function rotate_xz({x, y, z}, theta) {
+function rotate_xz_shape({x, y, z}, theta) {
+  // theta *= .01 * theta // rotation speed
   let cos_theta = Math.cos(theta);
   let sin_theta = Math.sin(theta);
   return {
@@ -81,10 +88,11 @@ function rotate_xz({x, y, z}, theta) {
 }
 
 function translate({x, y, z}, dz) {
-  return {x, y, z: z + dz}
+  // return {x, y, z: z + dz}
+  return {x, y, z: z + 2}
 }
 
-const vs = [
+const shapes = [
   {x: 0.5, y: 0.5, z: 0.5},
   {x: -0.5, y: 0.5, z: 0.5},
   {x: 0.5, y: -0.5, z: 0.5},
@@ -96,19 +104,50 @@ const vs = [
   {x: -0.5, y: -0.5, z: -0.5}
 ]
 
+const lines = [
+  [0, 1],
+  [0, 2],
+  [0, 4],
+  [1, 3],
+  [1, 5],
+  [2, 3],
+  [2, 6],
+  [3, 7],
+  [4, 5],
+  [4, 6],
+  [5, 7],
+  [6, 7]
+]
+
 let dz = 0;
 let theta = 0
 
 function draw_dynamic() {
-  dz += dt
-  theta += 2 * Math.PI * dt
+  dz += dt_fps
+  theta += 2 * Math.PI * dt_fps // rotation speed
   clear()
-  for (const v of vs) {
-    draw_point(
-        screen_coordinate(
-            project_3d_to_2d(
-                translate(
-                    rotate_xz(v, theta), dz))))
+  // for (const shape of shapes) {
+  //   draw_point(
+  //       screen_coordinate(
+  //           project_3d_to_2d(
+  //               translate(
+  //                   rotate_xz_shape(shape, theta), dz))))
+  // }
+
+  for (const line of lines) {
+    for (let i = 0; i < line.length; i++) {
+      const start = shapes[line[i]]
+      const end = shapes[line[(i + 1) % line.length]]
+      draw_line(
+          screen_coordinate(
+              project_3d_to_2d(
+                  translate(
+                      rotate_xz_shape(start, theta), dz))),
+          screen_coordinate(
+              project_3d_to_2d(
+                  translate(
+                      rotate_xz_shape(end, theta), dz))))
+    }
   }
   setTimeout(draw_dynamic, 500 / FPS)
 }
