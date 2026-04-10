@@ -14,10 +14,11 @@ const DT_FPS = 1 / FPS
 
 const point_pixels_width = 1
 const line_pixels_width = 1
-const vertexPixelWidth = point_pixels_width * 10;
-const textWidth = 50;
-
+const vertexPixelWidth = point_pixels_width * 10
+const dim_line_width = point_pixels_width / 5
 const point_half = point_pixels_width / 2
+const textWidth = 50
+
 function clear() {
   ctx.fillStyle = BACKGROUND
   ctx.fillRect(0, 0, canvas.width, canvas.height)
@@ -205,7 +206,7 @@ function main() {
   theta += 2 * Math.PI * DT_FPS // rotation speed
   clear()
   display_theta_legend(theta);
-  draw_lines(generateRandomLines(10), point_pixels_width / 5)
+  draw_lines(generateRandomLines(10), dim_line_width)
   draw_lines(data_single_lines, point_pixels_width)
   draw_rotating_vertices(dz, theta, data_vertices);
   draw_rotating_lines(dz, theta, data_vertices, data_lines);
@@ -213,7 +214,6 @@ function main() {
 }
 
 setTimeout(main, 2*timeout)
-// draw_lines(data_single_lines, point_pixels_width/10)
 
 const data_single_lines = [
   [0, 0, 100, 100],
