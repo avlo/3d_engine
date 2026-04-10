@@ -88,7 +88,8 @@ function translate({x, y, z}, dz) {
   return {x, y, z: z + 2}
 }
 
-const shapes = [
+// vertices of a square
+const vertices = [
   {x: 0.5, y: 0.5, z: 0.5},
   {x: -0.5, y: 0.5, z: 0.5},
   {x: 0.5, y: -0.5, z: 0.5},
@@ -100,6 +101,7 @@ const shapes = [
   {x: -0.5, y: -0.5, z: -0.5}
 ]
 
+// array of vertices to connect == lines
 const lines = [
   [0, 1],
   [0, 2],
@@ -121,8 +123,8 @@ let theta = 0
 function draw_lines(dz, theta) {
   for (const line of lines) {
     for (let i = 0; i < line.length; i++) {
-      const start = shapes[line[i]]
-      const end = shapes[line[(i + 1) % line.length]] // % 
+      const start = vertices[line[i]] // first vertex
+      const end = vertices[line[(i + 1) % line.length]] // % == last vertex wrap around 
       draw_line(
           canvas_coordinate(
               project_3d_to_2d(
@@ -139,7 +141,7 @@ function draw_lines(dz, theta) {
 }
 
 function draw_vertices(dz, theta) {
-  for (const shape of shapes) {
+  for (const shape of vertices) {
     draw_point(
         canvas_coordinate(
             project_3d_to_2d(
