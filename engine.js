@@ -35,33 +35,57 @@ function draw_line(p1, p2, pixels_width, foreground) {
   ctx.moveTo(p1.x, p1.y)
   ctx.lineTo(p2.x, p2.y)
   ctx.stroke()
+
+  let height = p2.x
+  let heightPx = height/4
+  ctx.font = heightPx + "px verdana";
+
+  // ctx.fillText("test", p1.x, p1.y, maxWidth)
+  ctx.strokeText("test", p2.x, p2.y, heightPx)
+  // ctx.fillText("x: "+ ~~(p1.x-(p1.x*.88)), 2, 50, 300)
+  // ctx.fillText("y: "+ ~~p1.y, 2, 100, 300)
+}
+
+function positivize(centered_point) {
+// yields
+//   -1..1 => 0..2
+  return {
+    x: centered_point.x + 1,
+    y: centered_point.y + 1
+  }
+}
+
+function normalize(positivized_point) {
+// yields
+//   -1..1 => 0..2 => 0..1  
+  return {
+    x: positivized_point.x / 2,
+    y: positivized_point.y / 2
+  }
+}
+
+function getCanvasPoint(normalized_point) {
+// yields
+//   -1..1 => 0..2 => 0..1 => 0..w/h
+  return {
+    x: normalized_point.x * canvas.width,
+// (4of4) reorient y axis
+    y: (1 - normalized_point.y) * canvas.height
+  }
 }
 
 // translate point (x,y) from screen center coordinates (0, 0) to HTML canvas top left coordinates (0, w/h), i.e,
 //    -1..1 => 0..w/h
-function canvas_coordinate(point) {
-// (1of4) translate negative coord to positive coord
-  let x_canvas_coord = point.x + 1;
-  let y_canvas_coord = point.y + 1;
-// yields
-//   -1..1 => 0..2
-
-// (2of4) dividing by 2 normalizes the result
-  let x_normalized = x_canvas_coord / 2;
-  let y_normalized = y_canvas_coord / 2;
-// yields
-//   -1..1 => 0..2 => 0..1
-
-// (3of4) multiply by width & height gives HTML canvas w/h coordinate
-//   -1..1 => 0..2 => 0..1 => 0..w/h  
-  let x = x_normalized * canvas.width
-  
-// (4of4) reorient y axis
-  let y = (1 - y_normalized) * canvas.height
-
+function canvasCoordinate(point) {
+// (1of3) translate negative coord to positive coord
+  let positiveCoordinatePoint = positivize(point);
+// (2of3) divide by 2 normalizes the result
+  let normalizedPoint = normalize(positiveCoordinatePoint)
+// (3of3) multiply by width & height gives HTML canvas w/h coordinate
+  let canvasPoint = getCanvasPoint(normalizedPoint)
   return {
-    x: x,
-    y: y
+    x: canvasPoint.x,
+    y: canvasPoint.y
   }
 }
 
@@ -126,11 +150,11 @@ function draw_lines(dz, theta) {
       const start = vertices[line[i]] // first vertex
       const end = vertices[line[(i + 1) % line.length]] // % == last vertex wrap around 
       draw_line(
-          canvas_coordinate(
+          canvasCoordinate(
               project_3d_to_2d(
                   translate(
                       rotate(start, theta), dz))),
-          canvas_coordinate(
+          canvasCoordinate(
               project_3d_to_2d(
                   translate(
                       rotate(end, theta), dz))),
@@ -141,24 +165,24 @@ function draw_lines(dz, theta) {
 }
 
 function draw_vertices(dz, theta) {
-  for (const shape of vertices) {
+  for (const vertex of vertices) {
     draw_point(
-        canvas_coordinate(
+        canvasCoordinate(
             project_3d_to_2d(
                 translate(
-                    rotate(shape, theta), dz))),
+                    rotate(vertex, theta), dz))),
         point_pixels_width,
         VERTICES_FOREGROUND)
   }
 }
 
-function draw_dynamic() {
+function draw_rotating_cube_with_vertices() {
   dz += dt_fps
   theta += 2 * Math.PI * dt_fps // rotation speed
   clear()
   draw_vertices(dz, theta);
   draw_lines(dz, theta);
-  setTimeout(draw_dynamic, 500 / FPS)
+  setTimeout(draw_rotating_cube_with_vertices, 500 / FPS)
 }
 
-setTimeout(draw_dynamic, 1000 / FPS)
+setTimeout(draw_rotating_cube_with_vertices, 1000 / FPS)
