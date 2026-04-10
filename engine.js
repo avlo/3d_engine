@@ -38,26 +38,26 @@ function draw_line(p1, p2) {
 // coordinate translation system from:
 //    0,0 at screen center & x/y directions -1,1
 // to 
-//    screen coordinate w/h
-function screen_coordinate(point) {
+//    HTML canvas coordinates w/h
+function canvas_coordinate(point) {
 // -1..1 => 0..w/h
 //   translate coordinate system from center: -1,1
-//   to screen coordinate w/h    
+//   to HTML canvas coordinates top left 0,w/h
 
 // conceptual step 1
 // translate from negative coord to positive
-  let x_screen_coord = point.x + 1;
-  let y_screen_coord = point.y + 1;
-// yields screen coordinates
+  let x_canvas_coord = point.x + 1;
+  let y_canvas_coord = point.y + 1;
+// yields HTML canvas coordinates
 //   -1..1 => 0..2 => 0..w/h
 
 // dividing by 2 normalizes the result
-  let x_normalized = x_screen_coord / 2;
-  let y_normalized = y_screen_coord / 2;
+  let x_normalized = x_canvas_coord / 2;
+  let y_normalized = y_canvas_coord / 2;
 // yields
 //   -1..1 => 0..2 => 0..1 => 0..w/h
 
-// then multiply by width and/or height gives screen w/h coordinate
+// then multiply by width and/or height gives HTML canvas w/h coordinate
 // -1..1 => 0..2 => 0..1 => 0..w
 //   (point.x + 1)/2  * engine.width
   let x = x_normalized * engine.width
@@ -128,7 +128,7 @@ function draw_dynamic() {
   clear()
   // for (const shape of shapes) {
   //   draw_point(
-  //       screen_coordinate(
+  //       canvas_coordinate(
   //           project_3d_to_2d(
   //               translate(
   //                   rotate_xz_shape(shape, theta), dz))))
@@ -139,11 +139,11 @@ function draw_dynamic() {
       const start = shapes[line[i]]
       const end = shapes[line[(i + 1) % line.length]]
       draw_line(
-          screen_coordinate(
+          canvas_coordinate(
               project_3d_to_2d(
                   translate(
                       rotate_xz_shape(start, theta), dz))),
-          screen_coordinate(
+          canvas_coordinate(
               project_3d_to_2d(
                   translate(
                       rotate_xz_shape(end, theta), dz))))
