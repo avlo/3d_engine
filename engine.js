@@ -112,39 +112,10 @@ function translate({x, y, z}, dz) {
   return {x, y, z: z + 2}
 }
 
-// vertices of a square
-const vertices = [
-  {x: 0.5, y: 0.5, z: 0.5},
-  {x: -0.5, y: 0.5, z: 0.5},
-  {x: 0.5, y: -0.5, z: 0.5},
-  {x: -0.5, y: -0.5, z: 0.5},
-
-  {x: 0.5, y: 0.5, z: -0.5},
-  {x: -0.5, y: 0.5, z: -0.5},
-  {x: 0.5, y: -0.5, z: -0.5},
-  {x: -0.5, y: -0.5, z: -0.5}
-]
-
-// array of vertices to connect == lines
-const lines = [
-  [0, 1],
-  [0, 2],
-  [0, 4],
-  [1, 3],
-  [1, 5],
-  [2, 3],
-  [2, 6],
-  [3, 7],
-  [4, 5],
-  [4, 6],
-  [5, 7],
-  [6, 7]
-]
-
 let dz = 0;
 let theta = 0
 
-function draw_lines(dz, theta) {
+function draw_lines(dz, theta, vertices, lines) {
   for (const line of lines) {
     for (let i = 0; i < line.length; i++) {
       const start = vertices[line[i]] // first vertex
@@ -164,7 +135,7 @@ function draw_lines(dz, theta) {
   }
 }
 
-function draw_vertices(dz, theta) {
+function draw_vertices(dz, theta, vertices) {
   for (const vertex of vertices) {
     draw_point(
         translateCenterPointToCanvasPoint(
@@ -176,13 +147,46 @@ function draw_vertices(dz, theta) {
   }
 }
 
+function draw_line_2() {
+  draw_line(p1, p2, pixels_width, foreground)
+}
+
 function draw_rotating_cube_with_vertices() {
   dz += dt_fps
   theta += 2 * Math.PI * dt_fps // rotation speed
   clear()
-  draw_vertices(dz, theta);
-  draw_lines(dz, theta);
+  draw_vertices(dz, theta, data_vertices);
+  draw_lines(dz, theta, data_vertices, data_lines);
   setTimeout(draw_rotating_cube_with_vertices, 500 / FPS)
 }
 
 setTimeout(draw_rotating_cube_with_vertices, 1000 / FPS)
+
+// vertices for square
+const data_vertices = [
+  {x: 0.5, y: 0.5, z: 0.5},
+  {x: -0.5, y: 0.5, z: 0.5},
+  {x: 0.5, y: -0.5, z: 0.5},
+  {x: -0.5, y: -0.5, z: 0.5},
+
+  {x: 0.5, y: 0.5, z: -0.5},
+  {x: -0.5, y: 0.5, z: -0.5},
+  {x: 0.5, y: -0.5, z: -0.5},
+  {x: -0.5, y: -0.5, z: -0.5}
+]
+
+// array of vertices to connect == lines
+const data_lines = [
+  [0, 1],
+  [0, 2],
+  [0, 4],
+  [1, 3],
+  [1, 5],
+  [2, 3],
+  [2, 6],
+  [3, 7],
+  [4, 5],
+  [4, 6],
+  [5, 7],
+  [6, 7]
+]
