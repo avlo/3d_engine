@@ -7,7 +7,6 @@ console.log(ctx)
 const BACKGROUND = "#101010"
 const VERTICES_FOREGROUND = "#11FF50"
 const LINES_FOREGROUND = "#FFFF50"
-
 const FPS = 600;
 let dt_fps = 1 / FPS;
 
@@ -28,7 +27,8 @@ function draw_point({x, y}, pixels_width, foreground) {
   ctx.fillRect(x, y, width, width)
 }
 
-function add_text(text_height, x, y) {
+function add_text(text_height, x, y, foreground) {
+  ctx.strokeStyle = foreground
   let heightPx = text_height / 2
   ctx.font = heightPx + "px verdana";
 
@@ -141,22 +141,16 @@ function draw_rotating_vertices(dz, theta, vertices) {
             translate(
                 rotate(vertex, theta), dz)));
     draw_point(point, point_pixels_width, VERTICES_FOREGROUND)
-    add_text(100, point.x, point.y)
+    add_text(100, point.x, point.y, VERTICES_FOREGROUND)
   }
 }
 
-function main__draw_rotating_cube_with_vertices() {
-  dz += dt_fps
-  theta += 2 * Math.PI * dt_fps // rotation speed
-  clear()
-  draw_rotating_vertices(dz, theta, data_vertices);
-  draw_rotating_lines(dz, theta, data_vertices, data_lines);
-  setTimeout(main__draw_rotating_cube_with_vertices, 500 / FPS)
-}
-
-function main__draw_line(lines, line_width) {
-  clear()
+function draw_some_lines(lines, line_width) {
+  // clear()
+  let colors = [VERTICES_FOREGROUND, LINES_FOREGROUND]
+  let i = 0
   for (const line of lines) {
+    let color = colors[i++ % 2]
     for (let i = 0; i < line.length; i++) {
       draw_line({
         x: line[i],
@@ -164,9 +158,26 @@ function main__draw_line(lines, line_width) {
       }, {
         x: line[i + 2],
         y: line[i + 3]
-      }, line_width, LINES_FOREGROUND)
+      }, line_width, color)
+      draw_line({
+        x: canvas.width - line[i],
+        y: canvas.height - line[i + 1]
+      }, {
+        x: canvas.width - line[i + 2],
+        y: canvas.height - line[i + 3]
+      }, line_width, color)
     }
   }
+}
+
+function main() {
+  dz += dt_fps
+  theta += 2 * Math.PI * dt_fps // rotation speed
+  clear()
+  draw_some_lines(data_single_lines, point_pixels_width/10)
+  draw_rotating_vertices(dz, theta, data_vertices);
+  draw_rotating_lines(dz, theta, data_vertices, data_lines);
+  setTimeout(main, 500 / FPS)
 }
 
 const data_single_lines = [
@@ -175,8 +186,8 @@ const data_single_lines = [
   [100, 0, 300, 200]
 ]
 
-setTimeout(main__draw_rotating_cube_with_vertices, 1000 / FPS)
-// main__draw_line(data_single_lines, point_pixels_width/10)
+setTimeout(main, 1000 / FPS)
+// draw_some_lines(data_single_lines, point_pixels_width/10)
 
 // vertices for square
 const data_vertices = [
