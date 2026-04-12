@@ -1,8 +1,32 @@
 console.log(canvas)
 canvas.width = 800
 canvas.height = 800
+
 const ctx = canvas.getContext("2d")
 console.log(ctx)
+
+let square_size = 1
+
+window.addEventListener('keydown', function (event) {
+  switch (event.key) {
+    case 38:
+      square_size++;
+      setTimeout(main_fxn, timeout);
+      break;
+      // case KEY_CODE.RIGHT:
+      //   console.log('Right');
+      //   break;
+    case 40:
+      square_size--;
+      setTimeout(main_fxn, timeout);
+      break;
+      // default:
+      //   setTimeout(main_fxn, timeout);
+  }
+  setTimeout(main_fxn, timeout)
+}, false);
+// }
+
 const canvasHalfWidth = canvas.width / 2
 
 const BACKGROUND = "#101010"
@@ -24,6 +48,7 @@ function clear() {
   ctx.fillRect(0, 0, canvas.width, canvas.height)
 
 }
+
 function draw_point({x, y}, pixels_width, foreground) {
   ctx.fillStyle = foreground
   ctx.fillRect(x - point_half, y - point_half, pixels_width, pixels_width)
@@ -133,7 +158,29 @@ function draw_rotating_lines(dz, theta, vertices, lines) {
   }
 }
 
-function draw_rotating_vertices(dz, theta, vertices) {
+function get_vertices_unit_square(square_size) {
+  /*
+  {x: 0.5, y: -0.5, z: -0.5},
+  {x: -0.5, y: -0.5, z: -0.5}
+   */
+  let side = square_size / 2
+  let pos = side
+  let neg = -side
+
+  return [
+    {x: pos, y: pos, z: pos},
+    {x: neg, y: pos, z: pos},
+    {x: pos, y: neg, z: pos},
+    {x: neg, y: neg, z: pos},
+
+    {x: pos, y: pos, z: neg},
+    {x: neg, y: pos, z: neg},
+    {x: pos, y: neg, z: neg},
+    {x: neg, y: neg, z: neg}
+  ]
+}
+
+function draw_rotating_vertices(dz, theta, vertices, square_z) {
   for (const vertex of vertices) {
     let point = convertCenteredCoordinatesToCanvasCoordinates(
         project_3d_to_2d(
@@ -201,37 +248,32 @@ function generateRandomLines(num_lines) {
 }
 
 let timeout = 500 / FPS;
-function main() {
+
+function main_fxn() {
   dz += DT_FPS
   theta += 2 * Math.PI * DT_FPS // rotation speed
   clear()
   display_theta_legend(theta);
   draw_lines(generateRandomLines(10), dim_line_width)
+
   draw_lines(data_single_lines, point_pixels_width)
-  draw_rotating_vertices(dz, theta, data_vertices);
-  draw_rotating_lines(dz, theta, data_vertices, data_lines);
-  setTimeout(main, timeout)
+  draw_rotating_vertices(dz, theta, get_vertices_unit_square(square_size), square_z);
+
+  draw_rotating_lines(dz, theta, get_vertices_unit_square(square_size), data_lines);
+  setTimeout(main_fxn, timeout)
 }
 
-setTimeout(main, 2*timeout)
+// setTimeout(main_fxn, timeout)
 
 const data_single_lines = [
   [0, 0, 100, 100],
   [50, 0, 200, 150],
   [100, 0, 300, 200]
 ]
+// square sizes
 
-// vertices for square
-const data_vertices = [
-  {x: 0.5, y: 0.5, z: 0.5},
-  {x: -0.5, y: 0.5, z: 0.5},
-  {x: 0.5, y: -0.5, z: 0.5},
-  {x: -0.5, y: -0.5, z: 0.5},
-
-  {x: 0.5, y: 0.5, z: -0.5},
-  {x: -0.5, y: 0.5, z: -0.5},
-  {x: 0.5, y: -0.5, z: -0.5},
-  {x: -0.5, y: -0.5, z: -0.5}
+const square_z = [
+  1
 ]
 
 // array of vertices to connect == lines
