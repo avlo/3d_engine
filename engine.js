@@ -276,13 +276,20 @@ function main_fxn() {
   let cos_prev_theta = Math.cos(prev_theta).toPrecision(2);
   clear()
   
-  display_legend(display_legend_arrow("dz", cos_dz, cos_prev_dz), cos_dz.toPrecision(2), legend_left_margin, 50)
-  display_legend(display_legend_arrow(String.fromCharCode(0x0398), cos_theta, cos_prev_theta), cos_theta, legend_left_margin, 100)
+  // legend
+  display_legend(
+      display_legend_arrow("dz", cos_dz, cos_prev_dz), 
+      cos_dz.toPrecision(2), 
+      legend_left_margin, 50)
+  display_legend(
+      display_legend_arrow(String.fromCharCode(0x0398), cos_theta, cos_prev_theta), 
+      cos_theta, 
+      legend_left_margin, 100)
   display_legend("iter", iter++, 15, 780-"iter".length)
   
   // draw general lines
-  draw_lines(generateRandomLines(10), dim_line_width)
-  draw_lines(data_single_lines, point_pixels_width)
+  // draw_lines(generateRandomLines(10), dim_line_width)
+  // draw_lines(data_single_lines, point_pixels_width)
 
   // draw square
   draw_rotating_vertices(cos_dz, theta, get_vertices_unit_square(square_size))
