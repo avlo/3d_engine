@@ -5,43 +5,38 @@ canvas.height = 800
 const ctx = canvas.getContext("2d")
 console.log(ctx)
 
-let square_size = 1
-
-window.addEventListener('keydown', function (event) {
-  switch (event.key) {
-    case 38:
-      square_size++;
-      setTimeout(main_fxn, timeout);
-      break;
-      // case KEY_CODE.RIGHT:
-      //   console.log('Right');
-      //   break;
-    case 40:
-      square_size--;
-      setTimeout(main_fxn, timeout);
-      break;
-      // default:
-      //   setTimeout(main_fxn, timeout);
-  }
-  setTimeout(main_fxn, timeout)
-}, false);
-// }
-
 const canvasHalfWidth = canvas.width / 2
 
 const BACKGROUND = "#101010"
 const VERTICES_FOREGROUND = "#11FF50"
 const VERTICES_TEXT = "#996666"
 const LINES_FOREGROUND = "#FFFF50"
-const FPS = 600
-const DT_FPS = 1 / FPS
-
 const point_pixels_width = 1
+
 const line_pixels_width = 1
 const vertexPixelWidth = point_pixels_width * 10
 const dim_line_width = point_pixels_width / 5
 const point_half = point_pixels_width / 2
-const textWidth = 50
+const fixedTextWidth = 50
+
+window.addEventListener('keydown', function (event) {
+  switch (event.key) {
+    case 38:
+      square_size++;
+      // setInterval(main_fxn, timeout);
+      break;
+      // case KEY_CODE.RIGHT:
+      //   console.log('Right');
+      //   break;
+    case 40:
+      square_size--;
+      // setInterval(main_fxn, timeout);
+      break;
+      // default:
+      //   setTimeout(main_fxn, timeout);
+  }
+  // setTimeout(main_fxn, timeout)
+}, false);
 
 function clear() {
   ctx.fillStyle = BACKGROUND
@@ -55,7 +50,7 @@ function draw_point({x, y}, pixels_width, foreground) {
 
 }
 
-function add_text(text, x, y, foreground) {
+function add_text(text, x, y, textWidth, foreground) {
   ctx.font = textWidth + "px monospace";
 
   ctx.fillStyle = foreground
@@ -136,8 +131,8 @@ function rotate({x, y, z}, theta) {
 }
 
 function translate({x, y, z}, dz) {
-  // return {x, y, z: z + dz}
-  return {x, y, z: z + 2}
+  return {x, y, z: -z + dz}
+  // return {x, y, z: z + 2}
 }
 
 function draw_rotating_lines(dz, theta, vertices, lines) {
@@ -158,7 +153,7 @@ function draw_rotating_lines(dz, theta, vertices, lines) {
   }
 }
 
-function get_vertices_unit_square(square_size) {
+function get_vertices_unit_square() {
   /*
   {x: 0.5, y: -0.5, z: -0.5},
   {x: -0.5, y: -0.5, z: -0.5}
@@ -180,22 +175,26 @@ function get_vertices_unit_square(square_size) {
   ]
 }
 
-function draw_rotating_vertices(dz, theta, vertices, square_z) {
+function draw_rotating_vertices(dz, theta, vertices) {
   for (const vertex of vertices) {
+    // draw vertices points
     let point = convertCenteredCoordinatesToCanvasCoordinates(
         project_3d_to_2d(
             translate(
                 rotate(vertex, theta), dz)))
+
+    // draw vertices labels
     let negative_bound = point.x <= canvasHalfWidth
     let color = negative_bound ? VERTICES_FOREGROUND : VERTICES_TEXT
     let text = negative_bound ? "+" : "-"
-    draw_point(point, vertexPixelWidth, color)
-    add_text(text, point.x, point.y, color)
+    let cos_dz = Math.cos(dz);
+    
+    draw_point(point, cos_dz * vertexPixelWidth/1.25, color)
+    add_text(text, point.x, point.y, cos_dz * fixedTextWidth/1.25, color)
   }
 }
 
 function draw_lines(lines, line_width) {
-  // clear()
   let colors = [VERTICES_FOREGROUND, LINES_FOREGROUND]
   let j = 0
   for (const line of lines) {
@@ -220,16 +219,19 @@ function draw_lines(lines, line_width) {
   }
 }
 
-let dz = 0;
-let theta = 0
-
-function display_theta_legend(theta) {
-  add_text(String.fromCharCode(0x0398) + " =", 680, 50, LINES_FOREGROUND)
-  let theta_precision = Math.cos(theta).toPrecision(2);
+function display_legend(key, value, x_pos, y_pos) {
+  add_text(key + " = ", x_pos, y_pos, fixedTextWidth, LINES_FOREGROUND)
+  let theta_precision = value;
   add_text(
       theta_precision,
-      740, 50,
-      theta_precision <= 0 ? VERTICES_FOREGROUND : VERTICES_TEXT)
+      x_pos+50, y_pos,
+      fixedTextWidth,
+      theta_precision <= 0 ? VERTICES_TEXT : VERTICES_FOREGROUND)
+}
+
+function display_legend_arrow(label, dz, prev_dz) {
+  let incrementing = prev_dz - dz <= 0;
+  return label + " " + (incrementing ? upArrow : downArrow)
 }
 
 function generateRandomLines(num_lines) {
@@ -247,23 +249,49 @@ function generateRandomLines(num_lines) {
   return array
 }
 
-let timeout = 500 / FPS;
+const FPS = 60
+const DT_FPS = .005
+let dz = 2;
+let prev_dz = dz
+let theta = -5
+let prev_theta = theta
+let rotationDirection = -1 // positive direction
+let constRotation = rotationDirection * 6 * DT_FPS % 360;
+let timeout = 10;
+let iter=0;
+
+const legend_left_margin = 680;
+
+const upArrow = String.fromCharCode(0x2B06)
+const downArrow = String.fromCharCode(0x2193)
 
 function main_fxn() {
+  prev_dz = dz
   dz += DT_FPS
-  theta += 2 * Math.PI * DT_FPS // rotation speed
+  theta += constRotation // rotation speed
+  
+  let cos_dz = Math.cos(dz);
+  let cos_prev_dz = Math.cos(prev_dz)
+  let cos_theta = Math.cos(theta).toPrecision(2);
+  let cos_prev_theta = Math.cos(prev_theta).toPrecision(2);
   clear()
-  display_theta_legend(theta);
+  
+  display_legend(display_legend_arrow("dz", cos_dz, cos_prev_dz), cos_dz.toPrecision(2), legend_left_margin, 50)
+  display_legend(display_legend_arrow(String.fromCharCode(0x0398), cos_theta, cos_prev_theta), cos_theta, legend_left_margin, 100)
+  display_legend("iter", iter++, 15, 780-"iter".length)
+  
+  // draw general lines
   draw_lines(generateRandomLines(10), dim_line_width)
-
   draw_lines(data_single_lines, point_pixels_width)
-  draw_rotating_vertices(dz, theta, get_vertices_unit_square(square_size), square_z);
 
-  draw_rotating_lines(dz, theta, get_vertices_unit_square(square_size), data_lines);
-  setTimeout(main_fxn, timeout)
+  // draw square
+  draw_rotating_vertices(cos_dz, theta, get_vertices_unit_square(square_size))
+  draw_rotating_lines(cos_dz, theta, get_vertices_unit_square(square_size), data_lines)
 }
 
-// setTimeout(main_fxn, timeout)
+setInterval(main_fxn, timeout)
+
+let square_size = -.125
 
 const data_single_lines = [
   [0, 0, 100, 100],
