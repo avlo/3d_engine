@@ -18,25 +18,27 @@ const vertexPixelWidth = point_pixels_width * 10
 const dim_line_width = point_pixels_width / 5
 const point_half = point_pixels_width / 2
 const fixedTextWidth = 50
+const legend_left_margin = 680
 
-window.addEventListener('keydown', function (event) {
-  switch (event.key) {
-    case 38:
-      square_size++;
-      // setInterval(main_fxn, timeout);
-      break;
-      // case KEY_CODE.RIGHT:
-      //   console.log('Right');
-      //   break;
-    case 40:
-      square_size--;
-      // setInterval(main_fxn, timeout);
-      break;
-      // default:
-      //   setTimeout(main_fxn, timeout);
-  }
-  // setTimeout(main_fxn, timeout)
-}, false);
+window.onload = function () {
+  let myCanvas = document.getElementById('canvas');
+  window.addEventListener('keydown', function (event) {
+    switch (event.key) {
+      case "ArrowUp":
+        square_size+=.01;
+        console.log(event)
+        // setInterval(main_fxn, timeout)
+        break;
+      case "ArrowDown":
+        square_size-=.01;
+        console.log(event)
+        // setInterval(main_fxn, timeout)
+        break;
+      default:
+        console.log(event)
+    }
+  }, false);
+}
 
 function clear() {
   ctx.fillStyle = BACKGROUND
@@ -188,9 +190,9 @@ function draw_rotating_vertices(dz, theta, vertices) {
     let color = negative_bound ? VERTICES_FOREGROUND : VERTICES_TEXT
     let text = negative_bound ? "+" : "-"
     let cos_dz = Math.cos(dz);
-    
-    draw_point(point, cos_dz * vertexPixelWidth/1.25, color)
-    add_text(text, point.x, point.y, cos_dz * fixedTextWidth/1.25, color)
+
+    draw_point(point, cos_dz * vertexPixelWidth / 1.25, color)
+    add_text(text, point.x, point.y, cos_dz * fixedTextWidth / 1.25, color)
   }
 }
 
@@ -224,7 +226,7 @@ function display_legend(key, value, x_pos, y_pos) {
   let theta_precision = value;
   add_text(
       theta_precision,
-      x_pos+50, y_pos,
+      x_pos + 50, y_pos,
       fixedTextWidth,
       theta_precision <= 0 ? VERTICES_TEXT : VERTICES_FOREGROUND)
 }
@@ -249,64 +251,66 @@ function generateRandomLines(num_lines) {
   return array
 }
 
-const FPS = 60
 const DT_FPS = .005
-let dz = 2;
-let prev_dz = dz
-let theta = -5
-let prev_theta = theta
+let dz = 0
+let theta = 0
 let rotationDirection = -1 // positive direction
-let constRotation = rotationDirection * 6 * DT_FPS % 360;
-let timeout = 10;
-let iter=0;
-
-const legend_left_margin = 680;
+let constRotation = rotationDirection * 6 * DT_FPS % 360
+let timeout = 10
+let iter = 0
 
 const upArrow = String.fromCharCode(0x2B06)
 const downArrow = String.fromCharCode(0x2193)
 
-function main_fxn() {
-  prev_dz = dz
+function draw_square(cos_dz, theta, square_size, data_lines) {
+  let verticesUnitSquare = get_vertices_unit_square(square_size);
+  draw_rotating_vertices(cos_dz, theta, verticesUnitSquare)
+  draw_rotating_lines(cos_dz, theta, verticesUnitSquare, data_lines)
+}
+
+function main_bounce() {
+  let prev_dz = dz
+  let prev_theta = theta
   dz += DT_FPS
   theta += constRotation // rotation speed
-  
+
   let cos_dz = Math.cos(dz);
   let cos_prev_dz = Math.cos(prev_dz)
   let cos_theta = Math.cos(theta).toPrecision(2);
   let cos_prev_theta = Math.cos(prev_theta).toPrecision(2);
   clear()
-  
+
   // legend
   display_legend(
-      display_legend_arrow("dz", cos_dz, cos_prev_dz), 
-      cos_dz.toPrecision(2), 
+      display_legend_arrow("dz", cos_dz, cos_prev_dz),
+      cos_dz.toPrecision(2),
       legend_left_margin, 50)
   display_legend(
-      display_legend_arrow(String.fromCharCode(0x0398), cos_theta, cos_prev_theta), 
-      cos_theta, 
+      display_legend_arrow(String.fromCharCode(0x0398), cos_theta, cos_prev_theta),
+      cos_theta,
       legend_left_margin, 100)
-  display_legend("iter", iter++, 15, 780-"iter".length)
-  
+  display_legend("iter", iter++, 15, 780 - "iter".length)
+
   // draw general lines
   // draw_lines(generateRandomLines(10), dim_line_width)
   // draw_lines(data_single_lines, point_pixels_width)
 
   // draw square
-  draw_rotating_vertices(cos_dz, theta, get_vertices_unit_square(square_size))
-  draw_rotating_lines(cos_dz, theta, get_vertices_unit_square(square_size), data_lines)
+  draw_square(cos_dz, theta, square_size, data_lines);
+  display_legend("inc", square_size.toPrecision(2), 125, 780 - "dep".length)
 }
 
-setInterval(main_fxn, timeout)
+setInterval(main_bounce, timeout)
 
-let square_size = -.125
+let square_size = -.0625
 
 const data_single_lines = [
   [0, 0, 100, 100],
   [50, 0, 200, 150],
   [100, 0, 300, 200]
 ]
-// square sizes
 
+// square sizes
 const square_z = [
   1
 ]
