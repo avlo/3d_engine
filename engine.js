@@ -21,23 +21,55 @@ const fixedTextWidth = 50
 const legend_left_margin = 680
 
 window.onload = function () {
-  let myCanvas = document.getElementById('canvas');
+  let interval = setInterval(main_bounce, timeout);
   window.addEventListener('keydown', function (event) {
     switch (event.key) {
       case "ArrowUp":
-        square_size+=.01;
-        console.log(event)
-        // setInterval(main_fxn, timeout)
+        square_size+=.05;
+        console.log(event);
+        setInterval(event_bounce, timeout)
         break;
       case "ArrowDown":
-        square_size-=.01;
-        console.log(event)
-        // setInterval(main_fxn, timeout)
+        square_size-=.05;
+        console.log(event);
+        setInterval(event_bounce, timeout)
         break;
       default:
         console.log(event)
-    }
+    };
+    clearInterval(interval)
   }, false);
+}
+
+function event_bounce() {
+  let prev_dzz = dz
+  let prev_theta_a = theta
+  theta += constRotation // rotation speed
+
+  let cos_dzz = Math.cos(dz);
+  let cos_prev_dzz = Math.cos(prev_dzz)
+  let cos_theta_a = Math.cos(theta).toPrecision(2);
+  let cos_prev_theta_a = Math.cos(prev_theta_a).toPrecision(2);
+  clear()
+
+  // legend
+  display_legend(
+      display_legend_arrow("bdz", cos_dzz, cos_prev_dzz),
+      cos_dzz.toPrecision(2),
+      legend_left_margin, 50)
+  display_legend(
+      display_legend_arrow(String.fromCharCode(0x0398), cos_theta_a, cos_prev_theta_a),
+      cos_theta_a,
+      legend_left_margin, 100)
+  display_legend("biter", iter++, 15, 780 - "iter".length)
+
+  // draw general lines
+  // draw_lines(generateRandomLines(10), dim_line_width)
+  // draw_lines(data_single_lines, point_pixels_width)
+
+  // draw square
+  draw_square(cos_dzz, theta, square_size, data_lines);
+  display_legend("binc", square_size.toPrecision(2), 125, 780 - "dep".length)
 }
 
 function clear() {
@@ -299,8 +331,6 @@ function main_bounce() {
   draw_square(cos_dz, theta, square_size, data_lines);
   display_legend("inc", square_size.toPrecision(2), 125, 780 - "dep".length)
 }
-
-setInterval(main_bounce, timeout)
 
 let square_size = -.0625
 
