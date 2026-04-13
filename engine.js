@@ -25,26 +25,25 @@ window.onload = function () {
   window.addEventListener('keydown', function (event) {
     switch (event.key) {
       case "ArrowUp":
-        square_size+=.05;
-        console.log(event);
-        setInterval(event_bounce, timeout)
+        square_size+=.025;
+        extracted();
         break;
       case "ArrowDown":
-        square_size-=.05;
-        console.log(event);
-        setInterval(event_bounce, timeout)
+        square_size -= .025;
+        extracted();
         break;
-      default:
-        console.log(event)
     };
-    clearInterval(interval)
+    function extracted() {
+      clearInterval(interval)
+      setInterval(event_bounce, timeout)
+    }
   }, false);
 }
 
 function event_bounce() {
   let prev_dzz = dz
   let prev_theta_a = theta
-  theta += constRotation // rotation speed
+  theta -= constRotation * square_size/2 // rotation speed
 
   let cos_dzz = Math.cos(dz);
   let cos_prev_dzz = Math.cos(prev_dzz)
