@@ -25,15 +25,16 @@ window.onload = function () {
   window.addEventListener('keydown', function (event) {
     switch (event.key) {
       case "ArrowUp":
-        square_size+=.025;
-        extracted();
+        square_width+=.025;
+        intervalClearSet();
         break;
       case "ArrowDown":
-        square_size -= .025;
-        extracted();
+        square_width -= .025;
+        intervalClearSet();
         break;
-    };
-    function extracted() {
+    }
+    
+    function intervalClearSet() {
       clearInterval(interval)
       setInterval(event_bounce, timeout)
     }
@@ -43,7 +44,7 @@ window.onload = function () {
 function event_bounce() {
   let prev_dzz = dz
   let prev_theta_a = theta
-  theta -= constRotation * square_size/2 // rotation speed
+  theta -= constRotation * square_width/4 // rotation speed
 
   let cos_dzz = Math.cos(dz);
   let cos_prev_dzz = Math.cos(prev_dzz)
@@ -67,20 +68,18 @@ function event_bounce() {
   // draw_lines(data_single_lines, point_pixels_width)
 
   // draw square
-  draw_square(cos_dzz, theta, square_size, data_lines);
-  display_legend("binc", square_size.toPrecision(2), 125, 780 - "dep".length)
+  draw_square(cos_dzz, theta, square_width);
+  display_legend("binc", square_width.toPrecision(2), 125, 780 - "binc".length)
 }
 
 function clear() {
   ctx.fillStyle = BACKGROUND
   ctx.fillRect(0, 0, canvas.width, canvas.height)
-
 }
 
 function draw_point({x, y}, pixels_width, foreground) {
   ctx.fillStyle = foreground
   ctx.fillRect(x - point_half, y - point_half, pixels_width, pixels_width)
-
 }
 
 function add_text(text, x, y, textWidth, foreground) {
@@ -168,30 +167,12 @@ function translate({x, y, z}, dz) {
   // return {x, y, z: z + 2}
 }
 
-function draw_rotating_lines(dz, theta, vertices, lines) {
-  for (const line of lines) {
-    for (let i = 0; i < line.length; i++) {
-      const start = vertices[line[i]] // first vertex
-      const end = vertices[line[(i + 1) % line.length]] // % == last vertex wrap around 
-      let p1 = convertCenteredCoordinatesToCanvasCoordinates(
-          project_3d_to_2d(
-              translate(
-                  rotate(start, theta), dz)));
-      let p2 = convertCenteredCoordinatesToCanvasCoordinates(
-          project_3d_to_2d(
-              translate(
-                  rotate(end, theta), dz)));
-      draw_line(p1, p2, line_pixels_width, LINES_FOREGROUND)
-    }
-  }
-}
-
-function get_vertices_unit_square() {
+function get_vertices_unit_square(local_square_size) {
   /*
   {x: 0.5, y: -0.5, z: -0.5},
   {x: -0.5, y: -0.5, z: -0.5}
    */
-  let side = square_size / 2
+  let side = local_square_size / 2
   let pos = side
   let neg = -side
 
@@ -208,6 +189,12 @@ function get_vertices_unit_square() {
   ]
 }
 
+function draw_square(cos_dz, theta, local_square_width) {
+  let verticesUnitSquare = get_vertices_unit_square(local_square_width);
+  draw_rotating_vertices(cos_dz, theta, verticesUnitSquare)
+  draw_rotating_lines(cos_dz, theta, verticesUnitSquare)
+}
+
 function draw_rotating_vertices(dz, theta, vertices) {
   for (const vertex of vertices) {
     // draw vertices points
@@ -216,14 +203,34 @@ function draw_rotating_vertices(dz, theta, vertices) {
             translate(
                 rotate(vertex, theta), dz)))
 
-    // draw vertices labels
     let negative_bound = point.x <= canvasHalfWidth
     let color = negative_bound ? VERTICES_FOREGROUND : VERTICES_TEXT
-    let text = negative_bound ? "+" : "-"
     let cos_dz = Math.cos(dz);
-
+    // draw corner points
     draw_point(point, cos_dz * vertexPixelWidth / 1.25, color)
+
+    // draw corner labels
+    let text = negative_bound ? "+" : "-"
     add_text(text, point.x, point.y, cos_dz * fixedTextWidth / 1.25, color)
+  }
+}
+
+function draw_rotating_lines(dz, theta, vertices) {
+  // array of vertices to connect == lines
+  for (const line of vertex_connections) {
+    for (let i = 0; i < line.length; i++) {
+      const start = vertices[line[i]] // first vertex
+      const end = vertices[line[(i + 1) % line.length]] // % == last vertex wrap around 
+      let p1 = convertCenteredCoordinatesToCanvasCoordinates(
+          project_3d_to_2d(
+              translate(
+                  rotate(start, theta), dz)));
+      let p2 = convertCenteredCoordinatesToCanvasCoordinates(
+          project_3d_to_2d(
+              translate(
+                  rotate(end, theta), dz)));
+      draw_line(p1, p2, line_pixels_width, LINES_FOREGROUND)
+    }
   }
 }
 
@@ -281,23 +288,17 @@ function generateRandomLines(num_lines) {
   // values.forEach(value => array.push(value))
   return array
 }
-
 const DT_FPS = .005
 let dz = 0
 let theta = 0
 let rotationDirection = -1 // positive direction
 let constRotation = rotationDirection * 6 * DT_FPS % 360
 let timeout = 10
+
 let iter = 0
-
 const upArrow = String.fromCharCode(0x2B06)
-const downArrow = String.fromCharCode(0x2193)
 
-function draw_square(cos_dz, theta, square_size, data_lines) {
-  let verticesUnitSquare = get_vertices_unit_square(square_size);
-  draw_rotating_vertices(cos_dz, theta, verticesUnitSquare)
-  draw_rotating_lines(cos_dz, theta, verticesUnitSquare, data_lines)
-}
+const downArrow = String.fromCharCode(0x2193)
 
 function main_bounce() {
   let prev_dz = dz
@@ -327,11 +328,11 @@ function main_bounce() {
   // draw_lines(data_single_lines, point_pixels_width)
 
   // draw square
-  draw_square(cos_dz, theta, square_size, data_lines);
-  display_legend("inc", square_size.toPrecision(2), 125, 780 - "dep".length)
+  draw_square(cos_dz, theta, square_width);
+  display_legend("inc", square_width.toPrecision(2), 125, 780 - "dep".length)
 }
 
-let square_size = -.0625
+let square_width = -.0625
 
 const data_single_lines = [
   [0, 0, 100, 100],
@@ -344,18 +345,12 @@ const square_z = [
   1
 ]
 
-// array of vertices to connect == lines
-const data_lines = [
-  [0, 1],
-  [0, 2],
-  [0, 4],
-  [1, 3],
-  [1, 5],
-  [2, 3],
-  [2, 6],
+const vertex_connections = [
+  [0, 1], [0, 2], [0, 4],
+  [1, 3], [1, 5], 
+  [2, 3], [2, 6], 
   [3, 7],
-  [4, 5],
-  [4, 6],
-  [5, 7],
+  [4, 5], [4, 6],
+  [5, 7], 
   [6, 7]
 ]
