@@ -2,14 +2,15 @@ console.log(canvas)
 canvas.width = 800
 canvas.height = 800
 
-const ctx = canvas.getContext("2d")
-console.log(ctx)
+const context = canvas.getContext("2d")
+console.log(context)
 
 const canvasHalfWidth = canvas.width / 2
 
 const BACKGROUND = "#101010"
 const VERTICES_FOREGROUND = "#11FF50"
 const VERTICES_TEXT = "#996666"
+const POLY_FILL_FRONT = "#EE2266"
 const LINES_FOREGROUND = "#FFFF50"
 const point_pixels_width = 1
 
@@ -73,32 +74,32 @@ function event_bounce() {
 }
 
 function clear() {
-  ctx.fillStyle = BACKGROUND
-  ctx.fillRect(0, 0, canvas.width, canvas.height)
+  context.fillStyle = BACKGROUND
+  context.fillRect(0, 0, canvas.width, canvas.height)
 }
 
 function draw_point({x, y}, pixels_width, foreground) {
-  ctx.fillStyle = foreground
-  ctx.fillRect(x - point_half, y - point_half, pixels_width, pixels_width)
+  context.fillStyle = foreground
+  context.fillRect(x - point_half, y - point_half, pixels_width, pixels_width)
 }
 
 function add_text(text, x, y, textWidth, foreground) {
-  ctx.font = textWidth + "px monospace";
+  context.font = textWidth + "px monospace";
 
-  ctx.fillStyle = foreground
-  ctx.fillText(text, x, y, textWidth)
+  context.fillStyle = foreground
+  context.fillText(text, x, y, textWidth)
 
-  // ctx.strokeStyle = foreground
-  // ctx.strokeText(text, x, y, text_width)
+  // context.strokeStyle = foreground
+  // context.strokeText(text, x, y, text_width)
 }
 
 function draw_line(p1, p2, pixels_width, foreground) {
-  ctx.lineWidth = pixels_width
-  ctx.strokeStyle = foreground
-  ctx.beginPath()
-  ctx.moveTo(p1.x, p1.y)
-  ctx.lineTo(p2.x, p2.y)
-  ctx.stroke()
+  context.lineWidth = pixels_width
+  context.strokeStyle = foreground
+  context.beginPath()
+  context.moveTo(p1.x, p1.y)
+  context.lineTo(p2.x, p2.y)
+  context.stroke()
 }
 
 function positivize(centered_point) {
@@ -167,32 +168,63 @@ function translate({x, y, z}, dz) {
   // return {x, y, z: z + 2}
 }
 
-function get_vertices_unit_square(local_square_size) {
-  /*
-  {x: 0.5, y: -0.5, z: -0.5},
-  {x: -0.5, y: -0.5, z: -0.5}
-   */
+function get_vertices_unit_cube(local_square_size) {
   let side = local_square_size / 2
   let pos = side
   let neg = -side
 
+  // x, y, z coords relative to center of unit cube
   return [
-    {x: pos, y: pos, z: pos},
-    {x: neg, y: pos, z: pos},
-    {x: pos, y: neg, z: pos},
-    {x: neg, y: neg, z: pos},
+    {x: neg, y: pos, z: pos}, // 0
+    {x: pos, y: pos, z: pos}, // 1
+    {x: neg, y: neg, z: pos}, // 4
+    {x: pos, y: neg, z: pos}, // 5
 
-    {x: pos, y: pos, z: neg},
-    {x: neg, y: pos, z: neg},
-    {x: pos, y: neg, z: neg},
-    {x: neg, y: neg, z: neg}
+    {x: neg, y: pos, z: neg}, // 2
+    {x: pos, y: pos, z: neg}, // 3
+    {x: neg, y: neg, z: neg}, // 6
+    {x: pos, y: neg, z: neg}  // 7
   ]
 }
 
+function fillPolygon(points, color) {
+  if (points.length > 0) {
+    context.fillStyle = color; // all css colors are accepted by this property
+
+    let point = points[0];
+
+    context.beginPath();
+    context.moveTo(point.x, point.y);   // point 1
+
+    for (let i = 1; i < points.length; ++i) {
+      point = points[i];
+
+      context.lineTo(point.x, point.y);
+    }
+
+    context.closePath();      // go back to point 1
+    context.fill();
+  }
+}
+
 function draw_square(cos_dz, theta, local_square_width) {
-  let verticesUnitSquare = get_vertices_unit_square(local_square_width);
+  let verticesUnitSquare = get_vertices_unit_cube(local_square_width);
   draw_rotating_vertices(cos_dz, theta, verticesUnitSquare)
   draw_rotating_lines(cos_dz, theta, verticesUnitSquare)
+  // draw_rotating_polygons(cos_dz, theta, verticesUnitSquare)
+}
+
+function draw_rotating_polygons(dz, theta, vertices) {
+  let points = []
+  for (const vertex of vertices) {
+    // draw vertices points
+    let point = convertCenteredCoordinatesToCanvasCoordinates(
+        project_3d_to_2d(
+            translate(
+                rotate(vertex, theta), dz)))
+    points.push(point)
+  }
+  fillPolygon(points, POLY_FILL_FRONT)
 }
 
 function draw_rotating_vertices(dz, theta, vertices) {
@@ -346,11 +378,12 @@ const square_z = [
 ]
 
 const vertex_connections = [
-  [0, 1], [0, 2], [0, 4],
-  [1, 3], [1, 5], 
-  [2, 3], [2, 6], 
-  [3, 7],
-  [4, 5], [4, 6],
-  [5, 7], 
-  [6, 7]
+     [0, 1],   [0, 2],   [0, 4], // 0
+  /* [1, 0] */ [1, 3],   [1, 5], // 1
+  /* [2, 0] */ [2, 3],   [2, 6], // 2
+  /* [3, 1]    [3, 2] */ [3, 7], // 3
+  /* [4, 0] */ [4, 5],   [4, 6], // 4
+  /* [5, 1]    [5, 4] */ [5, 7], // 5
+  /* [6, 2]    [6, 4] */ [6, 7]  // 6
+  /* [7, 3]    [7, 5]    [7, 6]*/// 7
 ]
