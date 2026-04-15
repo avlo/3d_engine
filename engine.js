@@ -11,6 +11,7 @@ const BACKGROUND = "#101010"
 const VERTICES_FOREGROUND = "#11FF50"
 const VERTICES_TEXT = "#996666"
 const POLY_FILL_FRONT = "#EE2266"
+const POLY_FILL_2 = "#EE6600"
 const LINES_FOREGROUND = "#FFFF50"
 const point_pixels_width = 1
 
@@ -26,7 +27,7 @@ window.onload = function () {
   window.addEventListener('keydown', function (event) {
     switch (event.key) {
       case "ArrowUp":
-        square_width+=.025;
+        square_width += .025;
         intervalClearSet();
         break;
       case "ArrowDown":
@@ -34,7 +35,7 @@ window.onload = function () {
         intervalClearSet();
         break;
     }
-    
+
     function intervalClearSet() {
       clearInterval(interval)
       setInterval(event_bounce, timeout)
@@ -45,7 +46,7 @@ window.onload = function () {
 function event_bounce() {
   let prev_dzz = dz
   let prev_theta_a = theta
-  theta -= constRotation * square_width/4 // rotation speed
+  theta -= constRotation * square_width / 4 // rotation speed
 
   let cos_dzz = Math.cos(dz);
   let cos_prev_dzz = Math.cos(prev_dzz)
@@ -177,41 +178,69 @@ function get_vertices_unit_cube(local_square_size) {
   return [
     {x: neg, y: pos, z: pos}, // 0
     {x: pos, y: pos, z: pos}, // 1
-    {x: neg, y: neg, z: pos}, // 4
-    {x: pos, y: neg, z: pos}, // 5
+    {x: pos, y: neg, z: pos}, // 2
+    {x: neg, y: neg, z: pos}, // 3
 
-    {x: neg, y: pos, z: neg}, // 2
-    {x: pos, y: pos, z: neg}, // 3
-    {x: neg, y: neg, z: neg}, // 6
-    {x: pos, y: neg, z: neg}  // 7
+    {x: neg, y: pos, z: neg}, // 4 =  8,  9
+    {x: pos, y: pos, z: neg}, // 5 = 10, 11
+    {x: pos, y: neg, z: neg}, // 6 = 12, 13
+    {x: neg, y: neg, z: neg}  // 7 = 14, 15
   ]
 }
 
-function fillPolygon(points, color) {
-  if (points.length > 0) {
-    context.fillStyle = color; // all css colors are accepted by this property
-
-    let point = points[0];
-
-    context.beginPath();
-    context.moveTo(point.x, point.y);   // point 1
-
-    for (let i = 1; i < points.length; ++i) {
-      point = points[i];
-
-      context.lineTo(point.x, point.y);
-    }
-
-    context.closePath();      // go back to point 1
-    context.fill();
-  }
+function draw_square(cos_dz, theta, local_square_width) {
+  let verticesUnitCube = get_vertices_unit_cube(local_square_width);
+  draw_rotating_polygons(cos_dz, theta, verticesUnitCube)
+  draw_rotating_vertices(cos_dz, theta, verticesUnitCube)
+  draw_rotating_lines(cos_dz, theta, verticesUnitCube)
 }
 
-function draw_square(cos_dz, theta, local_square_width) {
-  let verticesUnitSquare = get_vertices_unit_cube(local_square_width);
-  draw_rotating_vertices(cos_dz, theta, verticesUnitSquare)
-  draw_rotating_lines(cos_dz, theta, verticesUnitSquare)
-  // draw_rotating_polygons(cos_dz, theta, verticesUnitSquare)
+function fillPolygon(poly, color) {
+  context.fillStyle = color; // any css color
+
+  // let point = points[0];
+  //
+  // context.beginPath();
+  // context.moveTo(point.x, point.y);   // point 1
+  //
+  // for (let i = 1; i < points.length; ++i) {
+  //   point = points[i];
+  //
+  //   context.lineTo(point.x, point.y);
+  // }
+  //
+  // context.closePath();      // go back to point 1
+  // context.fill();
+
+  // context.rect(100, 100, 100, 200);
+
+  context.font = 50 + "px monospace";
+  // context.fillText(upper_left_point.x.toPrecision(3), 10, 50, 100)
+  // context.fillText(upper_left_point.y.toPrecision(3), 10, 100, 100)
+  // context.fillText(lower_right_point.x.toPrecision(3), 150, 50, 100)
+  // context.fillText(lower_right_point.y.toPrecision(3), 150, 100, 100)
+
+
+  context.beginPath();
+  context.moveTo(poly[0], poly[1]);
+  context.lineTo(poly[2], poly[3]);
+  context.lineTo(poly[4], poly[5]);
+  context.lineTo(poly[6], poly[7]);
+  context.closePath();
+  context.fill();
+
+  context.fillStyle = VERTICES_FOREGROUND
+  context.beginPath();
+  context.moveTo(poly[8], poly[9]);
+  context.lineTo(poly[10], poly[11]);
+  context.lineTo(poly[12], poly[13]);
+  context.lineTo(poly[14], poly[15]);
+  // for (let item = 2; item < poly.length - 1; item += 2) {
+  //   context.lineTo(poly[item], poly[item + 1])
+  // }
+
+  context.closePath();
+  context.fill();
 }
 
 function draw_rotating_polygons(dz, theta, vertices) {
@@ -222,8 +251,9 @@ function draw_rotating_polygons(dz, theta, vertices) {
         project_3d_to_2d(
             translate(
                 rotate(vertex, theta), dz)))
-    points.push(point)
+    points.push(point.x, point.y)
   }
+
   fillPolygon(points, POLY_FILL_FRONT)
 }
 
@@ -320,7 +350,8 @@ function generateRandomLines(num_lines) {
   // values.forEach(value => array.push(value))
   return array
 }
-const DT_FPS = .005
+
+const DT_FPS = .0005
 let dz = 0
 let theta = 0
 let rotationDirection = -1 // positive direction
@@ -335,8 +366,10 @@ const downArrow = String.fromCharCode(0x2193)
 function main_bounce() {
   let prev_dz = dz
   let prev_theta = theta
-  dz += DT_FPS
-  theta += constRotation // rotation speed
+  dz += DT_FPS * 5
+
+  // theta += constRotation // rotation speed
+  theta -= constRotation * square_width / 16 // rotation speed
 
   let cos_dz = Math.cos(dz);
   let cos_prev_dz = Math.cos(prev_dz)
@@ -378,12 +411,12 @@ const square_z = [
 ]
 
 const vertex_connections = [
-     [0, 1],   [0, 2],   [0, 4], // 0
-  /* [1, 0] */ [1, 3],   [1, 5], // 1
-  /* [2, 0] */ [2, 3],   [2, 6], // 2
-  /* [3, 1]    [3, 2] */ [3, 7], // 3
-  /* [4, 0] */ [4, 5],   [4, 6], // 4
-  /* [5, 1]    [5, 4] */ [5, 7], // 5
-  /* [6, 2]    [6, 4] */ [6, 7]  // 6
-  /* [7, 3]    [7, 5]    [7, 6]*/// 7
+  [0, 1], [0, 3], [0, 4], // 0
+  [1, 2], [1, 5], // 1
+  [2, 3], [2, 6], // 2
+  [3, 7], // 3
+  [4, 5], [4, 7], // 4
+  [5, 6], // 5
+  [6, 7]  // 6
+  // 7
 ]
