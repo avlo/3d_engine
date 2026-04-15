@@ -195,31 +195,28 @@ function draw_square(cos_dz, theta, local_square_width) {
   draw_rotating_lines(cos_dz, theta, verticesUnitCube)
 }
 
+const hex2rgb = (hex) => {
+  return [
+    parseInt(hex.slice(1, 3), 16),
+    parseInt(hex.slice(3, 5), 16),
+    parseInt(hex.slice(5, 7), 16)]
+}
+
+const rgb2hex = (r, g, b) => {
+  return '#' + (0x1000000 + ((r << 16) | (g << 8) | b)).toString(16).toUpperCase().slice(1) // #0080c0
+}
+
+function shift_color(css_color) {
+  let rgb = hex2rgb(css_color);
+  return rgb2hex(rgb[1], rgb[2], rgb[0])
+}
+
 function fillPolygon(poly, color) {
-  context.fillStyle = color; // any css color
-
-  // let point = points[0];
-  //
-  // context.beginPath();
-  // context.moveTo(point.x, point.y);   // point 1
-  //
-  // for (let i = 1; i < points.length; ++i) {
-  //   point = points[i];
-  //
-  //   context.lineTo(point.x, point.y);
-  // }
-  //
-  // context.closePath();      // go back to point 1
-  // context.fill();
-
-  // context.rect(100, 100, 100, 200);
+  let fillStyle = color;
+  context.fillStyle = fillStyle; // any css color
 
   context.font = 50 + "px monospace";
-  // context.fillText(upper_left_point.x.toPrecision(3), 10, 50, 100)
-  // context.fillText(upper_left_point.y.toPrecision(3), 10, 100, 100)
-  // context.fillText(lower_right_point.x.toPrecision(3), 150, 50, 100)
-  // context.fillText(lower_right_point.y.toPrecision(3), 150, 100, 100)
-
+  context.fillText(fillStyle, 10, 50, 100)
 
   context.beginPath();
   context.moveTo(poly[0], poly[1]);
@@ -229,7 +226,9 @@ function fillPolygon(poly, color) {
   context.closePath();
   context.fill();
 
-  context.fillStyle = VERTICES_FOREGROUND
+  fillStyle = shift_color(fillStyle);
+  context.fillStyle = fillStyle
+  context.fillText(fillStyle, 10, 100, 100)
   context.beginPath();
   context.moveTo(poly[8], poly[9]);
   context.lineTo(poly[10], poly[11]);
