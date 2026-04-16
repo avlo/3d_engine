@@ -95,30 +95,16 @@ function shift_color(css_color) {
   return rgb2hex(rgb[0] >> 2, rgb[1] >> 2, rgb[2])
 }
 
-function context_fill_polygon_obj(poly, face, color, y_text) {
-  context.fillStyle = color; // any css color
+function context_fill_polygon_obj(points, face) {
+  context.fillStyle = face.color; // any css color
   context.font = 50 + "px monospace";
 
-  context.fillText(color, 10, y_text, 100)
+  context.fillText(face.color, 10, face.y_text_coord, 100)
   context.beginPath();
-  context.moveTo(poly[face[0]], poly[face[1]]);
-  for (let i = 2; i < face.length; i += 2) {
-      context.lineTo(poly[face[i]], poly[face[i+1]]);
+  context.moveTo(points[face.xy[0]], points[face.xy[1]]);
+  for (let i = 2; i < face.xy.length; i += 2) {
+      context.lineTo(points[face.xy[i]], points[face.xy[i+1]]);
   }
-  context.closePath();
-  context.fill();
-}
-
-function context_fill_polygon(poly, a, b, c, d, e, f, g, h, color, y_text) {
-  context.fillStyle = color; // any css color
-  context.font = 50 + "px monospace";
-
-  context.fillText(color, 10, y_text, 100)
-  context.beginPath();
-  context.moveTo(poly[a], poly[b]);
-  context.lineTo(poly[c], poly[d]);
-  context.lineTo(poly[e], poly[f]);
-  context.lineTo(poly[g], poly[h]);
   context.closePath();
   context.fill();
 }
