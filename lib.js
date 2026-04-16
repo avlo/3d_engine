@@ -10,12 +10,8 @@ function draw_point({x, y}, pixels_width, foreground) {
 
 function add_text(text, x, y, textWidth, foreground) {
   context.font = textWidth + "px monospace";
-
   context.fillStyle = foreground
   context.fillText(text, x, y, textWidth)
-
-  // context.strokeStyle = foreground
-  // context.strokeText(text, x, y, text_width)
 }
 
 function draw_line(p1, p2, pixels_width, foreground) {
