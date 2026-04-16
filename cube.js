@@ -46,13 +46,13 @@ function fillPolygon(points, color) {
     y_text_coord:  300
   }
   
-  context_fill_polygon_obj(points, face_1)
-  context_fill_polygon_obj(points, face_2)
-  context_fill_polygon_obj(points, face_3)
-  context_fill_polygon_obj(points, face_4)
+  context_fill_polygon(points, face_1)
+  context_fill_polygon(points, face_2)
+  context_fill_polygon(points, face_3)
+  context_fill_polygon(points, face_4)
 
-  context_fill_polygon_obj(points, top)
-  context_fill_polygon_obj(points, bottom)
+  context_fill_polygon(points, top)
+  context_fill_polygon(points, bottom)
 
   // for (let item = 2; item < poly.length - 1; item += 2) {
   //   context.lineTo(poly[item], poly[item + 1])

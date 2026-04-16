@@ -95,7 +95,7 @@ function shift_color(css_color) {
   return rgb2hex(rgb[0] >> 2, rgb[1] >> 2, rgb[2])
 }
 
-function context_fill_polygon_obj(points, face) {
+function context_fill_polygon(points, face) {
   context.fillStyle = face.color; // any css color
   context.font = 50 + "px monospace";
 
