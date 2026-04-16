@@ -92,11 +92,9 @@ function bounce(prev_dzz, prev_theta_a) {
 }
 
 function key_event_bounce() {
-  let prev_dzz = dz
-  let prev_theta_a = theta
+  let prev_theta = theta
   theta -= constRotation * square_width / 4 // rotation speed
-
-  bounce(prev_dzz, prev_theta_a)
+  bounce(dz, prev_theta)
 }
 
 function main_bounce() {
@@ -104,6 +102,5 @@ function main_bounce() {
   let prev_theta = theta
   dz += DT_FPS
   theta += constRotation // rotation speed
-
   bounce(prev_dz, prev_theta)
 }
