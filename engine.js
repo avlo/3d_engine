@@ -165,8 +165,8 @@ function rotate({x, y, z}, theta) {
 }
 
 function translate({x, y, z}, dz) {
-  return {x, y, z: -z + dz}
-  // return {x, y, z: z + 2}
+  // return {x, y, z: -z + dz}
+  return {x, y, z: -z + .1}
 }
 
 function get_vertices_unit_cube(local_square_size) {
@@ -208,38 +208,37 @@ const rgb2hex = (r, g, b) => {
 
 function shift_color(css_color) {
   let rgb = hex2rgb(css_color);
-  return rgb2hex(rgb[1], rgb[2], rgb[0])
+  // return rgb2hex(rgb[1], rgb[2], rgb[0])
+  return rgb2hex(rgb[0]>>2, rgb[1]>>2, rgb[2])
+}
+
+function context_fill_polygon(poly, a,b,c,d,e,f,g,h, color, y_text) {
+  context.fillStyle = color; // any css color
+  context.font = 50 + "px monospace";
+  
+  context.fillText(color, 10, y_text, 100)
+  context.beginPath();
+  context.moveTo(poly[a], poly[b]);
+  context.lineTo(poly[c], poly[d]);
+  context.lineTo(poly[e], poly[f]);
+  context.lineTo(poly[g], poly[h]);
+  context.closePath();
+  context.fill();
 }
 
 function fillPolygon(poly, color) {
   let fillStyle = color;
-  context.fillStyle = fillStyle; // any css color
-
-  context.font = 50 + "px monospace";
-  context.fillText(fillStyle, 10, 50, 100)
-
-  context.beginPath();
-  context.moveTo(poly[0], poly[1]);
-  context.lineTo(poly[2], poly[3]);
-  context.lineTo(poly[4], poly[5]);
-  context.lineTo(poly[6], poly[7]);
-  context.closePath();
-  context.fill();
-
-  fillStyle = shift_color(fillStyle);
-  context.fillStyle = fillStyle
-  context.fillText(fillStyle, 10, 100, 100)
-  context.beginPath();
-  context.moveTo(poly[8], poly[9]);
-  context.lineTo(poly[10], poly[11]);
-  context.lineTo(poly[12], poly[13]);
-  context.lineTo(poly[14], poly[15]);
+  context_fill_polygon(poly, 0,1,2,3,4,5,6,7, "#EE2266", 50)
+  context_fill_polygon(poly, 8,9,14,15,6,7,0,1, "#2266EE", 100)
+  context_fill_polygon(poly, 2,3,10,11,12,13,4,5, "#EE6600", 150)
+  context_fill_polygon(poly, 8,9,10,11,12,13,14,15, "#114400", 200)
+  
+  context_fill_polygon(poly, 4,5,6,7,14,15,12,13, "#3B0866", 250)
+  context_fill_polygon(poly, 0,1,8,9,10,11,2,3, "#772211", 300)
+  
   // for (let item = 2; item < poly.length - 1; item += 2) {
   //   context.lineTo(poly[item], poly[item + 1])
   // }
-
-  context.closePath();
-  context.fill();
 }
 
 function draw_rotating_polygons(dz, theta, vertices) {
@@ -350,25 +349,26 @@ function generateRandomLines(num_lines) {
   return array
 }
 
-const DT_FPS = .0005
-let dz = 0
+const DT_FPS = 0.0125
+const rotation_factor = 1.5
+
+let dz = -2
 let theta = 0
 let rotationDirection = -1 // positive direction
-let constRotation = rotationDirection * 6 * DT_FPS % 360
+let constRotation = rotationDirection * DT_FPS * rotation_factor
 let timeout = 10
-
 let iter = 0
-const upArrow = String.fromCharCode(0x2B06)
+let square_width = -.0625
 
+const upArrow = String.fromCharCode(0x2B06)
 const downArrow = String.fromCharCode(0x2193)
 
 function main_bounce() {
   let prev_dz = dz
   let prev_theta = theta
-  dz += DT_FPS * 5
+  dz += DT_FPS
 
-  // theta += constRotation // rotation speed
-  theta -= constRotation * square_width / 16 // rotation speed
+  theta += constRotation // rotation speed
 
   let cos_dz = Math.cos(dz);
   let cos_prev_dz = Math.cos(prev_dz)
@@ -396,17 +396,10 @@ function main_bounce() {
   display_legend("inc", square_width.toPrecision(2), 125, 780 - "dep".length)
 }
 
-let square_width = -.0625
-
 const data_single_lines = [
   [0, 0, 100, 100],
   [50, 0, 200, 150],
   [100, 0, 300, 200]
-]
-
-// square sizes
-const square_z = [
-  1
 ]
 
 const vertex_connections = [
