@@ -8,32 +8,38 @@ function draw_square(cos_dz, theta, local_square_width) {
 }
 
 function fillPolygon(points) {
+  // side 1
   context_fill_polygon(points, {
     xy: [0, 1, 2, 3, 4, 5, 6, 7],
     color: "#EE2266",
     y_text_coord: 50
   })
+  // side 2
   context_fill_polygon(points, {
     xy: [8, 9, 14, 15, 6, 7, 0, 1],
     color: "#2266EE",
     y_text_coord: 100
   })
+  // side 3
   context_fill_polygon(points, {
     xy: [2, 3, 10, 11, 12, 13, 4, 5],
     color: "#EE6600",
     y_text_coord: 150
   })
+  // side 4
   context_fill_polygon(points, {
     xy: [8, 9, 10, 11, 12, 13, 14, 15],
     color: "#114400",
     y_text_coord: 200
   })
 
+  // top
   context_fill_polygon(points, {
     xy: [4, 5, 6, 7, 14, 15, 12, 13],
     color: "#3B0866",
     y_text_coord: 250
   })
+  // bottom
   context_fill_polygon(points, {
     xy: [0, 1, 8, 9, 10, 11, 2, 3],
     color: "#772211",
