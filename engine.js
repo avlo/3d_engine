@@ -22,6 +22,20 @@ const point_half = point_pixels_width / 2
 const fixedTextWidth = 50
 const legend_left_margin = 680
 
+const DT_FPS = 0.0125
+const rotation_factor = 1.5
+
+let dz = -2
+let theta = 0
+let rotationDirection = -1 // positive direction
+let constRotation = rotationDirection * DT_FPS * rotation_factor
+let timeout = 10
+let iter = 0
+let square_width = -.0625
+
+const upArrow = String.fromCharCode(0x2B06)
+const downArrow = String.fromCharCode(0x2193)
+
 window.onload = function () {
   let interval = setInterval(main_bounce, timeout);
   window.addEventListener('keydown', function (event) {
@@ -34,20 +48,24 @@ window.onload = function () {
         square_width -= .025;
         intervalClearSet();
         break;
+      case "ArrowLeft":
+        square_width += .025;
+        intervalClearSet();
+        break;
+      case "ArrowRight":
+        square_width -= .025;
+        intervalClearSet();
+        break;
     }
 
     function intervalClearSet() {
       clearInterval(interval)
-      setInterval(event_bounce, timeout)
+      setInterval(key_event_bounce, timeout)
     }
   }, false);
 }
 
-function event_bounce() {
-  let prev_dzz = dz
-  let prev_theta_a = theta
-  theta -= constRotation * square_width / 4 // rotation speed
-
+function bounce(prev_dzz, prev_theta_a) {
   let cos_dzz = Math.cos(dz);
   let cos_prev_dzz = Math.cos(prev_dzz)
   let cos_theta_a = Math.cos(theta).toPrecision(2);
@@ -74,341 +92,19 @@ function event_bounce() {
   display_legend("binc", square_width.toPrecision(2), 125, 780 - "binc".length)
 }
 
-function clear() {
-  context.fillStyle = BACKGROUND
-  context.fillRect(0, 0, canvas.width, canvas.height)
+function key_event_bounce() {
+  let prev_dzz = dz
+  let prev_theta_a = theta
+  theta -= constRotation * square_width / 4 // rotation speed
+
+  bounce(prev_dzz, prev_theta_a)
 }
-
-function draw_point({x, y}, pixels_width, foreground) {
-  context.fillStyle = foreground
-  context.fillRect(x - point_half, y - point_half, pixels_width, pixels_width)
-}
-
-function add_text(text, x, y, textWidth, foreground) {
-  context.font = textWidth + "px monospace";
-
-  context.fillStyle = foreground
-  context.fillText(text, x, y, textWidth)
-
-  // context.strokeStyle = foreground
-  // context.strokeText(text, x, y, text_width)
-}
-
-function draw_line(p1, p2, pixels_width, foreground) {
-  context.lineWidth = pixels_width
-  context.strokeStyle = foreground
-  context.beginPath()
-  context.moveTo(p1.x, p1.y)
-  context.lineTo(p2.x, p2.y)
-  context.stroke()
-}
-
-function positivize(centered_point) {
-// yields
-//   -1..1 => 0..2
-  return {
-    x: centered_point.x + 1,
-    y: centered_point.y + 1
-  }
-}
-
-function normalize(positivized_point) {
-// yields
-//   -1..1 => 0..2 => 0..1  
-  return {
-    x: positivized_point.x / 2,
-    y: positivized_point.y / 2
-  }
-}
-
-function canvasIze(normalized_point) {
-// yields
-//   -1..1 => 0..2 => 0..1 => 0..w/h
-  return {
-    x: normalized_point.x * canvas.width,
-// (4of4) reorient y axis
-    y: (1 - normalized_point.y) * canvas.height
-  }
-}
-
-// translate point (x,y) from screen center coordinates (0, 0) to HTML canvas top left coordinates (0, w/h), i.e,
-//    -1..1 => 0..w/h
-function convertCenteredCoordinatesToCanvasCoordinates(centered_point) {
-// (1of3) translate negative coord to positive coord
-  let positivized_point = positivize(centered_point);
-// (2of3) divide by 2 normalizes the result
-  let normalized_point = normalize(positivized_point)
-// (3of3) multiply by width & height gives HTML canvas w/h coordinate
-  let canvas_point = canvasIze(normalized_point)
-  return {
-    x: canvas_point.x,
-    y: canvas_point.y
-  }
-}
-
-function project_3d_to_2d({x, y, z}) {
-  return {
-    x: x / z,
-    y: y / z
-  }
-}
-
-function rotate({x, y, z}, theta) {
-  // theta *= .01 * theta // rotation speed
-  let cos_theta = Math.cos(theta);
-  let sin_theta = Math.sin(theta);
-  return {
-    x: x * cos_theta - z * sin_theta,
-    y,
-    z: x * sin_theta + z * cos_theta
-  }
-}
-
-function translate({x, y, z}, dz) {
-  // return {x, y, z: -z + dz}
-  return {x, y, z: -z + .1}
-}
-
-function get_vertices_unit_cube(local_square_size) {
-  let side = local_square_size / 2
-  let pos = side
-  let neg = -side
-
-  // x, y, z coords relative to center of unit cube
-  return [
-    {x: neg, y: pos, z: pos}, // 0
-    {x: pos, y: pos, z: pos}, // 1
-    {x: pos, y: neg, z: pos}, // 2
-    {x: neg, y: neg, z: pos}, // 3
-
-    {x: neg, y: pos, z: neg}, // 4 =  8,  9
-    {x: pos, y: pos, z: neg}, // 5 = 10, 11
-    {x: pos, y: neg, z: neg}, // 6 = 12, 13
-    {x: neg, y: neg, z: neg}  // 7 = 14, 15
-  ]
-}
-
-function draw_square(cos_dz, theta, local_square_width) {
-  let verticesUnitCube = get_vertices_unit_cube(local_square_width);
-  draw_rotating_polygons(cos_dz, theta, verticesUnitCube)
-  draw_rotating_vertices(cos_dz, theta, verticesUnitCube)
-  draw_rotating_lines(cos_dz, theta, verticesUnitCube)
-}
-
-const hex2rgb = (hex) => {
-  return [
-    parseInt(hex.slice(1, 3), 16),
-    parseInt(hex.slice(3, 5), 16),
-    parseInt(hex.slice(5, 7), 16)]
-}
-
-const rgb2hex = (r, g, b) => {
-  return '#' + (0x1000000 + ((r << 16) | (g << 8) | b)).toString(16).toUpperCase().slice(1) // #0080c0
-}
-
-function shift_color(css_color) {
-  let rgb = hex2rgb(css_color);
-  // return rgb2hex(rgb[1], rgb[2], rgb[0])
-  return rgb2hex(rgb[0]>>2, rgb[1]>>2, rgb[2])
-}
-
-function context_fill_polygon(poly, a,b,c,d,e,f,g,h, color, y_text) {
-  context.fillStyle = color; // any css color
-  context.font = 50 + "px monospace";
-  
-  context.fillText(color, 10, y_text, 100)
-  context.beginPath();
-  context.moveTo(poly[a], poly[b]);
-  context.lineTo(poly[c], poly[d]);
-  context.lineTo(poly[e], poly[f]);
-  context.lineTo(poly[g], poly[h]);
-  context.closePath();
-  context.fill();
-}
-
-function fillPolygon(poly, color) {
-  let fillStyle = color;
-  context_fill_polygon(poly, 0,1,2,3,4,5,6,7, "#EE2266", 50)
-  context_fill_polygon(poly, 8,9,14,15,6,7,0,1, "#2266EE", 100)
-  context_fill_polygon(poly, 2,3,10,11,12,13,4,5, "#EE6600", 150)
-  context_fill_polygon(poly, 8,9,10,11,12,13,14,15, "#114400", 200)
-  
-  context_fill_polygon(poly, 4,5,6,7,14,15,12,13, "#3B0866", 250)
-  context_fill_polygon(poly, 0,1,8,9,10,11,2,3, "#772211", 300)
-  
-  // for (let item = 2; item < poly.length - 1; item += 2) {
-  //   context.lineTo(poly[item], poly[item + 1])
-  // }
-}
-
-function draw_rotating_polygons(dz, theta, vertices) {
-  let points = []
-  for (const vertex of vertices) {
-    // draw vertices points
-    let point = convertCenteredCoordinatesToCanvasCoordinates(
-        project_3d_to_2d(
-            translate(
-                rotate(vertex, theta), dz)))
-    points.push(point.x, point.y)
-  }
-
-  fillPolygon(points, POLY_FILL_FRONT)
-}
-
-function draw_rotating_vertices(dz, theta, vertices) {
-  for (const vertex of vertices) {
-    // draw vertices points
-    let point = convertCenteredCoordinatesToCanvasCoordinates(
-        project_3d_to_2d(
-            translate(
-                rotate(vertex, theta), dz)))
-
-    let negative_bound = point.x <= canvasHalfWidth
-    let color = negative_bound ? VERTICES_FOREGROUND : VERTICES_TEXT
-    let cos_dz = Math.cos(dz);
-    // draw corner points
-    draw_point(point, cos_dz * vertexPixelWidth / 1.25, color)
-
-    // draw corner labels
-    let text = negative_bound ? "+" : "-"
-    add_text(text, point.x, point.y, cos_dz * fixedTextWidth / 1.25, color)
-  }
-}
-
-function draw_rotating_lines(dz, theta, vertices) {
-  // array of vertices to connect == lines
-  for (const line of vertex_connections) {
-    for (let i = 0; i < line.length; i++) {
-      const start = vertices[line[i]] // first vertex
-      const end = vertices[line[(i + 1) % line.length]] // % == last vertex wrap around 
-      let p1 = convertCenteredCoordinatesToCanvasCoordinates(
-          project_3d_to_2d(
-              translate(
-                  rotate(start, theta), dz)));
-      let p2 = convertCenteredCoordinatesToCanvasCoordinates(
-          project_3d_to_2d(
-              translate(
-                  rotate(end, theta), dz)));
-      draw_line(p1, p2, line_pixels_width, LINES_FOREGROUND)
-    }
-  }
-}
-
-function draw_lines(lines, line_width) {
-  let colors = [VERTICES_FOREGROUND, LINES_FOREGROUND]
-  let j = 0
-  for (const line of lines) {
-    // let color = "#" + ((1 << 24) * Math.random() | 0).toString(16).padStart(6, "0")
-    let color = colors[j++ % 2]
-    for (let i = 0; i < line.length; i++) {
-      draw_line({
-        x: line[i],
-        y: line[i + 1]
-      }, {
-        x: line[i + 2],
-        y: line[i + 3]
-      }, line_width, color)
-      draw_line({
-        x: canvas.width - line[i],
-        y: canvas.height - line[i + 1]
-      }, {
-        x: canvas.width - line[i + 2],
-        y: canvas.height - line[i + 3]
-      }, line_width, color)
-    }
-  }
-}
-
-function display_legend(key, value, x_pos, y_pos) {
-  add_text(key + " = ", x_pos, y_pos, fixedTextWidth, LINES_FOREGROUND)
-  let theta_precision = value;
-  add_text(
-      theta_precision,
-      x_pos + 50, y_pos,
-      fixedTextWidth,
-      theta_precision <= 0 ? VERTICES_TEXT : VERTICES_FOREGROUND)
-}
-
-function display_legend_arrow(label, dz, prev_dz) {
-  let incrementing = prev_dz - dz <= 0;
-  return label + " " + (incrementing ? upArrow : downArrow)
-}
-
-function generateRandomLines(num_lines) {
-  let array = [[]]
-  for (let i = 0; i < num_lines; i++) {
-    let p1x = canvas.width - (canvas.width * Math.random())
-    let p1y = canvas.height - (canvas.height * Math.random())
-    let p2x = canvas.width - (canvas.width * Math.random())
-    let p2y = canvas.height - (canvas.height * Math.random())
-    let internal_array = [p1x, p1y, p2x, p2y]
-    array.push(internal_array)
-  }
-  // let values = data_single_lines.values();
-  // values.forEach(value => array.push(value))
-  return array
-}
-
-const DT_FPS = 0.0125
-const rotation_factor = 1.5
-
-let dz = -2
-let theta = 0
-let rotationDirection = -1 // positive direction
-let constRotation = rotationDirection * DT_FPS * rotation_factor
-let timeout = 10
-let iter = 0
-let square_width = -.0625
-
-const upArrow = String.fromCharCode(0x2B06)
-const downArrow = String.fromCharCode(0x2193)
 
 function main_bounce() {
   let prev_dz = dz
   let prev_theta = theta
   dz += DT_FPS
-
   theta += constRotation // rotation speed
 
-  let cos_dz = Math.cos(dz);
-  let cos_prev_dz = Math.cos(prev_dz)
-  let cos_theta = Math.cos(theta).toPrecision(2);
-  let cos_prev_theta = Math.cos(prev_theta).toPrecision(2);
-  clear()
-
-  // legend
-  display_legend(
-      display_legend_arrow("dz", cos_dz, cos_prev_dz),
-      cos_dz.toPrecision(2),
-      legend_left_margin, 50)
-  display_legend(
-      display_legend_arrow(String.fromCharCode(0x0398), cos_theta, cos_prev_theta),
-      cos_theta,
-      legend_left_margin, 100)
-  display_legend("iter", iter++, 15, 780 - "iter".length)
-
-  // draw general lines
-  // draw_lines(generateRandomLines(10), dim_line_width)
-  // draw_lines(data_single_lines, point_pixels_width)
-
-  // draw square
-  draw_square(cos_dz, theta, square_width);
-  display_legend("inc", square_width.toPrecision(2), 125, 780 - "dep".length)
+  bounce(prev_dz, prev_theta)
 }
-
-const data_single_lines = [
-  [0, 0, 100, 100],
-  [50, 0, 200, 150],
-  [100, 0, 300, 200]
-]
-
-const vertex_connections = [
-  [0, 1], [0, 3], [0, 4], // 0
-  [1, 2], [1, 5], // 1
-  [2, 3], [2, 6], // 2
-  [3, 7], // 3
-  [4, 5], [4, 7], // 4
-  [5, 6], // 5
-  [6, 7]  // 6
-  // 7
-]
