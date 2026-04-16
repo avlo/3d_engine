@@ -120,7 +120,7 @@ function draw_rotating_polygons(dz, theta, vertices) {
     points.push(point.x, point.y)
   }
 
-  fillPolygon(points, POLY_FILL_FRONT)
+  fillPolygon(points)
 }
 
 function draw_rotating_vertices(dz, theta, vertices) {

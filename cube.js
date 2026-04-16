@@ -7,56 +7,38 @@ function draw_square(cos_dz, theta, local_square_width) {
   draw_rotating_lines(cos_dz, theta, verticesUnitCube)
 }
 
-function fillPolygon(points, color) {
-  let fillStyle = color;
-
-  let face_1 = {
+function fillPolygon(points) {
+  context_fill_polygon(points, {
     xy: [0, 1, 2, 3, 4, 5, 6, 7],
     color: "#EE2266",
-    y_text_coord:  50
-  }
-
-  let face_2 = {
+    y_text_coord: 50
+  })
+  context_fill_polygon(points, {
     xy: [8, 9, 14, 15, 6, 7, 0, 1],
     color: "#2266EE",
-    y_text_coord:  100
-  }
-
-  let face_3 = {
+    y_text_coord: 100
+  })
+  context_fill_polygon(points, {
     xy: [2, 3, 10, 11, 12, 13, 4, 5],
     color: "#EE6600",
-    y_text_coord:  150
-  }
-
-  let face_4 = {
+    y_text_coord: 150
+  })
+  context_fill_polygon(points, {
     xy: [8, 9, 10, 11, 12, 13, 14, 15],
     color: "#114400",
-    y_text_coord:  200
-  }
+    y_text_coord: 200
+  })
 
-  let top = {
+  context_fill_polygon(points, {
     xy: [4, 5, 6, 7, 14, 15, 12, 13],
     color: "#3B0866",
-    y_text_coord:  250
-  }
-
-  let bottom = {
+    y_text_coord: 250
+  })
+  context_fill_polygon(points, {
     xy: [0, 1, 8, 9, 10, 11, 2, 3],
     color: "#772211",
-    y_text_coord:  300
-  }
-  
-  context_fill_polygon(points, face_1)
-  context_fill_polygon(points, face_2)
-  context_fill_polygon(points, face_3)
-  context_fill_polygon(points, face_4)
-
-  context_fill_polygon(points, top)
-  context_fill_polygon(points, bottom)
-
-  // for (let item = 2; item < poly.length - 1; item += 2) {
-  //   context.lineTo(poly[item], poly[item + 1])
-  // }
+    y_text_coord: 300
+  })
 }
 
 // translate point (x,y) from screen center coordinates (0, 0) to HTML canvas top left coordinates (0, w/h), i.e,
