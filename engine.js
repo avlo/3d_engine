@@ -74,14 +74,14 @@ function bounce(prev_dzz, prev_theta_a) {
 
   // legend
   display_legend(
-      display_legend_arrow("bdz", cos_dzz, cos_prev_dzz),
+      display_legend_arrow("dz", cos_dzz, cos_prev_dzz),
       cos_dzz.toPrecision(2),
       legend_left_margin, 50)
   display_legend(
       display_legend_arrow(String.fromCharCode(0x0398), cos_theta_a, cos_prev_theta_a),
       cos_theta_a,
       legend_left_margin, 100)
-  display_legend("biter", iter++, 15, 780 - "iter".length)
+  display_legend("iter", iter++, 15, 780 - "iter".length)
 
   // draw general lines
   // draw_lines(generateRandomLines(10), dim_line_width)
@@ -89,7 +89,7 @@ function bounce(prev_dzz, prev_theta_a) {
 
   // draw square
   draw_square(cos_dzz, theta, square_width);
-  display_legend("binc", square_width.toPrecision(2), 125, 780 - "binc".length)
+  display_legend("inc", square_width.toPrecision(2), 125, 780 - "inc".length)
 }
 
 function key_event_bounce() {
