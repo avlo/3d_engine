@@ -31,7 +31,6 @@ let rotationDirection = -1 // positive direction
 let constRotation = rotationDirection * DT_FPS * rotation_factor
 let timeout = 10
 let iter = 0
-let square_width = -.0625
 
 const upArrow = String.fromCharCode(0x2B06)
 const downArrow = String.fromCharCode(0x2193)

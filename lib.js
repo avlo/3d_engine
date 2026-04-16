@@ -55,21 +55,6 @@ function canvasIze(normalized_point) {
   }
 }
 
-// translate point (x,y) from screen center coordinates (0, 0) to HTML canvas top left coordinates (0, w/h), i.e,
-//    -1..1 => 0..w/h
-function convertCenteredCoordinatesToCanvasCoordinates(centered_point) {
-// (1of3) translate negative coord to positive coord
-  let positivized_point = positivize(centered_point);
-// (2of3) divide by 2 normalizes the result
-  let normalized_point = normalize(positivized_point)
-// (3of3) multiply by width & height gives HTML canvas w/h coordinate
-  let canvas_point = canvasIze(normalized_point)
-  return {
-    x: canvas_point.x,
-    y: canvas_point.y
-  }
-}
-
 function project_3d_to_2d({x, y, z}) {
   return {
     x: x / z,
@@ -93,13 +78,6 @@ function translate({x, y, z}, dz) {
   return {x, y, z: -z + .1}
 }
 
-function draw_square(cos_dz, theta, local_square_width) {
-  let verticesUnitCube = get_vertices_unit_cube(local_square_width);
-  draw_rotating_polygons(cos_dz, theta, verticesUnitCube)
-  draw_rotating_vertices(cos_dz, theta, verticesUnitCube)
-  draw_rotating_lines(cos_dz, theta, verticesUnitCube)
-}
-
 const hex2rgb = (hex) => {
   return [
     parseInt(hex.slice(1, 3), 16),
@@ -114,10 +92,24 @@ const rgb2hex = (r, g, b) => {
 function shift_color(css_color) {
   let rgb = hex2rgb(css_color);
   // return rgb2hex(rgb[1], rgb[2], rgb[0])
-  return rgb2hex(rgb[0]>>2, rgb[1]>>2, rgb[2])
+  return rgb2hex(rgb[0] >> 2, rgb[1] >> 2, rgb[2])
 }
 
-function context_fill_polygon(poly, a,b,c,d,e,f,g,h, color, y_text) {
+function context_fill_polygon_obj(poly, face, color, y_text) {
+  context.fillStyle = color; // any css color
+  context.font = 50 + "px monospace";
+
+  context.fillText(color, 10, y_text, 100)
+  context.beginPath();
+  context.moveTo(poly[face[0]], poly[face[1]]);
+  for (let i = 2; i < face.length; i += 2) {
+      context.lineTo(poly[face[i]], poly[face[i+1]]);
+  }
+  context.closePath();
+  context.fill();
+}
+
+function context_fill_polygon(poly, a, b, c, d, e, f, g, h, color, y_text) {
   context.fillStyle = color; // any css color
   context.font = 50 + "px monospace";
 
@@ -135,7 +127,7 @@ function draw_rotating_polygons(dz, theta, vertices) {
   let points = []
   for (const vertex of vertices) {
     // draw vertices points
-    let point = convertCenteredCoordinatesToCanvasCoordinates(
+    let point = convertCubeCenteredCoordinatesToCanvasCoordinates(
         project_3d_to_2d(
             translate(
                 rotate(vertex, theta), dz)))
@@ -148,7 +140,7 @@ function draw_rotating_polygons(dz, theta, vertices) {
 function draw_rotating_vertices(dz, theta, vertices) {
   for (const vertex of vertices) {
     // draw vertices points
-    let point = convertCenteredCoordinatesToCanvasCoordinates(
+    let point = convertCubeCenteredCoordinatesToCanvasCoordinates(
         project_3d_to_2d(
             translate(
                 rotate(vertex, theta), dz)))
@@ -171,11 +163,11 @@ function draw_rotating_lines(dz, theta, vertices) {
     for (let i = 0; i < line.length; i++) {
       const start = vertices[line[i]] // first vertex
       const end = vertices[line[(i + 1) % line.length]] // % == last vertex wrap around 
-      let p1 = convertCenteredCoordinatesToCanvasCoordinates(
+      let p1 = convertCubeCenteredCoordinatesToCanvasCoordinates(
           project_3d_to_2d(
               translate(
                   rotate(start, theta), dz)));
-      let p2 = convertCenteredCoordinatesToCanvasCoordinates(
+      let p2 = convertCubeCenteredCoordinatesToCanvasCoordinates(
           project_3d_to_2d(
               translate(
                   rotate(end, theta), dz)));
@@ -222,19 +214,4 @@ function display_legend(key, value, x_pos, y_pos) {
 function display_legend_arrow(label, dz, prev_dz) {
   let incrementing = prev_dz - dz <= 0;
   return label + " " + (incrementing ? upArrow : downArrow)
-}
-
-function fillPolygon(poly, color) {
-  let fillStyle = color;
-  context_fill_polygon(poly, 0,1,2,3,4,5,6,7, "#EE2266", 50)
-  context_fill_polygon(poly, 8,9,14,15,6,7,0,1, "#2266EE", 100)
-  context_fill_polygon(poly, 2,3,10,11,12,13,4,5, "#EE6600", 150)
-  context_fill_polygon(poly, 8,9,10,11,12,13,14,15, "#114400", 200)
-
-  context_fill_polygon(poly, 4,5,6,7,14,15,12,13, "#3B0866", 250)
-  context_fill_polygon(poly, 0,1,8,9,10,11,2,3, "#772211", 300)
-
-  // for (let item = 2; item < poly.length - 1; item += 2) {
-  //   context.lineTo(poly[item], poly[item + 1])
-  // }
 }
