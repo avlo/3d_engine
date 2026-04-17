@@ -69,8 +69,8 @@ function rotate({x, y, z}, theta) {
   }
 }
 
-function translate({x, y, z}, dz) {
-  return {x, y, z: -z + dz}
+function translate({x, y, z}, dz, z_offset) {
+  return {x, y, z: (-z + dz) + z_offset}
   // return {x, y, z: -z + .1}
 }
 
@@ -122,41 +122,43 @@ function context_fill_polygon(points, face) {
   context.fill();
 }
 
-function draw_rotating_polygons(dz, theta, vertices) {
+function draw_rotating_polygons(dz, theta, vertices, z_offset) {
   let points = []
   for (const vertex of vertices) {
     // draw vertices points
     let point = convertCubeCenteredCoordinatesToCanvasCoordinates(
         project_3d_to_2d(
             translate(
-                rotate(vertex, theta), dz)))
+                rotate(vertex, theta), dz, z_offset)))
     points.push(point.x, point.y)
   }
 
   fillPolygon(points)
 }
 
-function draw_rotating_vertices(dz, theta, vertices) {
+function draw_rotating_vertices(dz, theta, vertices, z_offset) {
   for (const vertex of vertices) {
     // draw vertices points
     let point = convertCubeCenteredCoordinatesToCanvasCoordinates(
         project_3d_to_2d(
             translate(
-                rotate(vertex, theta), dz)))
+                rotate(vertex, theta), dz, z_offset)))
 
-    let negative_bound = point.x <= canvasHalfWidth
-    let color = negative_bound ? VERTICES_FOREGROUND : VERTICES_TEXT
+    let negative_bound_x = point.x <= canvasHalfWidth
+    let color = negative_bound_x ? VERTICES_FOREGROUND : VERTICES_TEXT
     let cos_dz = Math.cos(dz);
     // draw corner points
-    draw_point(point, cos_dz * vertexPixelWidth / 1.25, color)
+    // draw_point(point, cos_dz * vertexPixelWidth / 1.25, color)
 
     // draw corner labels
-    let text = negative_bound ? "+" : "-"
-    add_text(text, point.x, point.y, cos_dz * fixedTextWidth / 1.25, color)
+    let text = negative_bound_x ? "+" : "-"
+    let negative_bound_y = point.y <= canvasHalfHeight
+    let point_y = negative_bound_y ? point.y : point.y+20 
+    add_text(text, point.x-10, point_y, cos_dz * fixedTextWidth / 1.25, color)
   }
 }
 
-function draw_rotating_lines(dz, theta, vertices) {
+function draw_rotating_lines(dz, theta, vertices, z_offset) {
   // array of vertices to connect == lines
   for (const line of vertex_connections) {
     for (let i = 0; i < line.length; i++) {
@@ -165,11 +167,11 @@ function draw_rotating_lines(dz, theta, vertices) {
       let p1 = convertCubeCenteredCoordinatesToCanvasCoordinates(
           project_3d_to_2d(
               translate(
-                  rotate(start, theta), dz)));
+                  rotate(start, theta), dz, z_offset)));
       let p2 = convertCubeCenteredCoordinatesToCanvasCoordinates(
           project_3d_to_2d(
               translate(
-                  rotate(end, theta), dz)));
+                  rotate(end, theta), dz, z_offset)));
       draw_line(p1, p2, line_pixels_width, LINES_FOREGROUND)
     }
   }

@@ -6,6 +6,7 @@ const context = canvas.getContext("2d")
 console.log(context)
 
 const canvasHalfWidth = canvas.width / 2
+const canvasHalfHeight = canvas.height / 2
 
 const BACKGROUND = "#101010"
 const VERTICES_FOREGROUND = "#11FF50"
@@ -25,6 +26,7 @@ const legend_left_margin = 680
 const DT_FPS = 0.0125
 const rotation_factor = 1.5
 
+let square_width = -0.625
 let dz = -2
 let theta = 0
 let rotationDirection = -1 // positive direction
@@ -40,26 +42,25 @@ window.onload = function () {
   window.addEventListener('keydown', function (event) {
     switch (event.key) {
       case "ArrowUp":
+        clearInterval(interval)
+        setInterval(key_event_bounce_positive, timeout)
         square_width += .025;
-        intervalClearSet();
         break;
       case "ArrowDown":
+        clearInterval(interval)
+        setInterval(key_event_bounce_negative, timeout)
         square_width -= .025;
-        intervalClearSet();
         break;
-      case "ArrowLeft":
-        square_width += .025;
-        intervalClearSet();
-        break;
-      case "ArrowRight":
-        square_width -= .025;
-        intervalClearSet();
-        break;
-    }
-
-    function intervalClearSet() {
-      clearInterval(interval)
-      setInterval(key_event_bounce, timeout)
+      // case "ArrowLeft":
+      //   square_width += .025;
+      //   clearInterval(interval)
+      //   setInterval(key_event_bounce_positive, timeout)
+      //   break;
+      // case "ArrowRight":
+      //   square_width -= .025;
+      //   clearInterval(interval)
+      //   setInterval(key_event_bounce_negative, timeout)
+      //   break;
     }
   }, false);
 }
@@ -91,17 +92,24 @@ function bounce(prev_dz, prev_theta) {
   display_legend("inc", square_width.toPrecision(2), 125, 780 - "inc".length)
 }
 
-function key_event_bounce() {
+function key_event_bounce_negative() {
   let prev_theta = theta
-  // theta -= constRotation * square_width / 4 // rotation speed
-  theta += constRotation // rotation speed
+  theta -= constRotation * square_width / 40 // rotation speed
+  // theta += constRotation // rotation speed
+  bounce(dz, prev_theta)
+}
+
+function key_event_bounce_positive() {
+  let prev_theta = theta
+  theta += constRotation * square_width / 40 // rotation speed
+  // theta += constRotation // rotation speed
   bounce(dz, prev_theta)
 }
 
 function main_bounce() {
   let prev_dz = dz
   let prev_theta = theta
-  // dz += DT_FPS
+  dz += DT_FPS
   theta += constRotation // rotation speed
   bounce(prev_dz, prev_theta)
 }

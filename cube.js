@@ -1,10 +1,10 @@
-let square_width = .05
+let z_offset = 2
 
 function draw_square(cos_dz, theta, local_square_width) {
   let verticesUnitCube = get_vertices_unit_cube(local_square_width);
-  draw_rotating_lines(cos_dz, theta, verticesUnitCube)
-  draw_rotating_polygons(cos_dz, theta, verticesUnitCube)
-  // draw_rotating_vertices(cos_dz, theta, verticesUnitCube)
+  draw_rotating_lines(cos_dz, theta, verticesUnitCube, z_offset)
+  draw_rotating_polygons(cos_dz, theta, verticesUnitCube, z_offset)
+  // draw_rotating_vertices(cos_dz, theta, verticesUnitCube, z_offset)
 }
 
 function fillPolygon(points) {
