@@ -79,16 +79,16 @@ function cross(point2d_a, point2d_b) {
   
   // let min_x = 0;
   // let max_x = canvas.width
-  // let point2d_a_x_normal = ((point2d_a.x - min_x) / max_x - min_x)
+  // let point2d_a_x_nrmlzd = ((point2d_a.x - min_x) / (max_x - min_x))
   // simplifies to:
-  let point2d_a_x_normal = point2d_a.x / canvas.width
-  
+  let point2d_a_x_nrmlzd = point2d_a.x / canvas.width
   // and similar for the rest:
-  let point2d_a_y_normal = point2d_a.y / canvas.height
-  let point2d_b_x_normal = point2d_b.x / canvas.width
-  let point2d_b_y_normal = point2d_b.y / canvas.height
+  let point2d_a_y_nrmlzd = point2d_a.y / canvas.height
+  let point2d_b_x_nrmlzd = point2d_b.x / canvas.width
+  let point2d_b_y_nrmlzd = point2d_b.y / canvas.height
   
-  return point2d_a_x_normal * point2d_b_y_normal - point2d_a_y_normal * point2d_b_x_normal;
+  // vector cross product === surface normal
+  return point2d_a_x_nrmlzd * point2d_b_y_nrmlzd - point2d_a_y_nrmlzd * point2d_b_x_nrmlzd;
 }
 
 function context_fill_polygon(points, face) {
