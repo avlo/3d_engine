@@ -64,21 +64,21 @@ window.onload = function () {
   }, false);
 }
 
-function bounce(prev_dzz, prev_theta_a) {
-  let cos_dzz = Math.cos(dz);
-  let cos_prev_dzz = Math.cos(prev_dzz)
-  let cos_theta_a = Math.cos(theta).toPrecision(2);
-  let cos_prev_theta_a = Math.cos(prev_theta_a).toPrecision(2);
+function bounce(prev_dz, prev_theta) {
+  let cos_dz = Math.cos(dz);
+  let cos_prev_dz = Math.cos(prev_dz)
+  let cos_theta = Math.cos(theta).toPrecision(2);
+  let cos_prev_theta = Math.cos(prev_theta).toPrecision(2);
   clear()
 
   // legend
   display_legend(
-      display_legend_arrow("dz", cos_dzz, cos_prev_dzz),
-      cos_dzz.toPrecision(2),
+      display_legend_arrow("dz", cos_dz, cos_prev_dz),
+      cos_dz.toPrecision(2),
       legend_left_margin, 50)
   display_legend(
-      display_legend_arrow(String.fromCharCode(0x0398), cos_theta_a, cos_prev_theta_a),
-      cos_theta_a,
+      display_legend_arrow(String.fromCharCode(0x0398), cos_theta, cos_prev_theta),
+      cos_theta,
       legend_left_margin, 100)
   display_legend("iter", iter++, 15, 780 - "iter".length)
 
@@ -87,20 +87,21 @@ function bounce(prev_dzz, prev_theta_a) {
   // draw_lines(data_single_lines, point_pixels_width)
 
   // draw square
-  draw_square(cos_dzz, theta, square_width);
+  draw_square(cos_dz, theta, square_width);
   display_legend("inc", square_width.toPrecision(2), 125, 780 - "inc".length)
 }
 
 function key_event_bounce() {
   let prev_theta = theta
-  theta -= constRotation * square_width / 4 // rotation speed
+  // theta -= constRotation * square_width / 4 // rotation speed
+  theta += constRotation // rotation speed
   bounce(dz, prev_theta)
 }
 
 function main_bounce() {
   let prev_dz = dz
   let prev_theta = theta
-  dz += DT_FPS
+  // dz += DT_FPS
   theta += constRotation // rotation speed
   bounce(prev_dz, prev_theta)
 }

@@ -70,36 +70,53 @@ function rotate({x, y, z}, theta) {
 }
 
 function translate({x, y, z}, dz) {
-  // return {x, y, z: -z + dz}
-  return {x, y, z: -z + .1}
+  return {x, y, z: -z + dz}
+  // return {x, y, z: -z + .1}
 }
 
-const hex2rgb = (hex) => {
-  return [
-    parseInt(hex.slice(1, 3), 16),
-    parseInt(hex.slice(3, 5), 16),
-    parseInt(hex.slice(5, 7), 16)]
-}
-
-const rgb2hex = (r, g, b) => {
-  return '#' + (0x1000000 + ((r << 16) | (g << 8) | b)).toString(16).toUpperCase().slice(1) // #0080c0
-}
-
-function shift_color(css_color) {
-  let rgb = hex2rgb(css_color);
-  // return rgb2hex(rgb[1], rgb[2], rgb[0])
-  return rgb2hex(rgb[0] >> 2, rgb[1] >> 2, rgb[2])
+function cross(point2d_a, point2d_b) {
+  // normalize fxn: (x - min(x)) / (max(x) - min(x))
+  
+  // let min_x = 0;
+  // let max_x = canvas.width
+  // let point2d_a_x_normal = ((point2d_a.x - min_x) / max_x - min_x)
+  // simplifies to:
+  let point2d_a_x_normal = point2d_a.x / canvas.width
+  
+  // and similar for the rest:
+  let point2d_a_y_normal = point2d_a.y / canvas.height
+  let point2d_b_x_normal = point2d_b.x / canvas.width
+  let point2d_b_y_normal = point2d_b.y / canvas.height
+  
+  return point2d_a_x_normal * point2d_b_y_normal - point2d_a_y_normal * point2d_b_x_normal;
 }
 
 function context_fill_polygon(points, face) {
+
+  let point_a_xy = {
+    x: points[face.xy[0]].toPrecision(2),
+    y: points[face.xy[1]].toPrecision(2)
+  }
+
+  let point_b_xy = {
+    x: points[face.xy[2]].toPrecision(2),
+    y: points[face.xy[3]].toPrecision(2)
+  }
+
+  // if surface normal not in camera direction, just return (don't draw polygon)
+  if (cross(point_a_xy, point_b_xy) >= 0)
+    return
+
   context.fillStyle = face.color; // any css color
   context.font = 50 + "px monospace";
 
-  context.fillText(face.color, 10, face.y_text_coord, 100)
+  // context.fillText(point_a_xy.x, 10, 50, 100)
+  // context.fillText(point_a_xy.y, 10, 100, 100)
+  // context.fillText(cross1, 10, face.y_text_coord, 100)
   context.beginPath();
   context.moveTo(points[face.xy[0]], points[face.xy[1]]);
   for (let i = 2; i < face.xy.length; i += 2) {
-      context.lineTo(points[face.xy[i]], points[face.xy[i+1]]);
+    context.lineTo(points[face.xy[i]], points[face.xy[i + 1]]);
   }
   context.closePath();
   context.fill();
@@ -196,4 +213,21 @@ function display_legend(key, value, x_pos, y_pos) {
 function display_legend_arrow(label, dz, prev_dz) {
   let incrementing = prev_dz - dz <= 0;
   return label + " " + (incrementing ? upArrow : downArrow)
+}
+
+const hex2rgb = (hex) => {
+  return [
+    parseInt(hex.slice(1, 3), 16),
+    parseInt(hex.slice(3, 5), 16),
+    parseInt(hex.slice(5, 7), 16)]
+}
+
+const rgb2hex = (r, g, b) => {
+  return '#' + (0x1000000 + ((r << 16) | (g << 8) | b)).toString(16).toUpperCase().slice(1) // #0080c0
+}
+
+function shift_color(css_color) {
+  let rgb = hex2rgb(css_color);
+  // return rgb2hex(rgb[1], rgb[2], rgb[0])
+  return rgb2hex(rgb[0] >> 2, rgb[1] >> 2, rgb[2])
 }
