@@ -59,6 +59,17 @@ function project_3d_to_2d({x, y, z}) {
   }
 }
 
+function rotate_x({x, y, z}, theta) {
+  let cos_theta = Math.cos(theta);
+  let sin_theta = Math.sin(theta);
+  // return {x, y, z}
+  return {
+    x: x,
+    y: y * cos_theta - z * sin_theta,
+    z: y * sin_theta + z * cos_theta
+  }
+}
+
 function rotate_y({x, y, z}, theta) {
   let cos_theta = Math.cos(theta);
   let sin_theta = Math.sin(theta);
@@ -66,7 +77,6 @@ function rotate_y({x, y, z}, theta) {
   return {
     x: x * cos_theta - y * sin_theta,
     y: x * sin_theta + y * cos_theta,
-    // z: x * sin_theta + z * cos_theta
     z
   }
 }
@@ -77,9 +87,7 @@ function rotate_z({x, y, z}, theta) {
   return {
     x: x * cos_theta - z * sin_theta,
     y,
-    // y: x * sin_theta + z * cos_theta,
     z: x * sin_theta + z * cos_theta
-    // z
   }
 }
 
@@ -175,7 +183,7 @@ function context_fill_polygon(points, face) {
   context.fill();
 }
 
-function draw_rotating_polygons(dz, dy, theta, vertices, z_offset) {
+function draw_rotating_polygons(dz, dy, dx, theta, vertices, z_offset) {
   let points = []
   for (const vertex of vertices) {
     // draw vertices points
@@ -183,7 +191,11 @@ function draw_rotating_polygons(dz, dy, theta, vertices, z_offset) {
         project_3d_to_2d(
             translate( // {x, y, z}, dz, z_offset
                 rotate_z(
-                    rotate_y(vertex, theta), theta), dz, z_offset)))
+                    rotate_y(
+                        rotate_x(vertex, theta),
+                        theta),
+                    theta),
+                dz, z_offset)))
     points.push(point.x, point.y)
   }
 
@@ -212,7 +224,7 @@ function draw_rotating_vertices(dz, theta, vertices, z_offset) {
   }
 }
 
-function draw_rotating_lines(dz, dy, theta, vertices, z_offset) {
+function draw_rotating_lines(dz, dy, dx, theta, vertices, z_offset) {
   // array of vertices to connect == lines
   for (const line of vertex_connections) {
     for (let i = 0; i < line.length; i++) {
@@ -222,12 +234,18 @@ function draw_rotating_lines(dz, dy, theta, vertices, z_offset) {
           project_3d_to_2d(
               translate(
                   rotate_z(
-                      rotate_y(start, theta), theta), dz, z_offset)));
+                      rotate_y(
+                          rotate_x(start, theta),
+                          theta),
+                      theta), dz, z_offset)));
       let p2 = convertCubeCenteredCoordinatesToCanvasCoordinates(
           project_3d_to_2d(
               translate(
                   rotate_z(
-                      rotate_y(end, theta), theta), dz, z_offset)));
+                      rotate_y(
+                          rotate_x(end, theta),
+                          theta),
+                      theta), dz, z_offset)));
       draw_line(p1, p2, line_pixels_width, LINES_FOREGROUND)
     }
   }

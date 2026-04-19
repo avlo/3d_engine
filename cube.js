@@ -1,9 +1,9 @@
 let z_offset = 2
 
-function draw_square(cos_dz, cos_dy, theta, local_square_width) {
+function draw_square(cos_dz, cos_dy, cos_dx, theta, local_square_width) {
   let verticesUnitCube = get_vertices_unit_cube(local_square_width);
-  draw_rotating_lines(cos_dz, cos_dy, theta, verticesUnitCube, z_offset)
-  draw_rotating_polygons(cos_dz, cos_dy, theta, verticesUnitCube, z_offset)
+  draw_rotating_lines(cos_dz, cos_dy, cos_dx, theta, verticesUnitCube, z_offset)
+  draw_rotating_polygons(cos_dz, cos_dy, cos_dx, theta, verticesUnitCube, z_offset)
   // draw_rotating_vertices(cos_dz, theta, verticesUnitCube, z_offset)
 }
 
