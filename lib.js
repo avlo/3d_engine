@@ -138,8 +138,8 @@ function display_vertices_text(point_1, point_2, surface_normal_theta, y_text_co
       point_2.y
       + ")";
 
-  context.fillText("p1:" + p1_string, point_1.x, point_1.y)
-  context.fillText("p2:" + p2_string, point_2.x, point_2.y)
+  context.fillText("p1:" + p1_string, point_1.x-50, point_1.y)
+  context.fillText("p2:" + p2_string, point_2.x-50, point_2.y)
 
   context.fillText(formula, 100, y_text_coord)
 }
@@ -168,19 +168,20 @@ function context_fill_polygon(points, face) {
   }
 
   let surface_normal_theta = cross(point_1_xy, point_2_xy, point_3_xy).toPrecision(2);
-  // display_vertices_text(point_1_xy, point_3_xy, surface_normal_theta, face.y_text_coord)
+  display_vertices_text(point_1_xy, point_3_xy, surface_normal_theta, face.y_text_coord)
 
-  // if surface normal - camera normal < 90deg (not in camera direction), just return (don't draw polygon)
-  if (surface_normal_theta <= 0)
-    return
+  if (surface_normal_theta > 0)
+    paint_face(points, point_1x_face_idx_0, point_1y_face_idx_1, face)
+}
 
+function paint_face(points, point_1x_face_idx_0, point_1y_face_idx_1, face) {
   context.beginPath();
   context.moveTo(point_1x_face_idx_0, point_1y_face_idx_1);
   for (let i = 2; i < face.xy.length; i += 2) {
     context.lineTo(points[face.xy[i]], points[face.xy[i + 1]]);
   }
   context.closePath();
-  context.fill();
+  context.fill(); 
 }
 
 function draw_rotating_polygons(dz, dy, dx, theta, vertices, z_offset) {
