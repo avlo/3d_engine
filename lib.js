@@ -150,8 +150,7 @@ function context_fill_polygon(points, face) {
   // display_vertices_text(point_1_xy, point_3_xy, surface_normal_theta, face.y_text_coord)
 
   // if surface normal - camera normal < 90deg (not in camera direction), just return (don't draw polygon)
-  let positive_z_gt_0 = surface_normal_theta < 0;
-  if (positive_z_gt_0)
+  if (surface_normal_theta <= 0)
     return
   
   context.beginPath();
