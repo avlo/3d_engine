@@ -24,52 +24,62 @@ const fixedTextWidth = 50
 const legend_left_margin = 680
 
 const DT_FPS = 0.0125
-const rotation_factor = 1.5
+const rotation_factor = .0025
+const rotationDirection = -1 // positive direction
+const constRotation = rotationDirection * rotation_factor
 
 let square_width = -0.625
-let dz = -2
-let theta = 0
-let rotationDirection = -1 // positive direction
-let constRotation = rotationDirection * DT_FPS * rotation_factor
-let timeout = 10
+let dz = 0
+let theta_z_camera = 90
+let theta_z_surface = theta_z_camera
+let timeout = 1
 let iter = 0
 
 const upArrow = String.fromCharCode(0x2B06)
 const downArrow = String.fromCharCode(0x2193)
 
 window.onload = function () {
+  let increment = .05;
   let interval = setInterval(main_bounce, timeout);
   window.addEventListener('keydown', function (event) {
     switch (event.key) {
       case "ArrowUp":
+        dz -= DT_FPS
         clearInterval(interval)
-        setInterval(key_event_bounce_positive, timeout)
-        square_width += .025;
+        setInterval(bounce, timeout, dz, theta_z_surface)
         break;
       case "ArrowDown":
+        dz += DT_FPS
         clearInterval(interval)
-        setInterval(key_event_bounce_negative, timeout)
-        square_width -= .025;
+        setInterval(bounce, timeout, dz, theta_z_surface)
         break;
-      // case "ArrowLeft":
-      //   square_width += .025;
-      //   clearInterval(interval)
-      //   setInterval(key_event_bounce_positive, timeout)
-      //   break;
-      // case "ArrowRight":
-      //   square_width -= .025;
-      //   clearInterval(interval)
-      //   setInterval(key_event_bounce_negative, timeout)
-      //   break;
+      case "ArrowLeft":
+        theta_z_surface -= increment
+        clearInterval(interval)
+        setInterval(bounce, timeout, dz, theta_z_surface)
+        break;
+      case "ArrowRight":
+        theta_z_surface += increment
+        clearInterval(interval)
+        setInterval(bounce, timeout, dz, theta_z_surface)
+        break;
+      case "a":
+        clearInterval(interval)
+        interval = setInterval(bounce, timeout, dz, theta_z_surface)
+        break;
+      case "z":
+        clearInterval(interval)
+        interval = setInterval(main_bounce, timeout)
+        break;
     }
   }, false);
 }
 
-function bounce(prev_dz, prev_theta) {
+function bounce(prev_dz, prev_theta_z_surface) {
   let cos_dz = Math.cos(dz);
   let cos_prev_dz = Math.cos(prev_dz)
-  let cos_theta = Math.cos(theta).toPrecision(2);
-  let cos_prev_theta = Math.cos(prev_theta).toPrecision(2);
+  let cos_theta_z_surface = Math.cos(theta_z_surface).toPrecision(2);
+  let cos_prev_theta_z_surface = Math.cos(prev_theta_z_surface).toPrecision(2);
   clear()
 
   // legend
@@ -78,8 +88,8 @@ function bounce(prev_dz, prev_theta) {
       cos_dz.toPrecision(2),
       legend_left_margin, 50)
   display_legend(
-      display_legend_arrow(String.fromCharCode(0x0398), cos_theta, cos_prev_theta),
-      cos_theta,
+      display_legend_arrow(String.fromCharCode(0x0398), cos_theta_z_surface, cos_prev_theta_z_surface),
+      cos_theta_z_surface,
       legend_left_margin, 100)
   display_legend("iter", iter++, 15, 780 - "iter".length)
 
@@ -88,28 +98,14 @@ function bounce(prev_dz, prev_theta) {
   // draw_lines(data_single_lines, point_pixels_width)
 
   // draw square
-  draw_square(cos_dz, theta, square_width);
+  draw_square(cos_dz, theta_z_surface, square_width);
   display_legend("inc", square_width.toPrecision(2), 125, 780 - "inc".length)
-}
-
-function key_event_bounce_negative() {
-  let prev_theta = theta
-  theta -= constRotation * square_width / 40 // rotation speed
-  // theta += constRotation // rotation speed
-  bounce(dz, prev_theta)
-}
-
-function key_event_bounce_positive() {
-  let prev_theta = theta
-  theta += constRotation * square_width / 40 // rotation speed
-  // theta += constRotation // rotation speed
-  bounce(dz, prev_theta)
 }
 
 function main_bounce() {
   let prev_dz = dz
-  let prev_theta = theta
+  let prev_theta = theta_z_surface
   dz += DT_FPS
-  theta += constRotation // rotation speed
+  theta_z_surface += constRotation // rotation speed
   bounce(prev_dz, prev_theta)
 }

@@ -12,6 +12,7 @@ function add_text(text, x, y, textWidth, foreground) {
   context.font = textWidth + "px monospace";
   context.fillStyle = foreground
   context.fillText(text, x, y, textWidth)
+  // context.fillStyle = BACKGROUND
 }
 
 function draw_line(p1, p2, pixels_width, foreground) {
@@ -74,47 +75,87 @@ function translate({x, y, z}, dz, z_offset) {
   // return {x, y, z: -z + .1}
 }
 
-function cross(point2d_a, point2d_b) {
+function cross(point1, point2, point3) {
   // normalize fxn: (x - min(x)) / (max(x) - min(x))
-  
+
   // let min_x = 0;
   // let max_x = canvas.width
-  // let point2d_a_x_nrmlzd = ((point2d_a.x - min_x) / (max_x - min_x))
+  // let point1_x = ((point1.x - min_x) / (max_x - min_x))
   // simplifies to:
-  let point2d_a_x_nrmlzd = point2d_a.x / canvas.width
+  let point1_x = point1.x / canvas.width
   // and similar for the rest:
-  let point2d_a_y_nrmlzd = point2d_a.y / canvas.height
-  let point2d_b_x_nrmlzd = point2d_b.x / canvas.width
-  let point2d_b_y_nrmlzd = point2d_b.y / canvas.height
+  let point1_y = point1.y / canvas.height
+  let point2_x = point2.x / canvas.width
+  let point2_y = point2.y / canvas.height
+  let point3_x = point3.x / canvas.width
+  let point3_y = point3.y / canvas.height
+  
+  let line1_x1_x2 = point1_x - point2_x
+  let line1_x3_x2 = point3_x - point2_x
+
+  let line1_y1_y2 = point1_y - point2_y
+  let line1_y3_y2 = point3_y - point2_y
+  // let line1_x1_diff = line1_x1_x2 - line1_x2_x3;
   
   // vector cross product === surface normal
-  return point2d_a_x_nrmlzd * point2d_b_y_nrmlzd - point2d_a_y_nrmlzd * point2d_b_x_nrmlzd;
+  return line1_x1_x2 * line1_y3_y2 - line1_y1_y2 * line1_x3_x2
+}
+
+function display_vertices_text(point_1, point_2, surface_normal_theta, y_text_coord) {
+
+  let surface_normal_legend = surface_normal_theta > 0 ? `+${surface_normal_theta}` : surface_normal_theta;
+  context.fillText(surface_normal_legend, 10, y_text_coord, 100)
+  
+  let p1_string = point_1.x + "," + point_1.y
+  let p2_string = point_2.x + "," + point_2.y
+  let formula =
+      "p1(" + point_1.x +
+      "," +
+      + point_1.y +
+      ") p2(" + point_2.x +
+      "," +
+      point_2.y
+      + ")";
+
+  context.fillText("p1:"+p1_string, point_1.x, point_1.y)
+  context.fillText("p2:"+p2_string, point_2.x, point_2.y)
+  
+  context.fillText(formula, 100, y_text_coord)
 }
 
 function context_fill_polygon(points, face) {
-
-  let point_a_xy = {
-    x: points[face.xy[0]].toPrecision(2),
-    y: points[face.xy[1]].toPrecision(2)
-  }
-
-  let point_b_xy = {
-    x: points[face.xy[2]].toPrecision(2),
-    y: points[face.xy[3]].toPrecision(2)
-  }
-
-  // if surface normal not in camera direction, just return (don't draw polygon)
-  if (cross(point_a_xy, point_b_xy) >= 0)
-    return
-
   context.fillStyle = face.color; // any css color
-  context.font = 50 + "px monospace";
+  context.font = 20 + "px monospace";
+  let point_1x_face_idx_0 = points[face.xy[0]];
+  let point_1y_face_idx_1 = points[face.xy[1]];
+  let point_2x_face_idx_2 = points[face.xy[2]];
+  let point_2y_face_idx_3 = points[face.xy[3]];
+  let point_3x_face_idx_4 = points[face.xy[4]];
+  let point_3y_face_idx_5 = points[face.xy[5]];
+  
+  let point_1_xy = {
+    x: point_1x_face_idx_0.toPrecision(3),
+    y: point_1y_face_idx_1.toPrecision(3)
+  }
+  let point_2_xy = {
+    x: point_2x_face_idx_2.toPrecision(3),
+    y: point_2y_face_idx_3.toPrecision(3)
+  }
+  let point_3_xy = {
+    x: point_3x_face_idx_4.toPrecision(3),
+    y: point_3y_face_idx_5.toPrecision(3)
+  }
 
-  // context.fillText(point_a_xy.x, 10, 50, 100)
-  // context.fillText(point_a_xy.y, 10, 100, 100)
-  // context.fillText(cross1, 10, face.y_text_coord, 100)
+  let surface_normal_theta = cross(point_1_xy, point_2_xy, point_3_xy).toPrecision(2);
+  // display_vertices_text(point_1_xy, point_3_xy, surface_normal_theta, face.y_text_coord)
+
+  // if surface normal - camera normal < 90deg (not in camera direction), just return (don't draw polygon)
+  let positive_z_gt_0 = surface_normal_theta < 0;
+  if (positive_z_gt_0)
+    return
+  
   context.beginPath();
-  context.moveTo(points[face.xy[0]], points[face.xy[1]]);
+  context.moveTo(point_1x_face_idx_0, point_1y_face_idx_1);
   for (let i = 2; i < face.xy.length; i += 2) {
     context.lineTo(points[face.xy[i]], points[face.xy[i + 1]]);
   }
@@ -153,7 +194,7 @@ function draw_rotating_vertices(dz, theta, vertices, z_offset) {
     // draw corner labels
     let text = negative_bound_x ? "+" : "-"
     let negative_bound_y = point.y <= canvasHalfHeight
-    let point_y = negative_bound_y ? point.y : point.y+20 
+    let point_y = negative_bound_y ? point.y : point.y+20
     add_text(text, point.x-10, point_y, cos_dz * fixedTextWidth / 1.25, color)
   }
 }

@@ -13,26 +13,26 @@ function fillPolygon(points) {
     xy: [0, 1, 2, 3, 4, 5, 6, 7],
     // xy: [0, 1, 2, 3],
     color: "#EE2266",
-    y_text_coord: 50
+    y_text_coord: 20
   })
   // side 2
   context_fill_polygon(points, {
-    xy: [14, 15, 6, 7, 0, 1, 8, 9],
+    xy: [8, 9, 0, 1, 6, 7, 14, 15],
     color: "#2266EE",
-    y_text_coord: 100
+    y_text_coord: 40
   })
-  // // side 3
+  // // // side 3
   context_fill_polygon(points, {
     xy: [2, 3, 10, 11, 12, 13, 4, 5],
     color: "#EE6600",
-    y_text_coord: 150
+    y_text_coord: 60
   })
-  // // // side 4
+  // // // // side 4
   context_fill_polygon(points, {
-    // xy: [8, 9, 10, 11, 12, 13, 14, 15],
-    xy: [12, 13, 14, 15, 8, 9, 10, 11],
+    xy: [10, 11, 8, 9, 14, 15, 12, 13],
+    // xy: [12, 13, 14, 15, 8, 9, 10, 11],
     color: "#114400",
-    y_text_coord: 200
+    y_text_coord: 80
   })
   //
   // // top
