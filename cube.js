@@ -1,9 +1,9 @@
 let z_offset = 2
 
-function draw_square(cos_dz, theta, local_square_width) {
+function draw_square(cos_dz, cos_dy, theta, local_square_width) {
   let verticesUnitCube = get_vertices_unit_cube(local_square_width);
-  draw_rotating_lines(cos_dz, theta, verticesUnitCube, z_offset)
-  draw_rotating_polygons(cos_dz, theta, verticesUnitCube, z_offset)
+  draw_rotating_lines(cos_dz, cos_dy, theta, verticesUnitCube, z_offset)
+  draw_rotating_polygons(cos_dz, cos_dy, theta, verticesUnitCube, z_offset)
   // draw_rotating_vertices(cos_dz, theta, verticesUnitCube, z_offset)
 }
 
@@ -36,17 +36,17 @@ function fillPolygon(points) {
   })
   //
   // // top
-  // context_fill_polygon(points, {
-  //   xy: [4, 5, 6, 7, 14, 15, 12, 13],
-  //   color: "#3B0866",
-  //   y_text_coord: 250
-  // })
+  context_fill_polygon(points, {
+    xy: [4, 5, 12, 13, 14, 15,  6, 7],
+    color: "#3B0866",
+    y_text_coord: 100
+  })
   // // bottom
-  // context_fill_polygon(points, {
-  //   xy: [0, 1, 8, 9, 10, 11, 2, 3],
-  //   color: "#772211",
-  //   y_text_coord: 300
-  // })
+  context_fill_polygon(points, {
+    xy: [0, 1, 8, 9, 10, 11, 2, 3],
+    color: "#772211",
+    y_text_coord: 120
+  })
 }
 
 // translate point (x,y) from screen center coordinates (0, 0) to HTML canvas top left coordinates (0, w/h), i.e,

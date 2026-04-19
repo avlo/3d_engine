@@ -26,10 +26,11 @@ const legend_left_margin = 680
 const DT_FPS = 0.0125
 const rotation_factor = .0025
 const rotationDirection = -1 // positive direction
-const constRotation = rotationDirection * rotation_factor
+const constRotation = rotationDirection * rotation_factor * 4
 
 let square_width = -0.625
 let dz = 0
+let dy = 0
 let theta_z_camera = 90
 let theta_z_surface = theta_z_camera
 let timeout = 1
@@ -75,9 +76,13 @@ window.onload = function () {
   }, false);
 }
 
-function bounce(prev_dz, prev_theta_z_surface) {
+function bounce(prev_dz, prev_dy, prev_theta_z_surface) {
   let cos_dz = Math.cos(dz);
   let cos_prev_dz = Math.cos(prev_dz)
+
+  let cos_dy = Math.cos(dy);
+  let cos_prev_dy = Math.cos(prev_dy)
+  
   let cos_theta_z_surface = Math.cos(theta_z_surface).toPrecision(2);
   let cos_prev_theta_z_surface = Math.cos(prev_theta_z_surface).toPrecision(2);
   clear()
@@ -88,9 +93,13 @@ function bounce(prev_dz, prev_theta_z_surface) {
       cos_dz.toPrecision(2),
       legend_left_margin, 50)
   display_legend(
+      display_legend_arrow("dy", cos_dy, cos_prev_dy),
+      cos_dy.toPrecision(2),
+      legend_left_margin, 100)
+  display_legend(
       display_legend_arrow(String.fromCharCode(0x0398), cos_theta_z_surface, cos_prev_theta_z_surface),
       cos_theta_z_surface,
-      legend_left_margin, 100)
+      legend_left_margin, 150)
   display_legend("iter", iter++, 15, 780 - "iter".length)
 
   // draw general lines
@@ -98,14 +107,16 @@ function bounce(prev_dz, prev_theta_z_surface) {
   // draw_lines(data_single_lines, point_pixels_width)
 
   // draw square
-  draw_square(cos_dz, theta_z_surface, square_width);
+  draw_square(cos_dz, cos_dy, theta_z_surface, square_width);
   display_legend("inc", square_width.toPrecision(2), 125, 780 - "inc".length)
 }
 
 function main_bounce() {
   let prev_dz = dz
+  let prev_dy_dx = dy
   let prev_theta = theta_z_surface
   dz += DT_FPS
+  dy += DT_FPS
   theta_z_surface += constRotation // rotation speed
-  bounce(prev_dz, prev_theta)
+  bounce(prev_dz, prev_dy_dx, prev_theta)
 }
