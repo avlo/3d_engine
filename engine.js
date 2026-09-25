@@ -36,13 +36,13 @@ let theta_z_camera = 90
 let theta_z_surface = theta_z_camera
 let timeout = 1
 let iter = 0
+let increment = .05;
+let interval = setInterval(bounce_entrypoint, timeout);
 
 const upArrow = String.fromCharCode(0x2B06)
 const downArrow = String.fromCharCode(0x2193)
 
 window.onload = function () {
-  let increment = .05;
-  let interval = setInterval(main_bounce, timeout);
   window.addEventListener('keydown', function (event) {
     switch (event.key) {
       case "ArrowUp":
@@ -71,13 +71,18 @@ window.onload = function () {
         break;
       case "z":
         clearInterval(interval)
-        interval = setInterval(main_bounce, timeout)
+        interval = setInterval(bounce_entrypoint, timeout)
         break;
     }
   }, false);
 }
 
-function bounce(prev_dz, prev_dy, prev_dx, prev_theta_z_surface) {
+function bounce(
+    prev_dz,
+    prev_dy,
+    prev_dx,
+    prev_theta_z_surface) {
+  
   let cos_dx = Math.cos(dx);
   let cos_prev_dx = Math.cos(prev_dx)
   
@@ -92,23 +97,18 @@ function bounce(prev_dz, prev_dy, prev_dx, prev_theta_z_surface) {
   clear()
 
   // legend
-  display_legend(
-      display_legend_arrow("dx", cos_dx, cos_prev_dx),
-      cos_dy.toPrecision(2),
-      legend_left_margin, 50)
-  display_legend(
-      display_legend_arrow("dy", cos_dy, cos_prev_dy),
-      cos_dy.toPrecision(2),
-      legend_left_margin, 100)
-  display_legend(
-      display_legend_arrow("dz", cos_dz, cos_prev_dz),
-      cos_dz.toPrecision(2),
-      legend_left_margin, 150)
-  display_legend(
-      display_legend_arrow(String.fromCharCode(0x0398), cos_theta_z_surface, cos_prev_theta_z_surface),
+  do_legend(
+      cos_dx,
+      cos_prev_dx,
+      
+      cos_dy,
+      cos_prev_dy,
+      
+      cos_dz,
+      cos_prev_dz,
+      
       cos_theta_z_surface,
-      legend_left_margin, 200)
-  display_legend("iter", iter++, 15, 780 - "iter".length)
+      cos_prev_theta_z_surface);
 
   // draw general lines
   // draw_lines(generateRandomLines(10), dim_line_width)
@@ -119,7 +119,7 @@ function bounce(prev_dz, prev_dy, prev_dx, prev_theta_z_surface) {
   display_legend("inc", square_width.toPrecision(2), 125, 780 - "inc".length)
 }
 
-function main_bounce() {
+function bounce_entrypoint() {
   let prev_dx = dx
   let prev_dy = dy
   let prev_dz = dz

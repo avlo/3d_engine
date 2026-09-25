@@ -1,4 +1,4 @@
-let z_offset = 2
+ let z_offset = 2
 
 function draw_square(cos_dz, cos_dy, cos_dx, theta, local_square_width) {
   let verticesUnitCube = get_vertices_unit_cube(local_square_width);

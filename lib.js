@@ -168,7 +168,7 @@ function context_fill_polygon(points, face) {
   }
 
   let surface_normal_theta = cross(point_1_xy, point_2_xy, point_3_xy).toPrecision(2);
-  display_vertices_text(point_1_xy, point_3_xy, surface_normal_theta, face.y_text_coord)
+  // display_vertices_text(point_1_xy, point_3_xy, surface_normal_theta, face.y_text_coord)
 
   if (surface_normal_theta > 0)
     paint_face(points, point_1x_face_idx_0, point_1y_face_idx_1, face)
@@ -275,21 +275,6 @@ function draw_lines(lines, line_width) {
       }, line_width, color)
     }
   }
-}
-
-function display_legend(key, value, x_pos, y_pos) {
-  add_text(key + " = ", x_pos, y_pos, fixedTextWidth, LINES_FOREGROUND)
-  let theta_precision = value;
-  add_text(
-      theta_precision,
-      x_pos + 50, y_pos,
-      fixedTextWidth,
-      theta_precision <= 0 ? VERTICES_TEXT : VERTICES_FOREGROUND)
-}
-
-function display_legend_arrow(label, dz, prev_dz) {
-  let incrementing = prev_dz - dz <= 0;
-  return label + " " + (incrementing ? upArrow : downArrow)
 }
 
 const hex2rgb = (hex) => {
