@@ -97,18 +97,7 @@ function bounce(
   clear()
 
   // legend
-  do_legend(
-      cos_dx,
-      cos_prev_dx,
-      
-      cos_dy,
-      cos_prev_dy,
-      
-      cos_dz,
-      cos_prev_dz,
-      
-      cos_theta_z_surface,
-      cos_prev_theta_z_surface);
+  // display_legend(cos_dx, cos_prev_dx, cos_dy, cos_prev_dy, cos_dz, cos_prev_dz, cos_theta_z_surface, cos_prev_theta_z_surface);
 
   // draw general lines
   // draw_lines(generateRandomLines(10), dim_line_width)
@@ -116,7 +105,6 @@ function bounce(
 
   // draw square
   draw_cube(cos_dz, cos_dy, cos_dx, theta_z_surface, square_width);
-  display_legend("inc", square_width.toPrecision(2), 125, 780 - "inc".length)
 }
 
 function bounce_entrypoint() {
