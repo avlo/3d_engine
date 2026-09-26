@@ -1,6 +1,6 @@
  let z_offset = 2
 
-function draw_square(cos_dz, cos_dy, cos_dx, theta, local_square_width) {
+function draw_cube(cos_dz, cos_dy, cos_dx, theta, local_square_width) {
   let verticesUnitCube = get_vertices_unit_cube(local_square_width);
   draw_rotating_lines(cos_dz, cos_dy, cos_dx, theta, verticesUnitCube, z_offset)
   draw_rotating_polygons(cos_dz, cos_dy, cos_dx, theta, verticesUnitCube, z_offset)
@@ -9,12 +9,12 @@ function draw_square(cos_dz, cos_dy, cos_dx, theta, local_square_width) {
 
 function fillPolygon(points) {
   // side 1
-  // context_fill_polygon(points, {
-  //   xy: [0, 1, 2, 3, 4, 5, 6, 7],
-  //   // xy: [0, 1, 2, 3],
-  //   color: "#EE2266",
-  //   y_text_coord: 20
-  // })
+  context_fill_polygon(points, {
+    xy: [0, 1, 2, 3, 4, 5, 6, 7],
+    // xy: [0, 1, 2, 3],
+    color: "#EE2266",
+    y_text_coord: 20
+  })
   // side 2
   context_fill_polygon(points, {
     xy: [8, 9, 0, 1, 6, 7, 14, 15],

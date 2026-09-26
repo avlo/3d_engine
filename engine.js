@@ -115,7 +115,7 @@ function bounce(
   // draw_lines(data_single_lines, point_pixels_width)
 
   // draw square
-  draw_square(cos_dz, cos_dy, cos_dx, theta_z_surface, square_width);
+  draw_cube(cos_dz, cos_dy, cos_dx, theta_z_surface, square_width);
   display_legend("inc", square_width.toPrecision(2), 125, 780 - "inc".length)
 }
 
