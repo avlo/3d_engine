@@ -168,7 +168,7 @@ function context_fill_polygon(points, face) {
   }
 
   let surface_normal_theta = cross(point_1_xy, point_2_xy, point_3_xy).toPrecision(2);
-  // display_vertices_text(point_1_xy, point_3_xy, surface_normal_theta, face.y_text_coord)
+  display_vertices_text(point_1_xy, point_3_xy, surface_normal_theta, face.y_text_coord)
 
   if (surface_normal_theta > 0)
     paint_face(points, point_1x_face_idx_0, point_1y_face_idx_1, face)

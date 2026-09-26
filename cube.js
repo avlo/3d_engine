@@ -10,26 +10,26 @@ function draw_cube(cos_dz, cos_dy, cos_dx, theta, local_square_width) {
 function fillPolygon(points) {
   // side 1
   context_fill_polygon(points, {
-    xy: [0, 1, 2, 3, 4, 5, 6, 7],
+    xy: [4, 5, 6, 7, 2, 3, 0, 1],
     // xy: [0, 1, 2, 3],
     color: "#EE2266",
     y_text_coord: 20
   })
   // side 2
   context_fill_polygon(points, {
-    xy: [8, 9, 0, 1, 6, 7, 14, 15],
+    xy: [0, 1, 8, 9, 12, 13, 4, 5],
     color: "#2266EE",
     y_text_coord: 40
   })
   // // // side 3
   context_fill_polygon(points, {
-    xy: [2, 3, 10, 11, 12, 13, 4, 5],
+    xy: [10, 11, 2, 3, 6, 7, 14, 15],
     color: "#EE6600",
     y_text_coord: 60
   })
   // // // // side 4
   context_fill_polygon(points, {
-    xy: [10, 11, 8, 9, 14, 15, 12, 13],
+    xy: [14, 15, 12, 13, 8, 9, 10, 11],
     // xy: [12, 13, 14, 15, 8, 9, 10, 11],
     color: "#114400",
     y_text_coord: 80
@@ -43,7 +43,7 @@ function fillPolygon(points) {
   })
   // // bottom
   context_fill_polygon(points, {
-    xy: [0, 1, 8, 9, 10, 11, 2, 3],
+    xy: [8, 9, 0, 1, 2, 3, 10, 11],
     color: "#772211",
     y_text_coord: 120
   })
@@ -71,25 +71,25 @@ function get_vertices_unit_cube(local_square_size) {
 
   // x, y, z coords relative to center of unit cube
   return [
-    {x: neg, y: pos, z: pos}, // 0
-    {x: pos, y: pos, z: pos}, // 1
-    {x: pos, y: neg, z: pos}, // 2
-    {x: neg, y: neg, z: pos}, // 3
-
-    {x: neg, y: pos, z: neg}, // 4 =  8,  9
-    {x: pos, y: pos, z: neg}, // 5 = 10, 11
-    {x: pos, y: neg, z: neg}, // 6 = 12, 13
-    {x: neg, y: neg, z: neg}  // 7 = 14, 15
+    {x: pos, y: pos, z: pos} // 1
+    , {x: neg, y: pos, z: pos} // 0
+    , {x: pos, y: neg, z: pos} // 5
+    , {x: neg, y: neg, z: pos} // 4
+    //
+    , {x: pos, y: pos, z: neg} // 3 = 10, 11
+    , {x: neg, y: pos, z: neg} // 2 =  8,  9
+    , {x: pos, y: neg, z: neg} // 7 = 12, 13
+    , {x: neg, y: neg, z: neg}  // 6 = 14, 15
   ]
 }
 
 const vertex_connections = [
-  [0, 1], [0, 3], [0, 4], // 0
-  [1, 2], [1, 5], // 1
+  [0, 1], [0, 2], [0, 4], // 0
+  [1, 3], [1, 5], // 1
   [2, 3], [2, 6], // 2
   [3, 7], // 3
-  [4, 5], [4, 7], // 4
-  [5, 6], // 5
+  [4, 5], [4, 6], // 4
+  [5, 7], // 5
   [6, 7]  // 6
   // 7
 ]
