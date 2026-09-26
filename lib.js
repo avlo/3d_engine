@@ -122,7 +122,7 @@ function cross(point1, point2, point3) {
   return line1_x1_x2 * line1_y3_y2 - line1_y1_y2 * line1_x3_x2
 }
 
-function display_vertices_text(point_1, point_2, surface_normal_theta, y_text_coord) {
+function display_vertices_coordinates(point_1, point_2, surface_normal_theta, y_text_coord) {
 
   let surface_normal_legend = surface_normal_theta > 0 ? `+${surface_normal_theta}` : surface_normal_theta;
   context.fillText(surface_normal_legend, 10, y_text_coord, 100)
@@ -168,7 +168,7 @@ function context_fill_polygon(points, face) {
   }
 
   let surface_normal_theta = cross(point_1_xy, point_2_xy, point_3_xy).toPrecision(2);
-  display_vertices_text(point_1_xy, point_3_xy, surface_normal_theta, face.y_text_coord)
+  display_vertices_coordinates(point_1_xy, point_3_xy, surface_normal_theta, face.y_text_coord)
 
   if (surface_normal_theta > 0)
     paint_face(points, point_1x_face_idx_0, point_1y_face_idx_1, face)
