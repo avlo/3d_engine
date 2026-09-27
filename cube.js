@@ -1,69 +1,95 @@
- let z_offset = 2
+let z_offset = 2
 
 function draw_cube(cos_dz, cos_dy, cos_dx, theta, local_square_width) {
   let verticesUnitCube = get_vertices_unit_cube(local_square_width);
   draw_rotating_lines(cos_dz, cos_dy, cos_dx, theta, verticesUnitCube, z_offset)
-  // draw_rotating_polygons(cos_dz, cos_dy, cos_dx, theta, verticesUnitCube, z_offset)
+  draw_rotating_polygons(cos_dz, cos_dy, cos_dx, theta, verticesUnitCube, z_offset)
   // draw_rotating_vertices(cos_dz, theta, verticesUnitCube, z_offset)
 }
 
 function fillPolygon(points) {
-  top_left_x = 0;
-  top_left_y = 1;
+  let vertex_0 = { x: 0, y : 1 }
+  let vertex_1 = { x: 2 , y: 3 }
+  let vertex_2 = { x: 4 , y: 5 }
+  let vertex_3 = { x: 6 , y: 7 }
+  let vertex_4 = { x: 8 , y: 9 }
+  let vertex_5 = { x: 10 , y: 11 }
+  let vertex_6 = { x: 12 , y: 13 }
+  let vertex_7 = { x: 14 , y: 15 }
 
-  bottom_left_x = 2;
-  bottom_left_y = 3;
-
-  bottom_right_x = 4;
-  bottom_right_y = 5;
-
-  top_right_x = 6;
-  top_right_y = 7;
-  
   // side 1
+  let y_text_coord_val = 0;
   context_fill_polygon(points, {
     xy: [
-      top_left_x, top_left_y,
-      bottom_left_x, bottom_left_y,
-      bottom_right_x, bottom_right_y,
-      top_right_x, top_right_y
+      vertex_0.x, vertex_0.y,
+      vertex_1.x, vertex_1.y,
+      vertex_2.x, vertex_2.y,
+      vertex_3.x, vertex_3.y,
     ],
-    // xy: [0, 1, 2, 3],
-    color: "#EE2266",
-    y_text_coord: 20
+    color_idx: "#EE2266",
+    y_text_coord: y_text_coord_val+=20
   })
+
   // side 2
-  // context_fill_polygon(points, {
-  //   xy: [0, 1, 8, 9, 12, 13, 4, 5],
-  //   color: "#2266EE",
-  //   y_text_coord: 40
-  // })
+  context_fill_polygon(points, {
+    xy: [
+      vertex_3.x, vertex_3.y,
+      vertex_2.x, vertex_2.y,
+      vertex_5.x, vertex_5.y,
+      vertex_4.x, vertex_4.y,
+    ],
+    color: "#2266EE",
+    y_text_coord: y_text_coord_val+=20
+  })
+  
   // // // // side 3
-  // context_fill_polygon(points, {
-  //   xy: [10, 11, 2, 3, 6, 7, 14, 15],
-  //   color: "#EE6600",
-  //   y_text_coord: 60
-  // })
+  context_fill_polygon(points, {
+    xy: [
+      vertex_4.x, vertex_4.y,
+      vertex_5.x, vertex_5.y,
+      vertex_6.x, vertex_6.y,
+      vertex_7.x, vertex_7.y,
+    ],
+    color: "#EE6600",
+    y_text_coord: y_text_coord_val+=20
+  })
+  
   // // // // // side 4
-  // context_fill_polygon(points, {
-  //   xy: [14, 15, 12, 13, 8, 9, 10, 11],
-  //   // xy: [12, 13, 14, 15, 8, 9, 10, 11],
-  //   color: "#114400",
-  //   y_text_coord: 80
-  // })
+  context_fill_polygon(points, {
+    xy: [
+      vertex_7.x, vertex_7.y,
+      vertex_6.x, vertex_6.y,
+      vertex_1.x, vertex_1.y,
+      vertex_0.x, vertex_0.y,
+    ],
+    color: "#114400",
+    y_text_coord: y_text_coord_val+=20
+  })
+  
   // //
   // // // top
-  // context_fill_polygon(points, {
-  //   xy: [4, 5, 12, 13, 14, 15,  6, 7],
-  //   color: "#3B0866",
-  //   y_text_coord: 100
-  // })
+  context_fill_polygon(points, {
+    xy: [
+      vertex_0.x, vertex_0.y,
+      vertex_3.x, vertex_3.y,
+      vertex_4.x, vertex_4.y,
+      vertex_7.x, vertex_7.y,
+    ],
+    color: "#3B0866",
+    y_text_coord: 100
+  })
+  
   // // // bottom
-  // context_fill_polygon(points, {
-  //   xy: [8, 9, 0, 1, 2, 3, 10, 11],
-  //   color: "#772211",
-  //   y_text_coord: 120
-  // })
+  context_fill_polygon(points, {
+    xy: [
+      vertex_2.x, vertex_2.y,
+      vertex_1.x, vertex_1.y,
+      vertex_6.x, vertex_6.y,
+      vertex_5.x, vertex_5.y,
+    ],
+    color: "#772211",
+    y_text_coord: 120
+  })
 }
 
 // translate point (x,y) from screen center coordinates (0, 0) to HTML canvas top left coordinates (0, w/h), i.e,
