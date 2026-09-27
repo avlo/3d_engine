@@ -193,7 +193,7 @@ function draw_rotating_polygons(dz, dy, dx, theta, vertices, z_offset) {
             translate( // {x, y, z}, dz, z_offset
                 rotate_z(
                     rotate_y(
-                        rotate_x(screen_coordinate, theta),
+                        rotate_x(vertex, theta),
                         theta),
                     theta),
                 dz, z_offset)))
