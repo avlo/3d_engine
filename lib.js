@@ -96,7 +96,7 @@ function translate({x, y, z}, dz, z_offset) {
   // return {x, y, z: -z + .1}
 }
 
-function cross(point1, point2, point3) {
+function cross_product_aka_surface_normal(point1, point2, point3) {
   // normalize fxn: (x - min(x)) / (max(x) - min(x))
 
   // let min_x = 0;
@@ -118,7 +118,7 @@ function cross(point1, point2, point3) {
   let line1_y3_y2 = point3_y - point2_y
   // let line1_x1_diff = line1_x1_x2 - line1_x2_x3;
 
-  // vector cross product === surface normal
+  // vector cross_product_aka_surface_normal product === surface normal
   return line1_x1_x2 * line1_y3_y2 - line1_y1_y2 * line1_x3_x2
 }
 
@@ -144,41 +144,41 @@ function display_vertices_coordinates(point_1, point_2, surface_normal_theta, y_
   context.fillText(formula, 100, y_text_coord)
 }
 
-function context_fill_polygon(points, face) {
-  context.fillStyle = face.color; // any css color
+function context_fill_polygon(vertices_array, polygon_surface) {
+  context.fillStyle = polygon_surface.color; // any css color
   context.font = 20 + "px monospace";
-  let point_1x_face_idx_0 = points[face.xy[0]];
-  let point_1y_face_idx_1 = points[face.xy[1]];
-  let point_2x_face_idx_2 = points[face.xy[2]];
-  let point_2y_face_idx_3 = points[face.xy[3]];
-  let point_3x_face_idx_4 = points[face.xy[4]];
-  let point_3y_face_idx_5 = points[face.xy[5]];
+  let point_1_x = vertices_array[polygon_surface.xy[0]];
+  let point_1_y = vertices_array[polygon_surface.xy[1]];
+  let point_2_x = vertices_array[polygon_surface.xy[2]];
+  let point_2_y = vertices_array[polygon_surface.xy[3]];
+  let point_3_x = vertices_array[polygon_surface.xy[4]];
+  let point_3_y = vertices_array[polygon_surface.xy[5]];
 
   let point_1_xy = {
-    x: point_1x_face_idx_0.toPrecision(3),
-    y: point_1y_face_idx_1.toPrecision(3)
+    x: point_1_x.toPrecision(3),
+    y: point_1_y.toPrecision(3)
   }
   let point_2_xy = {
-    x: point_2x_face_idx_2.toPrecision(3),
-    y: point_2y_face_idx_3.toPrecision(3)
+    x: point_2_x.toPrecision(3),
+    y: point_2_y.toPrecision(3)
   }
   let point_3_xy = {
-    x: point_3x_face_idx_4.toPrecision(3),
-    y: point_3y_face_idx_5.toPrecision(3)
+    x: point_3_x.toPrecision(3),
+    y: point_3_y.toPrecision(3)
   }
 
-  let surface_normal_theta = cross(point_1_xy, point_2_xy, point_3_xy).toPrecision(2);
-  // display_vertices_coordinates(point_1_xy, point_3_xy, surface_normal_theta, face.y_text_coord)
+  let surface_normal_theta = cross_product_aka_surface_normal(point_1_xy, point_2_xy, point_3_xy).toPrecision(2);
+  // display_vertices_coordinates(point_1_xy, point_3_xy, surface_normal_theta, polygon_surface.y_text_coord)
 
   if (surface_normal_theta > 0)
-    paint_face(points, point_1x_face_idx_0, point_1y_face_idx_1, face)
+    paint_polygon_surface(vertices_array, point_1_x, point_1_y, polygon_surface)
 }
 
-function paint_face(points, point_1x_face_idx_0, point_1y_face_idx_1, face) {
+function paint_polygon_surface(vertices_array, starting_coordinate_x, starting_coordinate_y, polygon_surface) {
   context.beginPath();
-  context.moveTo(point_1x_face_idx_0, point_1y_face_idx_1);
-  for (let i = 2; i < face.xy.length; i += 2) {
-    context.lineTo(points[face.xy[i]], points[face.xy[i + 1]]);
+  context.moveTo(starting_coordinate_x, starting_coordinate_y);
+  for (let i = 2; i < polygon_surface.xy.length; i += 2) {
+    context.lineTo(vertices_array[polygon_surface.xy[i]], vertices_array[polygon_surface.xy[i + 1]]);
   }
   context.closePath();
   context.fill(); 

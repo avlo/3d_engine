@@ -1,5 +1,4 @@
 let z_offset = 2
-let y_text_coord_val = 0;
 
 const vertex_0 = { x: 0 , y: 1 }
 const vertex_1 = { x: 2 , y: 3 }
@@ -49,7 +48,7 @@ function fillPolygon(vertices_array) {
       vertex_3.x, vertex_3.y,
     ],
     color: "#fAEE05",
-    y_text_coord: y_text_coord_val+=20
+    y_text_coord: 20
   })
 
   // side 2
@@ -61,7 +60,7 @@ function fillPolygon(vertices_array) {
       vertex_4.x, vertex_4.y,
     ],
     color: "#2266EE",
-    y_text_coord: y_text_coord_val+=20
+    y_text_coord: 40
   })
   
   // // // // side 3
@@ -73,7 +72,7 @@ function fillPolygon(vertices_array) {
       vertex_7.x, vertex_7.y,
     ],
     color: "#EE6600",
-    y_text_coord: y_text_coord_val+=20
+    y_text_coord: 60
   })
   
   // // // // // side 4
@@ -85,7 +84,7 @@ function fillPolygon(vertices_array) {
       vertex_0.x, vertex_0.y,
     ],
     color: "#59AD3C",
-    y_text_coord: y_text_coord_val+=20
+    y_text_coord: 80
   })
   
   // //
