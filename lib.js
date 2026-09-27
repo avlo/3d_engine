@@ -227,7 +227,7 @@ function draw_rotating_vertices(dz, theta, vertices, z_offset) {
 
 function draw_rotating_lines(dz, dy, dx, theta, vertices, z_offset) {
   // array of vertices to connect == lines
-  for (const line of vertex_connections) {
+  for (const line of cube_outline_lines) {
     for (let i = 0; i < line.length; i++) {
       const start = vertices[line[i]] // first vertex
       const end = vertices[line[(i + 1) % line.length]] // % == last vertex wrap around 

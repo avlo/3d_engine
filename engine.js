@@ -28,7 +28,7 @@ const rotation_factor = .0025
 const rotationDirection = -1 // positive direction
 const constRotation = rotationDirection * rotation_factor * 4
 
-let square_width = -0.625
+let square_width = 1 // -0.625
 let dx = 0
 let dy = 0
 let dz = 0
