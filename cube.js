@@ -39,9 +39,9 @@ function draw_cube(cos_dz, cos_dy, cos_dx, theta, local_square_width) {
   // draw_rotating_vertices(cos_dz, theta, verticesUnitCube, z_offset)
 }
 
-function fillPolygon(points) {
+function fillPolygon(vertices_array) {
   // side 1
-  context_fill_polygon(points, {
+  context_fill_polygon(vertices_array, {
     xy: [
       vertex_0.x, vertex_0.y,
       vertex_1.x, vertex_1.y,
@@ -53,7 +53,7 @@ function fillPolygon(points) {
   })
 
   // side 2
-  context_fill_polygon(points, {
+  context_fill_polygon(vertices_array, {
     xy: [
       vertex_3.x, vertex_3.y,
       vertex_2.x, vertex_2.y,
@@ -65,7 +65,7 @@ function fillPolygon(points) {
   })
   
   // // // // side 3
-  context_fill_polygon(points, {
+  context_fill_polygon(vertices_array, {
     xy: [
       vertex_4.x, vertex_4.y,
       vertex_5.x, vertex_5.y,
@@ -77,7 +77,7 @@ function fillPolygon(points) {
   })
   
   // // // // // side 4
-  context_fill_polygon(points, {
+  context_fill_polygon(vertices_array, {
     xy: [
       vertex_7.x, vertex_7.y,
       vertex_6.x, vertex_6.y,
@@ -90,7 +90,7 @@ function fillPolygon(points) {
   
   // //
   // // // top
-  context_fill_polygon(points, {
+  context_fill_polygon(vertices_array, {
     xy: [
       vertex_0.x, vertex_0.y,
       vertex_3.x, vertex_3.y,
@@ -102,7 +102,7 @@ function fillPolygon(points) {
   })
   
   // // // bottom
-  context_fill_polygon(points, {
+  context_fill_polygon(vertices_array, {
     xy: [
       vertex_2.x, vertex_2.y,
       vertex_1.x, vertex_1.y,

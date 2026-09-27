@@ -185,22 +185,22 @@ function paint_face(points, point_1x_face_idx_0, point_1y_face_idx_1, face) {
 }
 
 function draw_rotating_polygons(dz, dy, dx, theta, vertices, z_offset) {
-  let points = []
+  let vertices_array = []
   for (const vertex of vertices) {
-    // draw vertices points
-    let point = convertCubeCenteredCoordinatesToCanvasCoordinates(
+    // draw vertices array
+    let screen_coordinate = convertCubeCenteredCoordinatesToCanvasCoordinates(
         project_3d_to_2d(
             translate( // {x, y, z}, dz, z_offset
                 rotate_z(
                     rotate_y(
-                        rotate_x(vertex, theta),
+                        rotate_x(screen_coordinate, theta),
                         theta),
                     theta),
                 dz, z_offset)))
-    points.push(point.x, point.y)
+    vertices_array.push(screen_coordinate.x, screen_coordinate.y)
   }
 
-  fillPolygon(points)
+  fillPolygon(vertices_array)
 }
 
 function draw_rotating_vertices(dz, theta, vertices, z_offset) {
