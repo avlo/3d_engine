@@ -170,7 +170,10 @@ function context_fill_polygon(vertices_array, polygon_surface) {
   let surface_normal_theta = cross_product_aka_surface_normal(point_1_xy, point_2_xy, point_3_xy).toPrecision(2);
   if (display_vertices_coordinates_bool) {
     display_vertices_coordinates(point_1_xy, point_3_xy, surface_normal_theta, polygon_surface.y_text_coord)
-  }    
+  }
+
+  if (!display_polygons_bool)
+    return
 
   if (surface_normal_theta > 0)
     paint_polygon_surface(vertices_array, point_1_x, point_1_y, polygon_surface)
@@ -183,7 +186,7 @@ function paint_polygon_surface(vertices_array, starting_coordinate_x, starting_c
     context.lineTo(vertices_array[polygon_surface.xy[i]], vertices_array[polygon_surface.xy[i + 1]]);
   }
   context.closePath();
-  context.fill(); 
+  context.fill();
 }
 
 function draw_rotating_polygons(dz, dy, dx, theta, vertices, z_offset) {
