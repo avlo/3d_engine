@@ -2,8 +2,21 @@ console.log(canvas)
 canvas.width = 800
 canvas.height = 800
 
-const display_vertices_coordinates_bool = true
-const display_legend_bool = false
+let display_vertices_coordinates_bool = false
+let display_legend_bool = false
+
+const displayVerticesCoordinatesCheckbox = document.getElementById("display-vertices-coordinates")
+const displayLegendCheckbox = document.getElementById("display-legend")
+
+displayVerticesCoordinatesCheckbox.checked = display_vertices_coordinates_bool
+displayLegendCheckbox.checked = display_legend_bool
+
+displayVerticesCoordinatesCheckbox.addEventListener("change", function () {
+  display_vertices_coordinates_bool = displayVerticesCoordinatesCheckbox.checked
+})
+displayLegendCheckbox.addEventListener("change", function () {
+  display_legend_bool = displayLegendCheckbox.checked
+})
 
 const context = canvas.getContext("2d")
 console.log(context)
