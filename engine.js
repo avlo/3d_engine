@@ -4,18 +4,30 @@ canvas.height = 800
 
 let display_vertices_coordinates_bool = false
 let display_legend_bool = false
+let display_polygons_bool = true
+let display_wireframe_bool = true
 
 const displayVerticesCoordinatesCheckbox = document.getElementById("display-vertices-coordinates")
 const displayLegendCheckbox = document.getElementById("display-legend")
+const displayPolygonsCheckbox = document.getElementById("display-polygons")
+const displayWireframeCheckbox = document.getElementById("display-wireframe")
 
 displayVerticesCoordinatesCheckbox.checked = display_vertices_coordinates_bool
 displayLegendCheckbox.checked = display_legend_bool
+displayPolygonsCheckbox.checked = display_polygons_bool
+displayWireframeCheckbox.checked = display_wireframe_bool
 
 displayVerticesCoordinatesCheckbox.addEventListener("change", function () {
   display_vertices_coordinates_bool = displayVerticesCoordinatesCheckbox.checked
 })
 displayLegendCheckbox.addEventListener("change", function () {
   display_legend_bool = displayLegendCheckbox.checked
+})
+displayPolygonsCheckbox.addEventListener("change", function () {
+  display_polygons_bool = displayPolygonsCheckbox.checked
+})
+displayWireframeCheckbox.addEventListener("change", function () {
+  display_wireframe_bool = displayWireframeCheckbox.checked
 })
 
 const context = canvas.getContext("2d")

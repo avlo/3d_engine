@@ -33,8 +33,12 @@ const cube_outline_lines = [
 
 function draw_cube(cos_dz, cos_dy, cos_dx, theta, local_square_width) {
   let verticesUnitCube = get_vertices_unit_cube(local_square_width);
-  draw_rotating_lines(cos_dz, cos_dy, cos_dx, theta, verticesUnitCube, z_offset)
-  draw_rotating_polygons(cos_dz, cos_dy, cos_dx, theta, verticesUnitCube, z_offset)
+  if (display_wireframe_bool) {
+    draw_rotating_lines(cos_dz, cos_dy, cos_dx, theta, verticesUnitCube, z_offset)
+  }
+  if (display_polygons_bool) {
+    draw_rotating_polygons(cos_dz, cos_dy, cos_dx, theta, verticesUnitCube, z_offset)
+  }
   // if/when used, needs updating first -> draw_rotating_vertices(cos_dz, theta, verticesUnitCube, z_offset)
 }
 
