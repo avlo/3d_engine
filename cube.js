@@ -1,4 +1,4 @@
-let z_offset = 2
+let z_offset = 2.5
 
 const vertex_0 = { x: 0 , y: 1 }
 const vertex_1 = { x: 2 , y: 3 }
