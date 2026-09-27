@@ -97,7 +97,7 @@ function bounce(
   clear()
 
   // legend
-  display_legend(cos_dx, cos_prev_dx, cos_dy, cos_prev_dy, cos_dz, cos_prev_dz, cos_theta_z_surface, cos_prev_theta_z_surface);
+  // display_legend(cos_dx, cos_prev_dx, cos_dy, cos_prev_dy, cos_dz, cos_prev_dz, cos_theta_z_surface, cos_prev_theta_z_surface);
 
   // draw general lines
   // draw_lines(generateRandomLines(10), dim_line_width)
