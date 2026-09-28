@@ -2,16 +2,6 @@ console.log(canvas)
 canvas.width = 800
 canvas.height = 800
 
-tdl.require('tdl.buffers');
-tdl.require('tdl.fast');
-tdl.require('tdl.log');
-tdl.require('tdl.math');
-tdl.require('tdl.models');
-tdl.require('tdl.primitives');
-tdl.require('tdl.programs');
-tdl.require('tdl.textures');
-tdl.require('tdl.webgl');
-
 let display_vertices_coordinates_bool = false
 let display_legend_bool = false
 let display_polygons_bool = true
