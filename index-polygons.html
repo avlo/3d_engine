@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<fieldset>
+    <label>
+        <input id="display-vertices-coordinates" type="checkbox">
+        Vertex coordinates
+    </label>
+    <label>
+        <input id="display-legend" type="checkbox">
+        Legend
+    </label>
+    <label>
+        <input id="display-polygons" type="checkbox">
+        Polygons
+    </label>
+    <label>
+        <input id="display-wireframe" type="checkbox">
+        WireFrame
+    </label>
+</fieldset>
+<head>
+    <title>requires webservar start: python3 -m http.server 8080</title>
+</head>
+<canvas id="canvas"></canvas>
+<script src="jquery-3.7.1.min.js"></script>
+<script src="tdl/tdl-minified.js"></script>
+<script src="lib.js"></script>
+<script src="parse-obj.js"></script>
+<script src="engine-polygons.js"></script>
+<script src="lines.js"></script>
+<script src="polygon.js"></script>
+<script src="legend.js"></script>
