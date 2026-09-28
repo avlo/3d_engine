@@ -73,7 +73,7 @@ let gl = canvas.getContext("webgl");
 
 // FIREFOX:  about:config -> security.fileuri.strict_origin_policy
 
-$.get('utah_teapot_res_1.obj', function(data) {
+$.get('../data/utah_teapot_res_1.obj', function(data) {
   let teapotModel = parseOBJ(data);
   console.log(teapotModel.geometries.values())
 }, 'text');
