@@ -36,15 +36,6 @@ console.log(context)
 const canvasHalfWidth = canvas.width / 2
 const canvasHalfHeight = canvas.height / 2
 
-const YELLOW = "#fAEE05"
-const BLUE = "#2266EE"
-const ORANGE = "#EE6600"
-const GREEN = "#59AD3C"
-const PURPLE = "#3B0866"
-const RED_DARK = "#772211"
-const colors_array = [YELLOW, BLUE, ORANGE, GREEN, PURPLE, RED_DARK]
-const colors_array_literal = ["YELLOW", "BLUE", "ORANGE", "GREEN", "PURPLE", "RED_DARK"]
-
 const BACKGROUND = "#101010"
 const VERTICES_FOREGROUND = "#11FF50"
 const VERTICES_TEXT = "#996666"
@@ -119,13 +110,13 @@ function bounce(
     prev_dy,
     prev_dx,
     prev_theta_z_surface) {
-
+  
   let cos_dx = Math.cos(dx);
   let cos_prev_dx = Math.cos(prev_dx)
-
+  
   let cos_dy = Math.cos(dy);
   let cos_prev_dy = Math.cos(prev_dy)
-
+  
   let cos_dz = Math.cos(dz);
   let cos_prev_dz = Math.cos(prev_dz)
 
@@ -143,15 +134,14 @@ function bounce(
   // draw_lines(data_single_lines, point_pixels_width)
 
   // draw square
-  // draw_cube(cos_dz, cos_dy, cos_dx, theta_z_surface, square_width);
-  draw_object(cos_dz, cos_dy, cos_dx, theta_z_surface, object_face)
+  draw_cube(cos_dz, cos_dy, cos_dx, theta_z_surface, square_width);
 }
 
 function bounce_entrypoint() {
   let prev_dx = dx
   let prev_dy = dy
   let prev_dz = dz
-
+  
   let prev_theta = theta_z_surface
   dx += DT_FPS
   dy += DT_FPS
@@ -159,52 +149,3 @@ function bounce_entrypoint() {
   theta_z_surface += constRotation // rotation speed
   bounce(prev_dz, prev_dy, prev_dx, prev_theta)
 }
-
-const object_face = [
-    [-1.000000, -1.000000, -1.000000] // RED
-  , [ 1.000000, -1.000000, -1.000000] // YELLOW
-  , [ 1.000000,  1.000000, -1.000000] // BLUE
-  , [-1.000000,  1.000000, -1.000000] // GREEN
-  // , [-1.000000, -1.000000, 1.000000]
-  // , [1.000000, -1.000000, 1.000000]
-  // , [1.000000, 1.000000, 1.000000]
-  // , [-1.000000, 1.000000, 1.000000]
-];
-
-const object_cube =
-    [[0.5, -0.5, -0.5],
-      [0.5, 0.5, -0.5],
-      [0.5, 0.5, 0.5],
-      [0.5, -0.5, -0.5],
-      [0.5, 0.5, 0.5],
-      [0.5, -0.5, 0.5],
-      [-0.5, -0.5, -0.5],
-      [-0.5, -0.5, 0.5],
-      [-0.5, 0.5, 0.5],
-      [-0.5, -0.5, -0.5],
-      [-0.5, 0.5, 0.5],
-      [-0.5, 0.5, -0.5],
-      [-0.5, 0.5, -0.5],
-      [-0.5, 0.5, 0.5],
-      [0.5, 0.5, 0.5],
-      [-0.5, 0.5, -0.5],
-      [0.5, 0.5, 0.5],
-      [0.5, 0.5, -0.5],
-      [-0.5, -0.5, -0.5],
-      [0.5, -0.5, -0.5],
-      [0.5, -0.5, 0.5],
-      [-0.5, -0.5, -0.5],
-      [0.5, -0.5, 0.5],
-      [-0.5, -0.5, 0.5],
-      [-0.5, -0.5, 0.5],
-      [0.5, -0.5, 0.5],
-      [0.5, 0.5, 0.5],
-      [-0.5, -0.5, 0.5],
-      [0.5, 0.5, 0.5],
-      [-0.5, 0.5, 0.5],
-      [-0.5, -0.5, -0.5],
-      [-0.5, 0.5, -0.5],
-      [0.5, 0.5, -0.5],
-      [-0.5, -0.5, -0.5],
-      [0.5, 0.5, -0.5],
-      [0.5, -0.5, -0.5]];

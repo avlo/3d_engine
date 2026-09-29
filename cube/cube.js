@@ -1,35 +1,14 @@
 let z_offset = 2.5
 
-const vertex_0 = { x: 0 , y: 1 }
-const vertex_1 = { x: 2 , y: 3 }
-const vertex_2 = { x: 4 , y: 5 }
-const vertex_3 = { x: 6 , y: 7 }
-const vertex_4 = { x: 8 , y: 9 }
-const vertex_5 = { x: 10 , y: 11 }
-const vertex_6 = { x: 12 , y: 13 }
-const vertex_7 = { x: 14 , y: 15 }
+function draw_object(cos_dz, cos_dy, cos_dx, theta, verticesUnitCube) {
+  if (display_wireframe_bool) {
+    draw_rotating_line(cos_dz, cos_dy, cos_dx, theta, verticesUnitCube, z_offset)
+  }
 
-const cube_outline_lines = [
-  // front face
-    [vertex_0.x, vertex_0.y]  // front upper left   [0, 1]
-  , [vertex_0.y, vertex_1.x]  // front bottom left  [1, 2]
-  , [vertex_1.x, vertex_1.y]  // front bottom right [2, 3]
-  , [vertex_1.y, vertex_0.x]  // front upper right  [3, 0]
-
-  // rear face    
-  , [vertex_2.x, vertex_2.y]  // rear upper left    [4, 5]
-  , [vertex_2.y, vertex_3.x]  // rear bottom left   [5, 6]
-  , [vertex_3.x, vertex_3.y]  // rear bottom right  [6, 7]
-  , [vertex_3.y, vertex_2.x]  // rear upper right   [7, 4]
-
-  // top
-  , [vertex_3.x, vertex_0.y]  // [6, 1]
-  , [vertex_3.y, vertex_0.x]  // [7, 0]
-
-  // bottom
-  , [vertex_1.x, vertex_2.y]  // [2, 5]
-  , [vertex_2.x, vertex_1.y]  // [4, 3]    
-]
+  // draw_rotating_face(cos_dz, cos_dy, cos_dx, theta, verticesUnitCube, z_offset)
+  // draw_rotating_polygons(cos_dz, cos_dy, cos_dx, theta, verticesUnitCube, z_offset)
+  // if/when used, needs updating first -> draw_rotating_vertices(cos_dz, theta, verticesUnitCube, z_offset)
+}
 
 function draw_cube(cos_dz, cos_dy, cos_dx, theta, local_square_width) {
   let verticesUnitCube = get_vertices_unit_cube(local_square_width);
@@ -41,78 +20,16 @@ function draw_cube(cos_dz, cos_dy, cos_dx, theta, local_square_width) {
   // if/when used, needs updating first -> draw_rotating_vertices(cos_dz, theta, verticesUnitCube, z_offset)
 }
 
-function fillPolygon(vertices_array) {
+function fillFace(vertices_array, color) {
   // side 1
-  context_fill_polygon(vertices_array, {
-    xy: [
-      vertex_0.x, vertex_0.y,
-      vertex_1.x, vertex_1.y,
-      vertex_2.x, vertex_2.y,
-      vertex_3.x, vertex_3.y,
+  context_fill_face(vertices_array, {
+    xyz: [
+      vertex_0.x, vertex_0.y, vertex_0.z,
+      vertex_1.x, vertex_1.y, vertex_1.z,
+      vertex_2.x, vertex_2.y, vertex_1.z
     ],
-    color: "#fAEE05",
+    color: color,
     y_text_coord: 20
-  })
-
-  // side 2
-  context_fill_polygon(vertices_array, {
-    xy: [
-      vertex_3.x, vertex_3.y,
-      vertex_2.x, vertex_2.y,
-      vertex_5.x, vertex_5.y,
-      vertex_4.x, vertex_4.y,
-    ],
-    color: "#2266EE",
-    y_text_coord: 40
-  })
-  
-  // // // // side 3
-  context_fill_polygon(vertices_array, {
-    xy: [
-      vertex_4.x, vertex_4.y,
-      vertex_5.x, vertex_5.y,
-      vertex_6.x, vertex_6.y,
-      vertex_7.x, vertex_7.y,
-    ],
-    color: "#EE6600",
-    y_text_coord: 60
-  })
-  
-  // // // // // side 4
-  context_fill_polygon(vertices_array, {
-    xy: [
-      vertex_7.x, vertex_7.y,
-      vertex_6.x, vertex_6.y,
-      vertex_1.x, vertex_1.y,
-      vertex_0.x, vertex_0.y,
-    ],
-    color: "#59AD3C",
-    y_text_coord: 80
-  })
-  
-  // //
-  // // // top
-  context_fill_polygon(vertices_array, {
-    xy: [
-      vertex_0.x, vertex_0.y,
-      vertex_3.x, vertex_3.y,
-      vertex_4.x, vertex_4.y,
-      vertex_7.x, vertex_7.y,
-    ],
-    color: "#3B0866",
-    y_text_coord: 100
-  })
-  
-  // // // bottom
-  context_fill_polygon(vertices_array, {
-    xy: [
-      vertex_2.x, vertex_2.y,
-      vertex_1.x, vertex_1.y,
-      vertex_6.x, vertex_6.y,
-      vertex_5.x, vertex_5.y,
-    ],
-    color: "#772211",
-    y_text_coord: 120
   })
 }
 
