@@ -209,51 +209,54 @@ function draw_rotating_face(dz, dy, dx, theta, vertices, z_offset) {
 }
 
 function draw_rotating_line(dz, dy, dx, theta, vertices, z_offset) {
-  // array of vertices to connect == lines
   let lines = 4
   for (let i = 0; i < lines; i++) {
-    for (let j = 0; j < 3; j++) {
+    for (let j = 0; j < lines; j++) {
       let start = {
         x: vertices[j][0],
         y: vertices[j][1],
         z: vertices[j][2]
       }
-
       let end = {
-        x: vertices[(j + 1) % 3][0],
-        y: vertices[(j + 1) % 3][1],
-        z: vertices[(j + 1) % 3][2]
+        x: vertices[(j + 1) % lines][0],
+        y: vertices[(j + 1) % lines][1],
+        z: vertices[(j + 1) % lines][2]
       }
-      
-      let rotated_x = rotate_x(start, theta);
-      let rotated_y = rotate_y(rotated_x, theta);
-      let rotated_z = rotate_z(rotated_y, theta);
-      let translated = translate(rotated_z, dz, z_offset);
-      let projected_2d = project_3d_to_2d(translated);
-      let p1 = convertCubeCenteredCoordinatesToCanvasCoordinates(projected_2d);
-      
-      let p2 = convertCubeCenteredCoordinatesToCanvasCoordinates(
-          project_3d_to_2d(
-              translate(
-                  rotate_z(
-                      rotate_y(
-                          rotate_x(end, theta),
-                          theta),
-                      theta), dz, z_offset)));
-      draw_line(p1, p2, line_pixels_width, colors_array[j])
-      // console.debug("color: " + colors_array_literal[j])
-      // console.debug("")
+      rotate_translate_project(start, theta, dz, z_offset, end, j);
     }
   }
 }
 
-// function draw_rotating_lines_DEL(dz, dy, dx, theta, vertices, z_offset) {
-//   // array of vertices to connect == lines
-//   for (const line of cube_outline_lines) {
-//     for (let i = 0; i < line.length; i++) {
-//       const start = vertices[line[i]] // first vertex
-//       const end = vertices[line[(i + 1) % line.length]] // % == last vertex wrap around 
-// }
+function draw_rotating_lines_DEL(dz, dy, dx, theta, vertices, z_offset) {
+  // array of vertices to connect == lines
+  for (const line of cube_outline_lines) {
+    for (let i = 0; i < line.length; i++) {
+      const start = vertices[line[i]] // first vertex
+      const end = vertices[line[(i + 1) % line.length]] // % == last vertex wrap around
+    }
+  }
+}
+
+function rotate_translate_project(start, theta, dz, z_offset, end, j) {
+  let rotated_x = rotate_x(start, theta);
+  let rotated_y = rotate_y(rotated_x, theta);
+  let rotated_z = rotate_z(rotated_y, theta);
+  let translated = translate(rotated_z, dz, z_offset);
+  let projected_2d = project_3d_to_2d(translated);
+  let p1 = convertCubeCenteredCoordinatesToCanvasCoordinates(projected_2d);
+
+  let p2 = convertCubeCenteredCoordinatesToCanvasCoordinates(
+      project_3d_to_2d(
+          translate(
+              rotate_z(
+                  rotate_y(
+                      rotate_x(end, theta),
+                      theta),
+                  theta), dz, z_offset)));
+  draw_line(p1, p2, line_pixels_width, colors_array[j])
+  // console.debug("color: " + colors_array_literal[j])
+  // console.debug("")
+}
 
 function draw_lines(lines, line_width) {
   let colors = [VERTICES_FOREGROUND, LINES_FOREGROUND]
