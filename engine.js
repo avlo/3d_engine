@@ -9,7 +9,7 @@ const GREEN = "#59AD3C"
 const PURPLE = "#3B0866"
 const RED_DARK = "#772211"
 const colors_array = [
-  YELLOW, 
+  YELLOW,
   // YELLOW,
   BLUE,
   // BLUE,
@@ -27,7 +27,7 @@ const colors_array_literal = ["YELLOW", "BLUE", "ORANGE", "GREEN", "PURPLE", "RE
 let display_vertices_coordinates_bool = false
 let display_legend_bool = false
 let display_polygons_bool = true
-let display_wireframe_bool = false
+let display_wireframe_bool = true
 
 const displayVerticesCoordinatesCheckbox = document.getElementById("display-vertices-coordinates")
 const displayLegendCheckbox = document.getElementById("display-legend")
@@ -93,17 +93,19 @@ const downArrow = String.fromCharCode(0x2193)
 
 let obj;
 
-window.onload = function () {
-  cubeSingleFace = './data/cube-single-face-sans-normals.obj';
-  cubeTriangulated = './data/triangulated-cube-with-faces-sans-normals.obj';
-  octahedron = './data/octahedron-with-faces-sans-normals.obj';
-  squareFacedCube = './data/cube-with-faces-sans-normals.obj';
-  fetch(squareFacedCube)
-      .then(response => response.text())
-      .then((data) => {
-        obj = readWavefrontObj(data)
-      });
+cubeSingleFace = './data/cube-single-face-sans-normals.obj';
+cubeTriangulated = './data/triangulated-cube-with-faces-sans-normals.obj';
+octahedron = './data/octahedron-with-faces-sans-normals.obj';
+squareFacedCube = './data/cube-with-faces-sans-normals.obj';
+fetch(octahedron)
+    .then(response => response.text())
+    .then((data) => {
+      obj = readWavefrontObj(data)
+    });
 
+console.log("checkpoint")
+
+window.onload = function () {
   let interval = setInterval(bounce_entrypoint, timeout);
 
   window.addEventListener('keydown', function (event) {
@@ -169,7 +171,7 @@ function bounce(
   // draw_lines(data_single_lines, point_pixels_width)
 
   // console.log(JSON.stringify(obj.getVertices(), null, 1))
-  draw_object(cos_dz, cos_dy, cos_dx, theta_z_surface, obj);
+  draw_object(cos_dz, cos_dy, cos_dx, theta_z_surface, obj, z_offset);
 }
 
 function bounce_entrypoint() {

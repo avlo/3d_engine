@@ -1,16 +1,5 @@
 let z_offset = 5
 
-function draw_object(cos_dz, cos_dy, cos_dx, theta, object) {
-  // let verticesUnitCube = get_vertices_unit_cube(local_square_width);
-  // let vertices = object.getVertices();
-  // if (display_wireframe_bool) {
-  //   draw_rotating_lines(cos_dz, cos_dy, cos_dx, theta, vertices, z_offset)
-  // }
-
-  draw_rotating_polygons(cos_dz, cos_dy, cos_dx, theta, object, z_offset)
-  // if/when used, needs updating first -> draw_rotating_vertices(cos_dz, theta, verticesUnitCube, z_offset)
-}
-
 function fillPolygon(vertices_array, input_color, coordinate) {
   // side 1
   // let length = vertices_array.length;
