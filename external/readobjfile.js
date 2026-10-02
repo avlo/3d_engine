@@ -10,7 +10,7 @@ function readWavefrontObj() {
     let edges_array = []
     let number_of_vertices = facesArrayArray[i].length
 
-    for (let j = 0; j < number_of_vertices - 1; j++) {
+    for (let j = 0; j < number_of_vertices; j++) {
       let edge = createEdge(verticesObjectsArray, facesArrayArray[i], j);
       // console.log("edge: " + JSON.stringify(edge))
       edges_array.push(edge)
@@ -61,7 +61,7 @@ function createFace(edges_array) {
 function createEdge(input_vertices, face_indexes, j) {
   let v0 = input_vertices[face_indexes[j]];
   let vertex_0 = {x: v0.x, y: v0.y, z: v0.z}
-  let v1 = input_vertices[(face_indexes[j + 1])];
+  let v1 = input_vertices[face_indexes[(j + 1) % face_indexes.length]];
   let vertex_1 = {x: v1.x, y: v1.y, z: v1.z}
   return {v0: vertex_0, v1: vertex_1,};
 }
