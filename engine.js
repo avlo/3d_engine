@@ -88,7 +88,7 @@ const downArrow = String.fromCharCode(0x2193)
 let obj;
 
 window.onload = function () {
-  fetch('./data/triangulated-cube-with-faces-sans-normals.obj')
+  fetch('./data/octahedron-with-faces-sans-normals.obj')
       .then(response => response.text())
       .then((data) => {
         obj = readWavefrontObj(data)
