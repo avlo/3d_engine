@@ -221,7 +221,7 @@ function draw_rotating_polygons(dz, dy, dx, theta, object, z_offset) {
                   dz, z_offset)))
       vertices_array.push(screen_coordinate.x, screen_coordinate.y)
     }
-    fillPolygon(vertices_array, colors_array[i], 20)
+    fillPolygon(vertices_array, colors_array[i%colors_array.length], 20)
   }
 }
 

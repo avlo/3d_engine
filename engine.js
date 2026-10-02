@@ -9,12 +9,18 @@ const GREEN = "#59AD3C"
 const PURPLE = "#3B0866"
 const RED_DARK = "#772211"
 const colors_array = [
-  YELLOW, YELLOW,
-  BLUE, BLUE,
-  ORANGE, ORANGE,
-  GREEN, GREEN,
-  PURPLE, PURPLE,
-  RED_DARK, RED_DARK]
+  YELLOW, 
+  // YELLOW,
+  BLUE,
+  // BLUE,
+  ORANGE,
+  // ORANGE,
+  GREEN,
+  // GREEN,
+  PURPLE,
+  // PURPLE,
+  // RED_DARK,
+  RED_DARK]
 
 const colors_array_literal = ["YELLOW", "BLUE", "ORANGE", "GREEN", "PURPLE", "RED_DARK"]
 
