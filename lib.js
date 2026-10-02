@@ -144,15 +144,15 @@ function display_vertices_coordinates(point_1, point_2, surface_normal_theta, y_
   context.fillText(formula, 100, y_text_coord)
 }
 
-function context_fill_face(vertices_array, polygon_surface) {
+function context_fill_polygon_rxr(vertices_array, polygon_surface) {
   context.fillStyle = polygon_surface.color; // any css color
   context.font = 20 + "px monospace";
-  let point_1_x = vertices_array[polygon_surface.xyz[0]];
-  let point_1_y = vertices_array[polygon_surface.xyz[1]];
-  let point_2_x = vertices_array[polygon_surface.xyz[3]];
-  let point_2_y = vertices_array[polygon_surface.xyz[4]];
-  let point_3_x = vertices_array[polygon_surface.xyz[6]];
-  let point_3_y = vertices_array[polygon_surface.xyz[7]];
+  let point_1_x = vertices_array[0];
+  let point_1_y = vertices_array[1];
+  let point_2_x = vertices_array[2];
+  let point_2_y = vertices_array[3];
+  let point_3_x = vertices_array[4];
+  let point_3_y = vertices_array[5];
 
   let point_1_xy = {
     x: point_1_x.toPrecision(3),
@@ -176,86 +176,80 @@ function context_fill_face(vertices_array, polygon_surface) {
     return
 
   if (surface_normal_theta > 0)
-    paint_polygon_surface(vertices_array, point_1_x, point_1_y, polygon_surface)
+    paint_polygon_surface_rxr(vertices_array, point_1_x, point_1_y, polygon_surface)
 }
 
-function paint_polygon_surface(vertices_array, starting_coordinate_x, starting_coordinate_y, polygon_surface) {
+function paint_polygon_surface_rxr(vertices_array, starting_coordinate_x, starting_coordinate_y) {
   context.beginPath();
   context.moveTo(starting_coordinate_x, starting_coordinate_y);
-  for (let i = 2; i < polygon_surface.xy.length; i += 2) {
-    context.lineTo(vertices_array[polygon_surface.xy[i]], vertices_array[polygon_surface.xy[i + 1]]);
+  let length = vertices_array.length;
+  // console.log("length: " + length)
+  for (let i = 2; i < length; i += 2) {
+    // let polygon_surface_xy_i = vertices_array[i];
+    // console.log("i  : [" + i + "], polygon_surface_xy_i: [" + polygon_surface_xy_i + "]")
+    // let polygon_surface_xy_i_plus_1 = vertices_array[i + 1];
+    // console.log("i+1: [" + (i + 1) + "], polygon_surface_xy_i_plus_1: [" + polygon_surface_xy_i_plus_1 + "]")
+    let vertices_element_i = vertices_array[i];
+    let vertices_element_i_plus_1 = vertices_array[i+1];
+    // console.log("vertices_element_i: " + vertices_element_i)
+    // console.log("vertices_element_i_plus_1: " + vertices_element_i_plus_1)
+    context.lineTo(vertices_element_i, vertices_element_i_plus_1);
   }
   context.closePath();
   context.fill();
 }
 
-function draw_rotating_face(dz, dy, dx, theta, vertices, z_offset) {
+function draw_rotating_polygons_rxr(dz, dy, dx, theta, object, z_offset) {
+  let facesArray = object.faces_array;
+  for (let i = 0; i < facesArray.length; i++) {
   let vertices_array = []
-  for (const vertex of vertices) {
-    // draw vertices array
-    let screen_coordinate = convertCubeCenteredCoordinatesToCanvasCoordinates(
-        project_3d_to_2d(
-            translate( // {x, y, z}, dz, z_offset
-                rotate_z(
-                    rotate_y(
-                        rotate_x(vertex, theta),
-                        theta),
-                    theta),
-                dz, z_offset)))
-    vertices_array.push(screen_coordinate.x, screen_coordinate.y)
-  }
+    let vertices = facesArray[i].getVertices();
+    for (let j = 0; j < vertices.length; j++) {
+      let vertex1 = vertices[j];
+      // let data = JSON.stringify(vertex1);
+      // const output = data.replace(/:([A-Za-z0-9])/g, ': $1');
+      // console.log(output)
 
-  fillFace(vertices_array)
-}
-
-function draw_rotating_line(dz, dy, dx, theta, vertices, z_offset) {
-  let lines = 4
-  for (let i = 0; i < lines; i++) {
-    for (let j = 0; j < lines; j++) {
-      let start = {
-        x: vertices[j][0],
-        y: vertices[j][1],
-        z: vertices[j][2]
-      }
-      let end = {
-        x: vertices[(j + 1) % lines][0],
-        y: vertices[(j + 1) % lines][1],
-        z: vertices[(j + 1) % lines][2]
-      }
-      rotate_translate_project(start, theta, dz, z_offset, end, j);
+      let screen_coordinate = convertCubeCenteredCoordinatesToCanvasCoordinates(
+          project_3d_to_2d(
+              translate( // {x, y, z}, dz, z_offset
+                  rotate_z(
+                      rotate_y(
+                          rotate_x(vertex1, theta),
+                          theta),
+                      theta),
+                  dz, z_offset)))
+      vertices_array.push(screen_coordinate.x, screen_coordinate.y)
     }
+    fillPolygon_rxr(vertices_array, colors_array[i], 20)
   }
 }
 
-function draw_rotating_lines_DEL(dz, dy, dx, theta, vertices, z_offset) {
+function draw_rotating_lines(dz, dy, dx, theta, vertices, z_offset) {
   // array of vertices to connect == lines
   for (const line of cube_outline_lines) {
     for (let i = 0; i < line.length; i++) {
       const start = vertices[line[i]] // first vertex
-      const end = vertices[line[(i + 1) % line.length]] // % == last vertex wrap around
+      const end = vertices[line[(i + 1) % line.length]] // % == last vertex wrap around 
+      let p1 = convertCubeCenteredCoordinatesToCanvasCoordinates(
+          project_3d_to_2d(
+              translate(
+                  rotate_z(
+                      rotate_y(
+                          rotate_x(start, theta),
+                          theta),
+                      theta), dz, z_offset)));
+      let p2 = convertCubeCenteredCoordinatesToCanvasCoordinates(
+          project_3d_to_2d(
+              translate(
+                  rotate_z(
+                      rotate_y(
+                          rotate_x(end, theta),
+                          theta),
+                      theta), dz, z_offset)));
+      draw_line(p1, p2, line_pixels_width, LINES_FOREGROUND)
     }
   }
-}
-
-function rotate_translate_project(start, theta, dz, z_offset, end, j) {
-  let rotated_x = rotate_x(start, theta);
-  let rotated_y = rotate_y(rotated_x, theta);
-  let rotated_z = rotate_z(rotated_y, theta);
-  let translated = translate(rotated_z, dz, z_offset);
-  let projected_2d = project_3d_to_2d(translated);
-  let p1 = convertCubeCenteredCoordinatesToCanvasCoordinates(projected_2d);
-
-  let p2 = convertCubeCenteredCoordinatesToCanvasCoordinates(
-      project_3d_to_2d(
-          translate(
-              rotate_z(
-                  rotate_y(
-                      rotate_x(end, theta),
-                      theta),
-                  theta), dz, z_offset)));
-  draw_line(p1, p2, line_pixels_width, colors_array[j])
-  // console.debug("color: " + colors_array_literal[j])
-  // console.debug("")
 }
 
 function draw_lines(lines, line_width) {
