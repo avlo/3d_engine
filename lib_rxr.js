@@ -183,16 +183,16 @@ function paint_polygon_surface_rxr(vertices_array, starting_coordinate_x, starti
   context.beginPath();
   context.moveTo(starting_coordinate_x, starting_coordinate_y);
   let length = vertices_array.length;
-  console.log("length: " + length)
+  // console.log("length: " + length)
   for (let i = 2; i < length; i += 2) {
-    let polygon_surface_xy_i = vertices_array[i];
-    console.log("i  : [" + i + "], polygon_surface_xy_i: [" + polygon_surface_xy_i + "]")
-    let polygon_surface_xy_i_plus_1 = vertices_array[i + 1];
-    console.log("i+1: [" + (i + 1) + "], polygon_surface_xy_i_plus_1: [" + polygon_surface_xy_i_plus_1 + "]")
+    // let polygon_surface_xy_i = vertices_array[i];
+    // console.log("i  : [" + i + "], polygon_surface_xy_i: [" + polygon_surface_xy_i + "]")
+    // let polygon_surface_xy_i_plus_1 = vertices_array[i + 1];
+    // console.log("i+1: [" + (i + 1) + "], polygon_surface_xy_i_plus_1: [" + polygon_surface_xy_i_plus_1 + "]")
     let vertices_element_i = vertices_array[i];
-    console.log("vertices_element_i: " + vertices_element_i)
     let vertices_element_i_plus_1 = vertices_array[i+1];
-    console.log("vertices_element_i_plus_1: " + vertices_element_i_plus_1)
+    // console.log("vertices_element_i: " + vertices_element_i)
+    // console.log("vertices_element_i_plus_1: " + vertices_element_i_plus_1)
     context.lineTo(vertices_element_i, vertices_element_i_plus_1);
   }
   context.closePath();
