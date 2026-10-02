@@ -144,15 +144,15 @@ function display_vertices_coordinates(point_1, point_2, surface_normal_theta, y_
   context.fillText(formula, 100, y_text_coord)
 }
 
-function context_fill_polygon(vertices_array, polygon_surface) {
+function fillPolygon(polygon_surface) {
   context.fillStyle = polygon_surface.color; // any css color
   context.font = 20 + "px monospace";
-  let point_1_x = vertices_array[0];
-  let point_1_y = vertices_array[1];
-  let point_2_x = vertices_array[2];
-  let point_2_y = vertices_array[3];
-  let point_3_x = vertices_array[4];
-  let point_3_y = vertices_array[5];
+  let point_1_x = polygon_surface.vertices_array[0];
+  let point_1_y = polygon_surface.vertices_array[1];
+  let point_2_x = polygon_surface.vertices_array[2];
+  let point_2_y = polygon_surface.vertices_array[3];
+  let point_3_x = polygon_surface.vertices_array[4];
+  let point_3_y = polygon_surface.vertices_array[5];
 
   let point_1_xy = {
     x: point_1_x.toPrecision(3),
@@ -176,7 +176,7 @@ function context_fill_polygon(vertices_array, polygon_surface) {
     return
 
   if (surface_normal_theta > 0)
-    paint_polygon_surface(vertices_array, point_1_x, point_1_y, polygon_surface)
+    paint_polygon_surface(polygon_surface.vertices_array, point_1_x, point_1_y)
 }
 
 function paint_polygon_surface(vertices_array, starting_coordinate_x, starting_coordinate_y) {
@@ -207,7 +207,11 @@ function draw_object(dz, dy, dx, theta, object, z_offset) {
         draw_line(screen_coordinate_p1, p2, line_pixels_width, LINES_FOREGROUND)
       }
     }
-    fillPolygon(vertices_array, colors_array[i%colors_array.length], 20)
+    fillPolygon(
+        { 
+          vertices_array,
+          color: colors_array[i%colors_array.length],
+          y_text_coord: 20 })
     // draw_line(p1, p2, line_pixels_width, LINES_FOREGROUND)
   }
 }
