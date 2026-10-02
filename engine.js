@@ -8,7 +8,14 @@ const ORANGE = "#EE6600"
 const GREEN = "#59AD3C"
 const PURPLE = "#3B0866"
 const RED_DARK = "#772211"
-const colors_array = [YELLOW, BLUE, ORANGE, GREEN, PURPLE, RED_DARK]
+const colors_array = [
+  YELLOW, YELLOW,
+  BLUE, BLUE,
+  ORANGE, ORANGE,
+  GREEN, GREEN,
+  PURPLE, PURPLE,
+  RED_DARK, RED_DARK]
+
 const colors_array_literal = ["YELLOW", "BLUE", "ORANGE", "GREEN", "PURPLE", "RED_DARK"]
 
 let display_vertices_coordinates_bool = false
@@ -88,7 +95,7 @@ window.onload = function () {
       });
 
   let interval = setInterval(bounce_entrypoint, timeout);
-  
+
   window.addEventListener('keydown', function (event) {
     switch (event.key) {
       case "ArrowUp":
