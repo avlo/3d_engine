@@ -1,15 +1,6 @@
 function readWavefrontObj() {
-  let input_vertices_array = [
-    -1.000000, -1.000000, -1.000000
-    , 1.000000, -1.000000, -1.000000
-    , 1.000000, 1.000000, -1.000000
-    , -1.000000, 1.000000, -1.000000
 
-    , -1.000000, -1.000000, 1.000000
-    , 1.000000, -1.000000, 1.000000
-    , 1.000000, 1.000000, 1.000000
-    , -1.000000, 1.000000, 1.000000
-  ]
+  let input_vertices_array = inputVerticesArray()
 
   let input_vertices = []
   for (let i = 0; i < input_vertices_array.length; i += 3) {
@@ -21,16 +12,7 @@ function readWavefrontObj() {
         })
   }
 
-  let original_input_faces = [
-    ["1 4 3 2"],
-    ["5 6 7 8"],
-    ["1 2 6 5"],
-    ["2 3 7 6"],
-    ["3 4 8 7"],
-    ["4 1 5 8"]
-  ]
-  
-  let input_faces = indexTranslatedFaces(original_input_faces)
+  let input_faces = indexTranslatedFaces()
 
   let faces_array = []
   for (let i = 0; i < input_faces.length; i++) {
@@ -76,6 +58,18 @@ function readWavefrontObj() {
 }
 
 function indexTranslatedFaces() {
+  // below as read from obj file...
+  /*
+  let original_input_faces = [
+    ["1 4 3 2"],
+    ["5 6 7 8"],
+    ["1 2 6 5"],
+    ["2 3 7 6"],
+    ["3 4 8 7"],
+    ["4 1 5 8"]
+  ]
+  */
+  // has each value-1 so can work with 0-index start array (instead of 1-index)
   return [
     ["0 3 2 1"]
     , ["4 5 6 7"]
@@ -83,5 +77,19 @@ function indexTranslatedFaces() {
     , ["1 2 6 5"]
     , ["2 3 7 6"]
     , ["3 0 4 7"]
+  ]
+}
+
+function inputVerticesArray() {
+  return [
+      -1.000000, -1.000000, -1.000000
+      , 1.000000, -1.000000, -1.000000
+      , 1.000000, 1.000000, -1.000000
+      , -1.000000, 1.000000, -1.000000
+
+      , -1.000000, -1.000000, 1.000000
+      , 1.000000, -1.000000, 1.000000
+      , 1.000000, 1.000000, 1.000000
+      , -1.000000, 1.000000, 1.000000
   ]
 }
