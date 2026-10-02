@@ -1,7 +1,5 @@
 let z_offset = 5
 
-const object = {};
-
 function draw_object(cos_dz, cos_dy, cos_dx, theta, object) {
   // let verticesUnitCube = get_vertices_unit_cube(local_square_width);
   // let vertices = object.getVertices();

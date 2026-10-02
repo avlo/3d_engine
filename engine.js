@@ -74,14 +74,21 @@ let theta_z_surface = theta_z_camera
 let timeout = 1
 let iter = 0
 let increment = .05;
-let interval = setInterval(bounce_entrypoint, timeout);
 
 const upArrow = String.fromCharCode(0x2B06)
 const downArrow = String.fromCharCode(0x2193)
 
-let obj = readWavefrontObj();
+let obj;
 
 window.onload = function () {
+  fetch('./data/triangulated-cube-with-faces-sans-normals.obj')
+      .then(response => response.text())
+      .then((data) => {
+        obj = readWavefrontObj(data)
+      });
+
+  let interval = setInterval(bounce_entrypoint, timeout);
+  
   window.addEventListener('keydown', function (event) {
     switch (event.key) {
       case "ArrowUp":

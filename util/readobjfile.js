@@ -1,9 +1,9 @@
-function readWavefrontObj() {
+function readWavefrontObj(data) {
   let verticesObjectsArray =
       asInputVerticesObjectArray(
-          inputVerticesArray());
+          parseVertexLines(data));
 
-  let facesArrayArray = indexTranslatedFaces();
+  let facesArrayArray = indexTranslatedFaces(data);
 
   let faces_array = []
   for (let i = 0; i < facesArrayArray.length; i++) {
@@ -19,27 +19,16 @@ function readWavefrontObj() {
 
     let face = createFace(edges_array);
     let vertices = face.getVertices();
-    console.log("face vertices[ " + i + " ]: \n" + JSON.stringify(vertices, null, 1))
+    // console.log("face vertices[ " + i + " ]: \n" + JSON.stringify(vertices, null, 1))
     faces_array.push(face)
   }
 
-  return {faces_array: faces_array,};
+  return {faces_array: faces_array};
 }
 
-function indexTranslatedFaces() {
-  // below as read from obj file...
-  /*
-  let original_input_faces = [
-    ["1 4 3 2"],
-    ["5 6 7 8"],
-    ["1 2 6 5"],
-    ["2 3 7 6"],
-    ["3 4 8 7"],
-    ["4 1 5 8"]
-  ]
-  */
-  // has each value-1 so can work with 0-index start array (instead of 1-index)
-  return inputFacesArray()
+function indexTranslatedFaces(data) {
+  return parseFaceLines(data).map(array =>
+      array.map(value => value - 1))
 }
 
 function createFace(edges_array) {
@@ -77,48 +66,4 @@ function asInputVerticesObjectArray(input_vertices_array) {
         })
   }
   return input_vertices;
-}
-
-function inputVerticesArray() {
-  return [
-    -1.000000, -1.000000, -1.000000
-    , 1.000000, -1.000000, -1.000000
-    , 1.000000, 1.000000, -1.000000
-    , -1.000000, 1.000000, -1.000000
-
-    , -1.000000, -1.000000, 1.000000
-    , 1.000000, -1.000000, 1.000000
-    , 1.000000, 1.000000, 1.000000
-    , -1.000000, 1.000000, 1.000000
-  ]
-}
-
-function inputFacesArray() {
-  let simulatedInputFacesArray = [
-    ["1 4 3 2"],
-    ["5 6 7 8"],
-    ["1 2 6 5"],
-    ["2 3 7 6"],
-    ["3 4 8 7"],
-    ["4 1 5 8"]
-  ];
-
-  let translatedInputFacesArray = [
-    ["0 3 2 1"]
-    , ["4 5 6 7"]
-    , ["0 1 5 4"]
-    , ["1 2 6 5"]
-    , ["2 3 7 6"]
-    , ["3 0 4 7"]
-  ];
-
-  let faces_array = []
-  for (let i = 0; i < translatedInputFacesArray.length; i++) {
-    for (let inputFace of translatedInputFacesArray[i]) {
-      let face_indexes = inputFace.split(/\s*[\s,]\s*/);
-      var arrayOfNumbers = face_indexes.map(Number);
-      faces_array.push(arrayOfNumbers)
-    }
-  }
-  return faces_array;
 }
