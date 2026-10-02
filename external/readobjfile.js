@@ -1,37 +1,32 @@
 function readWavefrontObj() {
-  let input_vertices =
+  let verticesObjectsArray =
       asInputVerticesObjectArray(
           inputVerticesArray());
 
-  let input_faces = 
-      indexTranslatedFaces(
-          inputFacesArray())
+  let facesArrayArray = indexTranslatedFaces();
 
   let faces_array = []
-  for (let i = 0; i < input_faces.length; i++) {
-    for (let inputFace of input_faces[i]) {
-      let edges_array = []
-      let face_indexes = inputFace.split(/\s*[\s,]\s*/);
-      let number_of_vertices = face_indexes.length
+  for (let i = 0; i < facesArrayArray.length; i++) {
+    let edges_array = []
+    let number_of_vertices = facesArrayArray[i].length
 
-      for (let j = 0; j < number_of_vertices - 1; j++) {
-        let edge = createEdge(input_vertices, face_indexes, j);
-        // console.log("edge: " + JSON.stringify(edge))
-        edges_array.push(edge)
-        // console.log("edges_array: " + JSON.stringify(edges_array))
-      }
-
-      let face = createFace(edges_array);
-      let vertices = face.getVertices();
-      console.log("face vertices[ " + i + " ]: \n" + JSON.stringify(vertices, null, 1))
-      faces_array.push(face)
+    for (let j = 0; j < number_of_vertices - 1; j++) {
+      let edge = createEdge(verticesObjectsArray, facesArrayArray[i], j);
+      // console.log("edge: " + JSON.stringify(edge))
+      edges_array.push(edge)
+      // console.log("edges_array: " + JSON.stringify(edges_array))
     }
+
+    let face = createFace(edges_array);
+    let vertices = face.getVertices();
+    console.log("face vertices[ " + i + " ]: \n" + JSON.stringify(vertices, null, 1))
+    faces_array.push(face)
   }
 
-  return { faces_array: faces_array, };
+  return {faces_array: faces_array,};
 }
 
-function indexTranslatedFaces(input_faces_array) {
+function indexTranslatedFaces() {
   // below as read from obj file...
   /*
   let original_input_faces = [
@@ -44,14 +39,7 @@ function indexTranslatedFaces(input_faces_array) {
   ]
   */
   // has each value-1 so can work with 0-index start array (instead of 1-index)
-  return [
-    ["0 3 2 1"]
-    , ["4 5 6 7"]
-    , ["0 1 5 4"]
-    , ["1 2 6 5"]
-    , ["2 3 7 6"]
-    , ["3 0 4 7"]
-  ]
+  return inputFacesArray()
 }
 
 function createFace(edges_array) {
@@ -106,7 +94,7 @@ function inputVerticesArray() {
 }
 
 function inputFacesArray() {
-  return [
+  let simulatedInputFacesArray = [
     ["1 4 3 2"],
     ["5 6 7 8"],
     ["1 2 6 5"],
@@ -114,4 +102,23 @@ function inputFacesArray() {
     ["3 4 8 7"],
     ["4 1 5 8"]
   ];
+
+  let translatedInputFacesArray = [
+    ["0 3 2 1"]
+    , ["4 5 6 7"]
+    , ["0 1 5 4"]
+    , ["1 2 6 5"]
+    , ["2 3 7 6"]
+    , ["3 0 4 7"]
+  ];
+
+  let faces_array = []
+  for (let i = 0; i < translatedInputFacesArray.length; i++) {
+    for (let inputFace of translatedInputFacesArray[i]) {
+      let face_indexes = inputFace.split(/\s*[\s,]\s*/);
+      var arrayOfNumbers = face_indexes.map(Number);
+      faces_array.push(arrayOfNumbers)
+    }
+  }
+  return faces_array;
 }
