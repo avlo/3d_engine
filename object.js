@@ -1,4 +1,4 @@
-let z_offset = 2.5
+let z_offset = 5
 
 const object = {};
 
@@ -41,28 +41,4 @@ function convertCubeCenteredCoordinatesToCanvasCoordinates(centered_point) {
     x: canvas_point.x,
     y: canvas_point.y
   }
-}
-
-function get_vertices_unit_cube(local_square_size) {
-  let side = local_square_size / 2
-  let pos = side
-  let neg = -side
-
-  // x, y, z coords relative to center of unit cube
-  // right hand rule => counterclockwise
-  // starting at upper left
-  return [
-    // front face
-      {x: neg, y: pos, z: pos} // 0 (top left front)
-    , {x: neg, y: neg, z: pos} // 1 (bottom left front)
-    , {x: pos, y: neg, z: pos} // 2 (bottom right front)
-    , {x: pos, y: pos, z: pos} // 3 (top right front)
-
-    // rear face
-    // below coords mirror as if spun 180 along y-axis
-    , {x: pos, y: pos, z: neg} // 4 = (top right rear)
-    , {x: pos, y: neg, z: neg} // 5 = (bottom right rear)
-    , {x: neg, y: neg, z: neg} // 6 = (bottom left rear)
-    , {x: neg, y: pos, z: neg} // 7 = (top left rear)
-  ]
 }
