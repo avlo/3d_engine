@@ -144,7 +144,7 @@ function display_vertices_coordinates(point_1, point_2, surface_normal_theta, y_
   context.fillText(formula, 100, y_text_coord)
 }
 
-function context_fill_polygon_rxr(vertices_array, polygon_surface) {
+function context_fill_polygon(vertices_array, polygon_surface) {
   context.fillStyle = polygon_surface.color; // any css color
   context.font = 20 + "px monospace";
   let point_1_x = vertices_array[0];
@@ -176,10 +176,10 @@ function context_fill_polygon_rxr(vertices_array, polygon_surface) {
     return
 
   if (surface_normal_theta > 0)
-    paint_polygon_surface_rxr(vertices_array, point_1_x, point_1_y, polygon_surface)
+    paint_polygon_surface(vertices_array, point_1_x, point_1_y, polygon_surface)
 }
 
-function paint_polygon_surface_rxr(vertices_array, starting_coordinate_x, starting_coordinate_y) {
+function paint_polygon_surface(vertices_array, starting_coordinate_x, starting_coordinate_y) {
   context.beginPath();
   context.moveTo(starting_coordinate_x, starting_coordinate_y);
   let length = vertices_array.length;
@@ -199,7 +199,7 @@ function paint_polygon_surface_rxr(vertices_array, starting_coordinate_x, starti
   context.fill();
 }
 
-function draw_rotating_polygons_rxr(dz, dy, dx, theta, object, z_offset) {
+function draw_rotating_polygons(dz, dy, dx, theta, object, z_offset) {
   let facesArray = object.faces_array;
   for (let i = 0; i < facesArray.length; i++) {
   let vertices_array = []
@@ -221,7 +221,7 @@ function draw_rotating_polygons_rxr(dz, dy, dx, theta, object, z_offset) {
                   dz, z_offset)))
       vertices_array.push(screen_coordinate.x, screen_coordinate.y)
     }
-    fillPolygon_rxr(vertices_array, colors_array[i], 20)
+    fillPolygon(vertices_array, colors_array[i], 20)
   }
 }
 

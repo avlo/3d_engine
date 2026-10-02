@@ -9,11 +9,11 @@ function draw_object(cos_dz, cos_dy, cos_dx, theta, object) {
   //   draw_rotating_lines(cos_dz, cos_dy, cos_dx, theta, vertices, z_offset)
   // }
 
-  draw_rotating_polygons_rxr(cos_dz, cos_dy, cos_dx, theta, object, z_offset)
+  draw_rotating_polygons(cos_dz, cos_dy, cos_dx, theta, object, z_offset)
   // if/when used, needs updating first -> draw_rotating_vertices(cos_dz, theta, verticesUnitCube, z_offset)
 }
 
-function fillPolygon_rxr(vertices_array, input_color, coordinate) {
+function fillPolygon(vertices_array, input_color, coordinate) {
   // side 1
   // let length = vertices_array.length;
   // let xy = []
@@ -25,7 +25,7 @@ function fillPolygon_rxr(vertices_array, input_color, coordinate) {
     color: input_color,
     y_text_coord: coordinate
   };
-  context_fill_polygon_rxr(vertices_array, polygonSurface)
+  context_fill_polygon(vertices_array, polygonSurface)
 }
 
 // translate point (x,y) from screen center coordinates (0, 0) to HTML canvas top left coordinates (0, w/h), i.e,
