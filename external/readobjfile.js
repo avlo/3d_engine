@@ -1,35 +1,11 @@
-function createFace(edges_array) {
-  let face = {
-    edges_array: edges_array,
-    getVertices() {
-      let local_vertices = []
-      let numberOfEdges = edges_array.length;
-      for (let k = 0; k < numberOfEdges; k++) {
-        let v0 = edges_array[k].v0;
-        local_vertices.push({x: v0.x, y: v0.y, z: v0.z})
-      }
-      // console.log("vertices.pushed: \n" + JSON.stringify(local_vertices, null, 1))
-      return local_vertices
-    }
-  }
-  return face;
-}
-
-function createEdge(input_vertices, face_indexes, j) {
-  let v0 = input_vertices[face_indexes[j]];
-  let vertex_0 = {x: v0.x, y: v0.y, z: v0.z}
-  let v1 = input_vertices[(face_indexes[j + 1])];
-  let vertex_1 = {x: v1.x, y: v1.y, z: v1.z}
-  let edge = {v0: vertex_0, v1: vertex_1,}
-  return edge;
-}
-
 function readWavefrontObj() {
   let input_vertices =
       asInputVerticesObjectArray(
           inputVerticesArray());
-  
-  let input_faces = indexTranslatedFaces()
+
+  let input_faces = 
+      indexTranslatedFaces(
+          inputFacesArray())
 
   let faces_array = []
   for (let i = 0; i < input_faces.length; i++) {
@@ -52,13 +28,10 @@ function readWavefrontObj() {
     }
   }
 
-  let obj = {
-    faces_array: faces_array,
-  }
-  return obj;
+  return { faces_array: faces_array, };
 }
 
-function indexTranslatedFaces() {
+function indexTranslatedFaces(input_faces_array) {
   // below as read from obj file...
   /*
   let original_input_faces = [
@@ -79,6 +52,30 @@ function indexTranslatedFaces() {
     , ["2 3 7 6"]
     , ["3 0 4 7"]
   ]
+}
+
+function createFace(edges_array) {
+  return {
+    edges_array: edges_array,
+    getVertices() {
+      let local_vertices = []
+      let numberOfEdges = edges_array.length;
+      for (let k = 0; k < numberOfEdges; k++) {
+        let v0 = edges_array[k].v0;
+        local_vertices.push({x: v0.x, y: v0.y, z: v0.z})
+      }
+      // console.log("vertices.pushed: \n" + JSON.stringify(local_vertices, null, 1))
+      return local_vertices
+    }
+  };
+}
+
+function createEdge(input_vertices, face_indexes, j) {
+  let v0 = input_vertices[face_indexes[j]];
+  let vertex_0 = {x: v0.x, y: v0.y, z: v0.z}
+  let v1 = input_vertices[(face_indexes[j + 1])];
+  let vertex_1 = {x: v1.x, y: v1.y, z: v1.z}
+  return {v0: vertex_0, v1: vertex_1,};
 }
 
 function asInputVerticesObjectArray(input_vertices_array) {
@@ -106,4 +103,15 @@ function inputVerticesArray() {
     , 1.000000, 1.000000, 1.000000
     , -1.000000, 1.000000, 1.000000
   ]
+}
+
+function inputFacesArray() {
+  return [
+    ["1 4 3 2"],
+    ["5 6 7 8"],
+    ["1 2 6 5"],
+    ["2 3 7 6"],
+    ["3 4 8 7"],
+    ["4 1 5 8"]
+  ];
 }
