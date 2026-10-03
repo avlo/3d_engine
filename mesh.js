@@ -15,7 +15,7 @@ function draw_edge(dz, dy, dx, theta, mesh, z_offset) {
   }
 }
 
-function draw_mesh(dz, dy, dx, theta, mesh, z_offset) {
+function render(dz, dy, dx, theta, mesh, z_offset) {
   let facesArray = mesh.faces_array;
   for (let i = 0; i < facesArray.length; i++) {
     let vertices_array = []
@@ -29,7 +29,7 @@ function draw_mesh(dz, dy, dx, theta, mesh, z_offset) {
       vertices_array.push(p1.x, p1.y)
       edges_array.push(p1, p2)
     }
-    fillFace(
+    fill(
         {
           vertices_array,
           edges_array,
@@ -40,7 +40,7 @@ function draw_mesh(dz, dy, dx, theta, mesh, z_offset) {
   }
 }
 
-function fillFace(face) {
+function fill(face) {
   canvas_2d_context.fillStyle = face.color; // any css color
   let point_1_x = face.vertices_array[0];
   let point_1_y = face.vertices_array[1];
@@ -71,7 +71,7 @@ function fillFace(face) {
     if (display_polygons_bool)
       paint_face(face, point_1_x, point_1_y)
     // draw_line(p1, p2, line_pixels_width, VERTICES_FOREGROUND, SOLID_LINE)
-    if (display_wireframe_bool) {
+    if (display_wireframe_visible_surface_bool) {
       for (let i = 0; i < 4; i++) {
         let start = face.edges_array[i]
         let end = face.edges_array[(i + 1) % 4]
@@ -80,12 +80,13 @@ function fillFace(face) {
     }
   }
 
-  if (!display_wireframe_bool)
-    return;
-
-  for (let i = 3; i < 6; i++) {
-    let start = face.edges_array[i]
-    let end = face.edges_array[(i + 1) % 6]
-    draw_line(start, end, line_pixels_width / 3, VERTICES_FOREGROUND_WHITE, DASHED_LINE)
+  if (surface_normal_theta <= 0) {
+    if (display_wireframe_hidden_surface_bool) {
+      for (let i = 3; i < 6; i++) {
+        let start = face.edges_array[i]
+        let end = face.edges_array[(i + 1) % 6]
+        draw_line(start, end, line_pixels_width / 3, VERTICES_FOREGROUND_WHITE, DASHED_LINE)
+      }
+    }
   }
 }

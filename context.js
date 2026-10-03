@@ -16,7 +16,7 @@ function add_text(text, x, y, textWidth, foreground) {
 }
 
 function draw_line(p1, p2, pixels_width, foreground, lineStyle) {
-  canvas_2d_context.globalAlpha = .6;
+  canvas_2d_context.globalAlpha = OPACITY;
   canvas_2d_context.setLineDash(lineStyle)
   canvas_2d_context.lineWidth = pixels_width
   canvas_2d_context.strokeStyle = foreground
@@ -49,7 +49,7 @@ function display_vertices_coordinates(point_1, point_2, surface_normal_theta, fa
 
 function paint_face(face, starting_coordinate_x, starting_coordinate_y) {
   let vertices_array = face.vertices_array
-  canvas_2d_context.globalAlpha = 0.5;
+  canvas_2d_context.globalAlpha = OPACITY;
   canvas_2d_context.beginPath();
   canvas_2d_context.moveTo(starting_coordinate_x, starting_coordinate_y);
   let length = vertices_array.length;

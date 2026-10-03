@@ -28,22 +28,25 @@ const colors_array = [
   RED_BRIGHT,
   TEAL]
 
-const colors_array_literal = ["YELLOW", "BLUE", "ORANGE", "GREEN", "PURPLE", "BROWN"]
+const OPACITY = .6;
 
 let display_vertices_coordinates_bool = false
 let display_legend_bool = false
-let display_polygons_bool = true
-let display_wireframe_bool = true
+let display_polygons_bool = false
+let display_wireframe_hidden_surface_bool = true
+let display_wireframe_visible_surface_bool = true
 
 const displayVerticesCoordinatesCheckbox = document.getElementById("display-vertices-coordinates")
 const displayLegendCheckbox = document.getElementById("display-legend")
 const displayPolygonsCheckbox = document.getElementById("display-polygons")
-const displayWireframeCheckbox = document.getElementById("display-wireframe")
+const displayHiddenWireframeCheckbox = document.getElementById("display-hidden-wireframe")
+const displayVisibleWireframeCheckbox = document.getElementById("display-visible-wireframe")
 
 displayVerticesCoordinatesCheckbox.checked = display_vertices_coordinates_bool
 displayLegendCheckbox.checked = display_legend_bool
 displayPolygonsCheckbox.checked = display_polygons_bool
-displayWireframeCheckbox.checked = display_wireframe_bool
+displayHiddenWireframeCheckbox.checked = display_wireframe_hidden_surface_bool
+displayVisibleWireframeCheckbox.checked = display_wireframe_visible_surface_bool
 
 displayVerticesCoordinatesCheckbox.addEventListener("change", function () {
   display_vertices_coordinates_bool = displayVerticesCoordinatesCheckbox.checked
@@ -54,8 +57,11 @@ displayLegendCheckbox.addEventListener("change", function () {
 displayPolygonsCheckbox.addEventListener("change", function () {
   display_polygons_bool = displayPolygonsCheckbox.checked
 })
-displayWireframeCheckbox.addEventListener("change", function () {
-  display_wireframe_bool = displayWireframeCheckbox.checked
+displayHiddenWireframeCheckbox.addEventListener("change", function () {
+  display_wireframe_hidden_surface_bool = displayHiddenWireframeCheckbox.checked
+})
+displayVisibleWireframeCheckbox.addEventListener("change", function () {
+  display_wireframe_visible_surface_bool = displayVisibleWireframeCheckbox.checked
 })
 
 const canvas_2d_context = canvas.getContext("2d")
@@ -106,7 +112,7 @@ cubeSingleFace = './data/cube-single-face-sans-normals.obj';
 cubeTriangulated = './data/triangulated-cube-with-faces-sans-normals.obj';
 octahedron = './data/octahedron-with-faces-sans-normals.obj';
 squareFacedCube = './data/cube-with-faces-sans-normals.obj';
-fetch(octahedron)
+fetch(squareFacedCube)
     .then(response => response.text())
     .then((data) => {
       mesh = readWavefrontObj(data)
@@ -173,12 +179,7 @@ function bounce(
   if (display_legend_bool)
     display_legend(cos_dx, cos_prev_dx, cos_dy, cos_prev_dy, cos_dz, cos_prev_dz, cos_theta_z_surface, cos_prev_theta_z_surface);
 
-  // if (display_wireframe_bool)
-  //   draw_edge(cos_dz, cos_dy, cos_dx, theta_z_surface, mesh, z_offset);
-
-  // console.log(JSON.stringify(mesh.getVertices(), null, 1))
-  // if (display_polygons_bool)
-    draw_mesh(cos_dz, cos_dy, cos_dx, theta_z_surface, mesh, z_offset);
+  render(cos_dz, cos_dy, cos_dx, theta_z_surface, mesh, z_offset);
 }
 
 function bounce_entrypoint() {
