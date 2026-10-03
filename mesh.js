@@ -1,5 +1,17 @@
 let z_offset = 5
 
+function draw_edge(dz, dy, dx, theta, mesh, z_offset) {
+  let facesArray = mesh.faces_array;
+  for (let i = 0; i < facesArray.length; i++) {
+    let vertices = facesArray[i].getVertices();
+    for (let j = 0; j < vertices.length; j++) {
+      let p1 = getScreenCoordinate(vertices[j], theta, dz, z_offset)
+      let p2 = getScreenCoordinate(vertices[(j + 1) % vertices.length], theta, dz, z_offset);
+      draw_line(p1, p2, line_pixels_width, VERTICES_FOREGROUND)
+    }
+  }
+}
+
 function draw_mesh(dz, dy, dx, theta, mesh, z_offset) {
   let facesArray = mesh.faces_array;
   for (let i = 0; i < facesArray.length; i++) {
@@ -8,18 +20,13 @@ function draw_mesh(dz, dy, dx, theta, mesh, z_offset) {
     for (let j = 0; j < vertices.length; j++) {
       let screen_coordinate_p1 = getScreenCoordinate(vertices[j], theta, dz, z_offset)
       vertices_array.push(screen_coordinate_p1.x, screen_coordinate_p1.y)
-
-      if (display_wireframe_bool) {
-        // % == last vertex wrap around
-        let p2 = getScreenCoordinate(vertices[(j + 1) % vertices.length], theta, dz, z_offset);
-        draw_line(screen_coordinate_p1, p2, line_pixels_width, LINES_FOREGROUND)
-      }
     }
     fillFace(
         {
           vertices_array,
-          color: colors_array[i%colors_array.length],
-          y_text_coord: 20 })
+          color: colors_array[i % colors_array.length],
+          y_text_coord: 20
+        })
     // draw_line(p1, p2, line_pixels_width, LINES_FOREGROUND)
   }
 }
@@ -50,9 +57,6 @@ function fillFace(face) {
   if (display_vertices_coordinates_bool) {
     display_vertices_coordinates(point_1_xy, point_3_xy, surface_normal_theta, face)
   }
-
-  if (!display_polygons_bool)
-    return
 
   if (surface_normal_theta > 0)
     paint_face(face, point_1_x, point_1_y)

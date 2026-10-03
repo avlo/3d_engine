@@ -5,9 +5,13 @@ canvas.height = 800
 const YELLOW = "#fAEE05"
 const BLUE = "#2266EE"
 const ORANGE = "#EE6600"
-const GREEN = "#59AD3C"
+const GREEN = "#3c7428"
 const PURPLE = "#3B0866"
-const RED_DARK = "#772211"
+const BROWN = "#836953"
+const PINK = "#ff69b4"
+const RED_BRIGHT = "#e70028"
+const TEAL = "#4ECDC4"
+
 const colors_array = [
   YELLOW,
   // YELLOW,
@@ -19,10 +23,12 @@ const colors_array = [
   // GREEN,
   PURPLE,
   // PURPLE,
-  // RED_DARK,
-  RED_DARK]
+  BROWN,
+  PINK,
+  RED_BRIGHT,
+  TEAL]
 
-const colors_array_literal = ["YELLOW", "BLUE", "ORANGE", "GREEN", "PURPLE", "RED_DARK"]
+const colors_array_literal = ["YELLOW", "BLUE", "ORANGE", "GREEN", "PURPLE", "BROWN"]
 
 let display_vertices_coordinates_bool = false
 let display_legend_bool = false
@@ -60,7 +66,7 @@ const canvasHalfWidth = canvas.width / 2
 const canvasHalfHeight = canvas.height / 2
 
 const BACKGROUND = "#101010"
-const VERTICES_FOREGROUND = "#11FF50"
+const VERTICES_FOREGROUND = "#11FF50" // "#FFFFFF"
 const VERTICES_TEXT = "#996666"
 const LINES_FOREGROUND = "#FFFF50"
 const point_pixels_width = 1
@@ -160,12 +166,15 @@ function bounce(
   let cos_prev_theta_z_surface = Math.cos(prev_theta_z_surface).toPrecision(2);
   clear()
 
-  if (display_legend_bool) {
+  if (display_legend_bool)
     display_legend(cos_dx, cos_prev_dx, cos_dy, cos_prev_dy, cos_dz, cos_prev_dz, cos_theta_z_surface, cos_prev_theta_z_surface);
-  }
+
+  if (display_wireframe_bool)
+    draw_edge(cos_dz, cos_dy, cos_dx, theta_z_surface, mesh, z_offset);
 
   // console.log(JSON.stringify(mesh.getVertices(), null, 1))
-  draw_mesh(cos_dz, cos_dy, cos_dx, theta_z_surface, mesh, z_offset);
+  if (display_polygons_bool)
+    draw_mesh(cos_dz, cos_dy, cos_dx, theta_z_surface, mesh, z_offset);
 }
 
 function bounce_entrypoint() {
