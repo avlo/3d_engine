@@ -65,6 +65,9 @@ canvas_2d_context.font = 20 + "px monospace";
 const canvasHalfWidth = canvas.width / 2
 const canvasHalfHeight = canvas.height / 2
 
+const SOLID_LINE = [];
+const DASHED_LINE = [5, 15];
+
 const BACKGROUND = "#101010"
 const VERTICES_FOREGROUND = "#11FF50" // "#FFFFFF"
 const VERTICES_TEXT = "#996666"
@@ -169,8 +172,8 @@ function bounce(
   if (display_legend_bool)
     display_legend(cos_dx, cos_prev_dx, cos_dy, cos_prev_dy, cos_dz, cos_prev_dz, cos_theta_z_surface, cos_prev_theta_z_surface);
 
-  if (display_wireframe_bool)
-    draw_edge(cos_dz, cos_dy, cos_dx, theta_z_surface, mesh, z_offset);
+  // if (display_wireframe_bool)
+  //   draw_edge(cos_dz, cos_dy, cos_dx, theta_z_surface, mesh, z_offset);
 
   // console.log(JSON.stringify(mesh.getVertices(), null, 1))
   if (display_polygons_bool)

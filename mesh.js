@@ -4,9 +4,14 @@ function draw_edge(dz, dy, dx, theta, mesh, z_offset) {
   let facesArray = mesh.faces_array;
   for (let i = 0; i < facesArray.length; i++) {
     let vertices = facesArray[i].getVertices();
+    // console.log(JSON.stringify(vertices))
     for (let j = 0; j < vertices.length; j++) {
-      let p1 = getScreenCoordinate(vertices[j], theta, dz, z_offset)
-      let p2 = getScreenCoordinate(vertices[(j + 1) % vertices.length], theta, dz, z_offset);
+      let vertex_1 = vertices[j];
+      let vertex_2 = vertices[(j + 1) % vertices.length];
+      let p1 = getScreenCoordinate(vertex_1, theta, dz, z_offset)
+      let p2 = getScreenCoordinate(vertex_2, theta, dz, z_offset);
+      console.log("v1: " + JSON.stringify(vertex_1))
+      console.log("v2: " + JSON.stringify(vertex_2))
       draw_line(p1, p2, line_pixels_width, VERTICES_FOREGROUND)
     }
   }
@@ -16,14 +21,20 @@ function draw_mesh(dz, dy, dx, theta, mesh, z_offset) {
   let facesArray = mesh.faces_array;
   for (let i = 0; i < facesArray.length; i++) {
     let vertices_array = []
+    let edges_array = []
     let vertices = facesArray[i].getVertices();
     for (let j = 0; j < vertices.length; j++) {
-      let screen_coordinate_p1 = getScreenCoordinate(vertices[j], theta, dz, z_offset)
-      vertices_array.push(screen_coordinate_p1.x, screen_coordinate_p1.y)
+      let vertex_1 = vertices[j];
+      let vertex_2 = vertices[(j + 1) % vertices.length];
+      let p1 = getScreenCoordinate(vertex_1, theta, dz, z_offset)
+      let p2 = getScreenCoordinate(vertex_2, theta, dz, z_offset);
+      vertices_array.push(p1.x, p1.y)
+      edges_array.push(p1, p2)
     }
     fillFace(
         {
           vertices_array,
+          edges_array,
           color: colors_array[i % colors_array.length],
           y_text_coord: 20
         })
@@ -58,6 +69,16 @@ function fillFace(face) {
     display_vertices_coordinates(point_1_xy, point_3_xy, surface_normal_theta, face)
   }
 
-  if (surface_normal_theta > 0)
-    paint_face(face, point_1_x, point_1_y)
+  // if (surface_normal_theta > 0) {
+  //   paint_face(face, point_1_x, point_1_y)
+  //   // draw_line(p1, p2, line_pixels_width, VERTICES_FOREGROUND, SOLID_LINE)
+  //   return
+  // }
+
+  let length = face.edges_array.length;
+  for (let i = 0; i < length; i++) {
+    let start = face.edges_array[i]
+    let end = face.edges_array[(i + 1) % length]
+    draw_line(start, end, line_pixels_width, VERTICES_FOREGROUND, DASHED_LINE)
+  }
 }

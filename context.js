@@ -15,7 +15,8 @@ function add_text(text, x, y, textWidth, foreground) {
   // context.fillStyle = BACKGROUND
 }
 
-function draw_line(p1, p2, pixels_width, foreground) {
+function draw_line(p1, p2, pixels_width, foreground, lineStyle) {
+  canvas_2d_context.setLineDash(lineStyle)
   canvas_2d_context.lineWidth = pixels_width
   canvas_2d_context.strokeStyle = foreground
   canvas_2d_context.beginPath()
