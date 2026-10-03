@@ -1,3 +1,21 @@
+let mesh;
+
+cubeSingleFace = './data/cube-single-face-sans-normals.obj';
+cubeTriangulated = './data/triangulated-cube-with-faces-sans-normals.obj';
+octahedron = './data/octahedron-with-faces-sans-normals.obj';
+squareFacedCube = './data/cube-with-faces-sans-normals.obj';
+fetch(squareFacedCube)
+    .then(response => response.text())
+    .then((data) => {
+      mesh = readWavefrontObj(data)
+    });
+
+let display_vertices_coordinates_bool = false
+let display_legend_bool = false
+let display_polygons_bool = true
+let display_wireframe_hidden_surface_bool = true
+let display_wireframe_visible_surface_bool = true
+
 // console.log(canvas)
 canvas.width = 800
 canvas.height = 800
@@ -29,12 +47,6 @@ const colors_array = [
   TEAL]
 
 const OPACITY = .6;
-
-let display_vertices_coordinates_bool = false
-let display_legend_bool = false
-let display_polygons_bool = false
-let display_wireframe_hidden_surface_bool = true
-let display_wireframe_visible_surface_bool = true
 
 const displayVerticesCoordinatesCheckbox = document.getElementById("display-vertices-coordinates")
 const displayLegendCheckbox = document.getElementById("display-legend")
@@ -105,18 +117,6 @@ let increment = .05;
 
 const upArrow = String.fromCharCode(0x2B06)
 const downArrow = String.fromCharCode(0x2193)
-
-let mesh;
-
-cubeSingleFace = './data/cube-single-face-sans-normals.obj';
-cubeTriangulated = './data/triangulated-cube-with-faces-sans-normals.obj';
-octahedron = './data/octahedron-with-faces-sans-normals.obj';
-squareFacedCube = './data/cube-with-faces-sans-normals.obj';
-fetch(squareFacedCube)
-    .then(response => response.text())
-    .then((data) => {
-      mesh = readWavefrontObj(data)
-    });
 
 console.log("checkpoint")
 
