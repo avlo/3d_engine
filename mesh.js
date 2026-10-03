@@ -67,24 +67,25 @@ function fillFace(face) {
     display_vertices_coordinates(point_1_xy, point_3_xy, surface_normal_theta, face)
   }
 
-  if (display_polygons_bool) {
-    if (surface_normal_theta > 0) {
+  if (surface_normal_theta >= 0) {
+    if (display_polygons_bool)
       paint_face(face, point_1_x, point_1_y)
-      // draw_line(p1, p2, line_pixels_width, VERTICES_FOREGROUND, SOLID_LINE)
+    // draw_line(p1, p2, line_pixels_width, VERTICES_FOREGROUND, SOLID_LINE)
+    if (display_wireframe_bool) {
       for (let i = 0; i < 4; i++) {
         let start = face.edges_array[i]
-        let end = face.edges_array[(i + 1) % 3]
-        draw_line(start, end, line_pixels_width/2, VERTICES_FOREGROUND_WHITE, SOLID_LINE)
+        let end = face.edges_array[(i + 1) % 4]
+        draw_line(start, end, line_pixels_width / 2, VERTICES_FOREGROUND_WHITE, SOLID_LINE)
       }
     }
   }
 
   if (!display_wireframe_bool)
     return;
-  
+
   for (let i = 3; i < 6; i++) {
     let start = face.edges_array[i]
     let end = face.edges_array[(i + 1) % 6]
-    draw_line(start, end, line_pixels_width/3, VERTICES_FOREGROUND_WHITE, DASHED_LINE)
+    draw_line(start, end, line_pixels_width / 3, VERTICES_FOREGROUND_WHITE, DASHED_LINE)
   }
 }
