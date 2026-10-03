@@ -24,9 +24,9 @@ function draw_line(p1, p2, pixels_width, foreground) {
   context.stroke()
 }
 
-function display_vertices_coordinates(point_1, point_2, surface_normal_theta, polygon_surface) {
+function display_vertices_coordinates(point_1, point_2, surface_normal_theta, face) {
   let surface_normal_legend = surface_normal_theta > 0 ? `+${surface_normal_theta}` : surface_normal_theta;
-  context.fillText(surface_normal_legend, 10, polygon_surface.y_text_coord, 100)
+  context.fillText(surface_normal_legend, 10, face.y_text_coord, 100)
 
   let p1_string = point_1.x + "," + point_1.y
   let p2_string = point_2.x + "," + point_2.y
@@ -42,11 +42,11 @@ function display_vertices_coordinates(point_1, point_2, surface_normal_theta, po
   context.fillText("p1:" + p1_string, point_1.x - 50, point_1.y)
   context.fillText("p2:" + p2_string, point_2.x - 50, point_2.y)
 
-  context.fillText(formula, 100, polygon_surface.y_text_coord)
+  context.fillText(formula, 100, face.y_text_coord)
 }
 
-function paint_polygon_surface(polygon_surface, starting_coordinate_x, starting_coordinate_y) {
-  let vertices_array = polygon_surface.vertices_array
+function paint_face(face, starting_coordinate_x, starting_coordinate_y) {
+  let vertices_array = face.vertices_array
   context.beginPath();
   context.moveTo(starting_coordinate_x, starting_coordinate_y);
   let length = vertices_array.length;
