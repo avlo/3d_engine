@@ -10,9 +10,7 @@ function draw_edge(dz, dy, dx, theta, mesh, z_offset) {
       let vertex_2 = vertices[(j + 1) % vertices.length];
       let p1 = getScreenCoordinate(vertex_1, theta, dz, z_offset)
       let p2 = getScreenCoordinate(vertex_2, theta, dz, z_offset);
-      console.log("v1: " + JSON.stringify(vertex_1))
-      console.log("v2: " + JSON.stringify(vertex_2))
-      draw_line(p1, p2, line_pixels_width, VERTICES_FOREGROUND)
+      draw_line(p1, p2, line_pixels_width, VERTICES_FOREGROUND_GREEN, SOLID_LINE)
     }
   }
 }
@@ -69,16 +67,20 @@ function fillFace(face) {
     display_vertices_coordinates(point_1_xy, point_3_xy, surface_normal_theta, face)
   }
 
-  // if (surface_normal_theta > 0) {
-  //   paint_face(face, point_1_x, point_1_y)
-  //   // draw_line(p1, p2, line_pixels_width, VERTICES_FOREGROUND, SOLID_LINE)
-  //   return
-  // }
+  if (display_polygons_bool) {
+    if (surface_normal_theta > 0) {
+      paint_face(face, point_1_x, point_1_y)
+      // draw_line(p1, p2, line_pixels_width, VERTICES_FOREGROUND, SOLID_LINE)
+    }
+  }
 
+  if (!display_wireframe_bool)
+    return;
+  
   let length = face.edges_array.length;
   for (let i = 0; i < length; i++) {
     let start = face.edges_array[i]
     let end = face.edges_array[(i + 1) % length]
-    draw_line(start, end, line_pixels_width, VERTICES_FOREGROUND, DASHED_LINE)
+    draw_line(start, end, line_pixels_width/6, VERTICES_FOREGROUND_WHITE, DASHED_LINE)
   }
 }

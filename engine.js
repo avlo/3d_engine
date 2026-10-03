@@ -69,7 +69,8 @@ const SOLID_LINE = [];
 const DASHED_LINE = [5, 15];
 
 const BACKGROUND = "#101010"
-const VERTICES_FOREGROUND = "#11FF50" // "#FFFFFF"
+const VERTICES_FOREGROUND_GREEN = "#11FF50"
+const VERTICES_FOREGROUND_WHITE = "#FFFFFF"
 const VERTICES_TEXT = "#996666"
 const LINES_FOREGROUND = "#FFFF50"
 const point_pixels_width = 1
@@ -176,7 +177,7 @@ function bounce(
   //   draw_edge(cos_dz, cos_dy, cos_dx, theta_z_surface, mesh, z_offset);
 
   // console.log(JSON.stringify(mesh.getVertices(), null, 1))
-  if (display_polygons_bool)
+  // if (display_polygons_bool)
     draw_mesh(cos_dz, cos_dy, cos_dx, theta_z_surface, mesh, z_offset);
 }
 
