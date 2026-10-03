@@ -16,7 +16,7 @@ function add_text(text, x, y, textWidth, foreground) {
 }
 
 function draw_line(p1, p2, pixels_width, foreground, lineStyle) {
-  canvas_2d_context.globalAlpha = 1.0;
+  canvas_2d_context.globalAlpha = .6;
   canvas_2d_context.setLineDash(lineStyle)
   canvas_2d_context.lineWidth = pixels_width
   canvas_2d_context.strokeStyle = foreground
