@@ -1,7 +1,7 @@
 let z_offset = 5
 
-function draw_object(dz, dy, dx, theta, object, z_offset) {
-  let facesArray = object.faces_array;
+function draw_mesh(dz, dy, dx, theta, mesh, z_offset) {
+  let facesArray = mesh.faces_array;
   for (let i = 0; i < facesArray.length; i++) {
     let vertices_array = []
     let vertices = facesArray[i].getVertices();
@@ -25,8 +25,7 @@ function draw_object(dz, dy, dx, theta, object, z_offset) {
 }
 
 function fillFace(face) {
-  context.fillStyle = face.color; // any css color
-  context.font = 20 + "px monospace";
+  canvas_2d_context.fillStyle = face.color; // any css color
   let point_1_x = face.vertices_array[0];
   let point_1_y = face.vertices_array[1];
   let point_2_x = face.vertices_array[2];

@@ -1,32 +1,32 @@
 function clear() {
-  context.fillStyle = BACKGROUND
-  context.fillRect(0, 0, canvas.width, canvas.height)
+  canvas_2d_context.fillStyle = BACKGROUND
+  canvas_2d_context.fillRect(0, 0, canvas.width, canvas.height)
 }
 
 function draw_point({x, y}, pixels_width, foreground) {
-  context.fillStyle = foreground
-  context.fillRect(x - point_half, y - point_half, pixels_width, pixels_width)
+  canvas_2d_context.fillStyle = foreground
+  canvas_2d_context.fillRect(x - point_half, y - point_half, pixels_width, pixels_width)
 }
 
 function add_text(text, x, y, textWidth, foreground) {
-  context.font = textWidth + "px monospace";
-  context.fillStyle = foreground
-  context.fillText(text, x, y, textWidth)
+  canvas_2d_context.font = textWidth + "px monospace";
+  canvas_2d_context.fillStyle = foreground
+  canvas_2d_context.fillText(text, x, y, textWidth)
   // context.fillStyle = BACKGROUND
 }
 
 function draw_line(p1, p2, pixels_width, foreground) {
-  context.lineWidth = pixels_width
-  context.strokeStyle = foreground
-  context.beginPath()
-  context.moveTo(p1.x, p1.y)
-  context.lineTo(p2.x, p2.y)
-  context.stroke()
+  canvas_2d_context.lineWidth = pixels_width
+  canvas_2d_context.strokeStyle = foreground
+  canvas_2d_context.beginPath()
+  canvas_2d_context.moveTo(p1.x, p1.y)
+  canvas_2d_context.lineTo(p2.x, p2.y)
+  canvas_2d_context.stroke()
 }
 
 function display_vertices_coordinates(point_1, point_2, surface_normal_theta, face) {
   let surface_normal_legend = surface_normal_theta > 0 ? `+${surface_normal_theta}` : surface_normal_theta;
-  context.fillText(surface_normal_legend, 10, face.y_text_coord, 100)
+  canvas_2d_context.fillText(surface_normal_legend, 10, face.y_text_coord, 100)
 
   let p1_string = point_1.x + "," + point_1.y
   let p2_string = point_2.x + "," + point_2.y
@@ -39,24 +39,24 @@ function display_vertices_coordinates(point_1, point_2, surface_normal_theta, fa
       point_2.y
       + ")";
 
-  context.fillText("p1:" + p1_string, point_1.x - 50, point_1.y)
-  context.fillText("p2:" + p2_string, point_2.x - 50, point_2.y)
+  canvas_2d_context.fillText("p1:" + p1_string, point_1.x - 50, point_1.y)
+  canvas_2d_context.fillText("p2:" + p2_string, point_2.x - 50, point_2.y)
 
-  context.fillText(formula, 100, face.y_text_coord)
+  canvas_2d_context.fillText(formula, 100, face.y_text_coord)
 }
 
 function paint_face(face, starting_coordinate_x, starting_coordinate_y) {
   let vertices_array = face.vertices_array
-  context.beginPath();
-  context.moveTo(starting_coordinate_x, starting_coordinate_y);
+  canvas_2d_context.beginPath();
+  canvas_2d_context.moveTo(starting_coordinate_x, starting_coordinate_y);
   let length = vertices_array.length;
   for (let i = 2; i < length; i += 2) {
-    context.lineTo(
+    canvas_2d_context.lineTo(
         vertices_array[i],
         vertices_array[i + 1]);
   }
-  context.closePath();
-  context.fill();
+  canvas_2d_context.closePath();
+  canvas_2d_context.fill();
 }
 
 const hex2rgb = (hex) => {

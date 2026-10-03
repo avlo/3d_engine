@@ -52,7 +52,8 @@ displayWireframeCheckbox.addEventListener("change", function () {
   display_wireframe_bool = displayWireframeCheckbox.checked
 })
 
-const context = canvas.getContext("2d")
+const canvas_2d_context = canvas.getContext("2d")
+canvas_2d_context.font = 20 + "px monospace";
 // console.log(context)
 
 const canvasHalfWidth = canvas.width / 2
@@ -61,8 +62,6 @@ const canvasHalfHeight = canvas.height / 2
 const BACKGROUND = "#101010"
 const VERTICES_FOREGROUND = "#11FF50"
 const VERTICES_TEXT = "#996666"
-const POLY_FILL_FRONT = "#EE2266"
-const POLY_FILL_2 = "#EE6600"
 const LINES_FOREGROUND = "#FFFF50"
 const point_pixels_width = 1
 
@@ -91,7 +90,7 @@ let increment = .05;
 const upArrow = String.fromCharCode(0x2B06)
 const downArrow = String.fromCharCode(0x2193)
 
-let obj;
+let mesh;
 
 cubeSingleFace = './data/cube-single-face-sans-normals.obj';
 cubeTriangulated = './data/triangulated-cube-with-faces-sans-normals.obj';
@@ -100,7 +99,7 @@ squareFacedCube = './data/cube-with-faces-sans-normals.obj';
 fetch(octahedron)
     .then(response => response.text())
     .then((data) => {
-      obj = readWavefrontObj(data)
+      mesh = readWavefrontObj(data)
     });
 
 console.log("checkpoint")
@@ -161,17 +160,12 @@ function bounce(
   let cos_prev_theta_z_surface = Math.cos(prev_theta_z_surface).toPrecision(2);
   clear()
 
-  // legend
   if (display_legend_bool) {
     display_legend(cos_dx, cos_prev_dx, cos_dy, cos_prev_dy, cos_dz, cos_prev_dz, cos_theta_z_surface, cos_prev_theta_z_surface);
   }
 
-  // draw general lines
-  // draw_lines(generateRandomLines(10), dim_line_width)
-  // draw_lines(data_single_lines, point_pixels_width)
-
-  // console.log(JSON.stringify(obj.getVertices(), null, 1))
-  draw_object(cos_dz, cos_dy, cos_dx, theta_z_surface, obj, z_offset);
+  // console.log(JSON.stringify(mesh.getVertices(), null, 1))
+  draw_mesh(cos_dz, cos_dy, cos_dx, theta_z_surface, mesh, z_offset);
 }
 
 function bounce_entrypoint() {
