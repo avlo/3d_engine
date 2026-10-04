@@ -68,5 +68,4 @@ function fill(face) {
   }
 
   paint_face_rxr(face, surface_normal_theta, point_1_x, point_1_y)
-  // draw_line(p1, p2, line_pixels_width, VERTICES_FOREGROUND, SOLID_LINE)
 }
