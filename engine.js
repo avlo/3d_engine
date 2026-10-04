@@ -1,15 +1,5 @@
 let mesh;
 
-cubeSingleFace = './data/cube-single-face-sans-normals.obj';
-cubeTriangulated = './data/triangulated-cube-with-faces-sans-normals.obj';
-octahedron = './data/octahedron-with-faces-sans-normals.obj';
-squareFacedCube = './data/cube-with-faces-sans-normals.obj';
-fetch(squareFacedCube)
-    .then(response => response.text())
-    .then((data) => {
-      mesh = readWavefrontObj(data)
-    });
-
 let display_vertices_coordinates_bool = false
 let display_legend_bool = false
 let display_faces_bool = true
