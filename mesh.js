@@ -1,20 +1,5 @@
 let z_offset = 5
 
-function draw_edge(dz, dy, dx, theta, mesh, z_offset, lineStyle) {
-  let facesArray = mesh.faces_array;
-  for (let i = 0; i < facesArray.length; i++) {
-    let vertices = facesArray[i].getVertices();
-    // console.log(JSON.stringify(vertices))
-    for (let j = 0; j < vertices.length; j++) {
-      let vertex_1 = vertices[j];
-      let vertex_2 = vertices[(j + 1) % vertices.length];
-      let p1 = getScreenCoordinate(vertex_1, theta, dz, z_offset)
-      let p2 = getScreenCoordinate(vertex_2, theta, dz, z_offset);
-      draw_line(p1, p2, line_pixels_width, EDGE_COLOR, lineStyle)
-    }
-  }
-}
-
 function render(dz, dy, dx, theta, mesh, z_offset) {
   let facesArray = mesh.faces_array;
   for (let i = 0; i < facesArray.length; i++) {
@@ -78,4 +63,18 @@ function fill(face) {
 
   if (display_wireframe_hidden_surface_bool)
     paint_edge(face, point_1_x, point_1_y, DASHED_LINE)
+}
+
+function paint_edge(face, starting_coordinate_x, starting_coordinate_y, lineStyle) {
+  let vertices_array = face.vertices_array
+  let length = vertices_array.length;
+  for (let i = 0; i < length-1; i += 2) {
+    let v1_x = vertices_array[i];
+    let v1_y = vertices_array[i + 1];
+    let p1 = { x: v1_x, y: v1_y }
+    let v2_x = vertices_array[(i + 2) % length];
+    let v2_y = vertices_array[(i + 3) % length];
+    let p2 = { x: v2_x, y: v2_y }
+    draw_line(p1, p2, line_pixels_width / 2, EDGE_COLOR, lineStyle)
+  }
 }
