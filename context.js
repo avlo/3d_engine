@@ -15,17 +15,6 @@ function add_text(text, x, y, textWidth, foreground) {
   // context.fillStyle = BACKGROUND
 }
 
-function draw_line(p1, p2, pixels_width, foreground, lineStyle) {
-  canvas_2d_context.globalAlpha = OPACITY;
-  canvas_2d_context.setLineDash(lineStyle)
-  canvas_2d_context.lineWidth = pixels_width
-  canvas_2d_context.strokeStyle = foreground
-  canvas_2d_context.beginPath()
-  canvas_2d_context.moveTo(p1.x, p1.y)
-  canvas_2d_context.lineTo(p2.x, p2.y)
-  canvas_2d_context.stroke()
-}
-
 function display_vertices_coordinates(point_1, point_2, surface_normal_theta, face) {
   let surface_normal_legend = surface_normal_theta > 0 ? `+${surface_normal_theta}` : surface_normal_theta;
   canvas_2d_context.fillText(surface_normal_legend, 10, face.y_text_coord, 100)
@@ -60,6 +49,54 @@ function paint_face(face, starting_coordinate_x, starting_coordinate_y) {
   }
   canvas_2d_context.closePath();
   canvas_2d_context.fill();
+}
+
+function draw_line(p1, p2, pixels_width, foreground, lineStyle) {
+  canvas_2d_context.globalAlpha = OPACITY;
+  canvas_2d_context.setLineDash(lineStyle)
+  canvas_2d_context.lineWidth = pixels_width
+  canvas_2d_context.strokeStyle = foreground
+  canvas_2d_context.beginPath()
+  canvas_2d_context.moveTo(p1.x, p1.y)
+  canvas_2d_context.lineTo(p2.x, p2.y)
+  canvas_2d_context.stroke()
+}
+
+function draw_line_rxr(pixels_width, foreground, lineStyle) {
+  canvas_2d_context.globalAlpha = OPACITY;
+  canvas_2d_context.setLineDash(lineStyle)
+  canvas_2d_context.lineWidth = pixels_width
+  canvas_2d_context.strokeStyle = foreground
+  canvas_2d_context.stroke()
+}
+
+function paint_face_rxr(face, surface_normal_theta, starting_coordinate_x, starting_coordinate_y) {
+  let vertices_array = face.vertices_array
+  canvas_2d_context.globalAlpha = OPACITY;
+  canvas_2d_context.beginPath();
+  canvas_2d_context.moveTo(starting_coordinate_x, starting_coordinate_y);
+  let length = vertices_array.length;
+  if (surface_normal_theta >= 0) {
+    for (let i = 2; i < length; i += 2) {
+      canvas_2d_context.lineTo(
+          vertices_array[i],
+          vertices_array[i + 1]);
+      if (display_wireframe_visible_surface_bool)
+        draw_line_rxr( line_pixels_width / 2, EDGE_COLOR, SOLID_LINE)
+    }
+    canvas_2d_context.closePath();
+    if (display_polygons_bool)
+      canvas_2d_context.fill();
+    return
+  }
+
+  for (let i = 2; i < length; i += 2) {
+    canvas_2d_context.lineTo(
+        vertices_array[i],
+        vertices_array[i + 1]);
+    if (display_wireframe_hidden_surface_bool)
+      draw_line_rxr( line_pixels_width / 2, EDGE_COLOR, DASHED_LINE)
+  }
 }
 
 const hex2rgb = (hex) => {
