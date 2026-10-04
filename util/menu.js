@@ -57,8 +57,11 @@ function populateMeshFileSelect(meshFileSelect) {
 
   for (let i = 0; i<=files.length; i++){
     let opt = document.createElement('option');
+    let parsedName = parseObjName(files[i]);
+    if (parsedName == null)
+      continue
     opt.value = files[i];
-    opt.innerHTML = files[i];
+    opt.innerHTML = parsedName;
     meshFileSelect.appendChild(opt);
   }
   
@@ -66,6 +69,21 @@ function populateMeshFileSelect(meshFileSelect) {
   // meshFileSelect.value = './data/octahedron-with-faces-sans-normals.obj'
   
   loadMesh(meshFileSelect.value)
+}
+
+function parseObjName(path) {
+  const prefix = './data/';
+  const suffix = '.obj';
+
+  if (path == null)
+    return 
+  
+  let b = path.startsWith(prefix);
+  let b1 = path.endsWith(suffix);
+  if (!b || !b1) 
+    return
+
+  return path.slice(prefix.length, -suffix.length);
 }
 
 function loadMesh(file) {

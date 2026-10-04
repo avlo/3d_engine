@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <fieldset>
+  <span style="font-size: 11px">
   <label>
     Mesh
     <select id="mesh-file"></select>
   </label>
   <label>
     <input id="display-vertices-coordinates" type="checkbox">
-    Vertex coordinates
+    Vertex x/y
   </label>
   <label>
     <input id="display-legend" type="checkbox">
@@ -20,18 +21,19 @@
     <input id="display-hidden-wireframe" type="checkbox">
     Hidden WireFrame
   </label>
-<label>
+  <label>
     <input id="display-visible-wireframe" type="checkbox">
     Visible WireFrame
-</label>
+  </label>
+  </span>
 </fieldset>
 <canvas id="canvas"></canvas>
-<script src ="util/jquery-3.7.1.min.js"></script>
-<script src ="context.js"></script>
-<script src ="util/obj-text-file-parser.js"></script>
-<script src ="util/readobjfile.js"></script>
-<script src ="menu.js"></script>
-<script src ="engine.js"></script>
-<script src ="translation_rotation_projection.js"></script>
-<script src ="mesh.js"></script>
-<script src ="util/legend.js"></script>
+<script src="util/jquery-3.7.1.min.js"></script>
+<script src="context.js"></script>
+<script src="util/obj-text-file-parser.js"></script>
+<script src="util/readobjfile.js"></script>
+<script src="util/menu.js"></script>
+<script src="engine.js"></script>
+<script src="translation_rotation_projection.js"></script>
+<script src="mesh.js"></script>
+<script src="util/legend.js"></script>
