@@ -1,6 +1,6 @@
 let z_offset = 5
 
-function draw_edge(dz, dy, dx, theta, mesh, z_offset) {
+function draw_edge(dz, dy, dx, theta, mesh, z_offset, lineStyle) {
   let facesArray = mesh.faces_array;
   for (let i = 0; i < facesArray.length; i++) {
     let vertices = facesArray[i].getVertices();
@@ -10,7 +10,7 @@ function draw_edge(dz, dy, dx, theta, mesh, z_offset) {
       let vertex_2 = vertices[(j + 1) % vertices.length];
       let p1 = getScreenCoordinate(vertex_1, theta, dz, z_offset)
       let p2 = getScreenCoordinate(vertex_2, theta, dz, z_offset);
-      draw_line(p1, p2, line_pixels_width, EDGE_COLOR, SOLID_LINE)
+      draw_line(p1, p2, line_pixels_width, EDGE_COLOR, lineStyle)
     }
   }
 }
@@ -67,5 +67,15 @@ function fill(face) {
     display_vertices_coordinates(point_1_xy, point_3_xy, surface_normal_theta, face)
   }
 
-  paint_face_rxr(face, surface_normal_theta, point_1_x, point_1_y)
+  if (surface_normal_theta >= 0) {
+    if (display_polygons_bool)
+      paint_face(face, point_1_x, point_1_y)
+    
+    if (display_wireframe_visible_surface_bool)
+      paint_edge(face, point_1_x, point_1_y, SOLID_LINE)
+    return
+  }
+
+  if (display_wireframe_hidden_surface_bool)
+    paint_edge(face, point_1_x, point_1_y, DASHED_LINE)
 }

@@ -70,32 +70,17 @@ function draw_line_rxr(pixels_width, foreground, lineStyle) {
   canvas_2d_context.stroke()
 }
 
-function paint_face_rxr(face, surface_normal_theta, starting_coordinate_x, starting_coordinate_y) {
+function paint_edge(face, starting_coordinate_x, starting_coordinate_y, lineStyle) {
   let vertices_array = face.vertices_array
-  canvas_2d_context.globalAlpha = OPACITY;
-  canvas_2d_context.beginPath();
-  canvas_2d_context.moveTo(starting_coordinate_x, starting_coordinate_y);
   let length = vertices_array.length;
-  if (surface_normal_theta >= 0) {
-    for (let i = 2; i < length; i += 2) {
-      canvas_2d_context.lineTo(
-          vertices_array[i],
-          vertices_array[i + 1]);
-      if (display_wireframe_visible_surface_bool)
-        draw_line_rxr( line_pixels_width / 2, EDGE_COLOR, SOLID_LINE)
-    }
-    canvas_2d_context.closePath();
-    if (display_polygons_bool)
-      canvas_2d_context.fill();
-    return
-  }
-
-  for (let i = 2; i < length; i += 2) {
-    canvas_2d_context.lineTo(
-        vertices_array[i],
-        vertices_array[i + 1]);
-    if (display_wireframe_hidden_surface_bool)
-      draw_line_rxr( line_pixels_width / 2, EDGE_COLOR, DASHED_LINE)
+  for (let i = 0; i < length-1; i += 2) {
+    let v1_x = vertices_array[i];
+    let v1_y = vertices_array[i + 1];
+    let p1 = { x: v1_x, y: v1_y }
+    let v2_x = vertices_array[(i + 2) % length];
+    let v2_y = vertices_array[(i + 3) % length];
+    let p2 = { x: v2_x, y: v2_y }
+    draw_line(p1, p2, line_pixels_width / 2, EDGE_COLOR, lineStyle)
   }
 }
 
