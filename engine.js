@@ -12,7 +12,7 @@ fetch(squareFacedCube)
 
 let display_vertices_coordinates_bool = false
 let display_legend_bool = false
-let display_polygons_bool = true
+let display_faces_bool = true
 let display_wireframe_hidden_surface_bool = true
 let display_wireframe_visible_surface_bool = true
 
@@ -48,33 +48,7 @@ const colors_array = [
 
 const OPACITY = .6;
 
-const displayVerticesCoordinatesCheckbox = document.getElementById("display-vertices-coordinates")
-const displayLegendCheckbox = document.getElementById("display-legend")
-const displayPolygonsCheckbox = document.getElementById("display-polygons")
-const displayHiddenWireframeCheckbox = document.getElementById("display-hidden-wireframe")
-const displayVisibleWireframeCheckbox = document.getElementById("display-visible-wireframe")
-
-displayVerticesCoordinatesCheckbox.checked = display_vertices_coordinates_bool
-displayLegendCheckbox.checked = display_legend_bool
-displayPolygonsCheckbox.checked = display_polygons_bool
-displayHiddenWireframeCheckbox.checked = display_wireframe_hidden_surface_bool
-displayVisibleWireframeCheckbox.checked = display_wireframe_visible_surface_bool
-
-displayVerticesCoordinatesCheckbox.addEventListener("change", function () {
-  display_vertices_coordinates_bool = displayVerticesCoordinatesCheckbox.checked
-})
-displayLegendCheckbox.addEventListener("change", function () {
-  display_legend_bool = displayLegendCheckbox.checked
-})
-displayPolygonsCheckbox.addEventListener("change", function () {
-  display_polygons_bool = displayPolygonsCheckbox.checked
-})
-displayHiddenWireframeCheckbox.addEventListener("change", function () {
-  display_wireframe_hidden_surface_bool = displayHiddenWireframeCheckbox.checked
-})
-displayVisibleWireframeCheckbox.addEventListener("change", function () {
-  display_wireframe_visible_surface_bool = displayVisibleWireframeCheckbox.checked
-})
+setupMenu()
 
 const canvas_2d_context = canvas.getContext("2d")
 canvas_2d_context.font = 20 + "px monospace";

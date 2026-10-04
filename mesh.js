@@ -53,7 +53,7 @@ function fill(face) {
   }
 
   if (surface_normal_theta >= 0) {
-    if (display_polygons_bool)
+    if (display_faces_bool)
       paint_face(face, point_1_x, point_1_y)
     
     if (display_wireframe_visible_surface_bool)
