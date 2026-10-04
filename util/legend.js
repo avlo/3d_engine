@@ -26,7 +26,7 @@ function legend(key, value, x_pos, y_pos) {
       theta_precision,
       x_pos + 50, y_pos,
       fixedTextWidth,
-      theta_precision <= 0 ? VERTICES_TEXT : VERTICES_FOREGROUND_GREEN)
+      theta_precision <= 0 ? VERTICES_TEXT : EDGE_COLOR)
 }
 
 function legend_arrow(label, dz, prev_dz) {

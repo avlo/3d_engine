@@ -87,8 +87,7 @@ const SOLID_LINE = [];
 const DASHED_LINE = [5, 15];
 
 const BACKGROUND = "#101010"
-const VERTICES_FOREGROUND_GREEN = "#11FF50"
-const VERTICES_FOREGROUND_WHITE = "#FFFFFF"
+const EDGE_COLOR = "#FFFFFF"
 const VERTICES_TEXT = "#996666"
 const LINES_FOREGROUND = "#FFFF50"
 const point_pixels_width = 1
