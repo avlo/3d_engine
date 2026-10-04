@@ -5,12 +5,14 @@ function setupMenu() {
   const displayFacesCheckbox = document.getElementById("display-faces")
   const displayHiddenWireframeCheckbox = document.getElementById("display-hidden-wireframe")
   const displayVisibleWireframeCheckbox = document.getElementById("display-visible-wireframe")
+  const opacitySlider = document.getElementById("opacity")
 
   displayVerticesCoordinatesCheckbox.checked = display_vertices_coordinates_bool
   displayLegendCheckbox.checked = display_legend_bool
   displayFacesCheckbox.checked = display_faces_bool
   displayHiddenWireframeCheckbox.checked = display_wireframe_hidden_surface_bool
   displayVisibleWireframeCheckbox.checked = display_wireframe_visible_surface_bool
+  opacitySlider.value = OPACITY
 
   populateMeshFileSelect(meshFileSelect)
 
@@ -32,6 +34,9 @@ function setupMenu() {
   })
   displayVisibleWireframeCheckbox.addEventListener("change", function () {
     display_wireframe_visible_surface_bool = displayVisibleWireframeCheckbox.checked
+  })
+  opacitySlider.addEventListener("input", function () {
+    OPACITY = Number(opacitySlider.value)
   })
 }
 

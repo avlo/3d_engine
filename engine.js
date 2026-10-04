@@ -36,7 +36,7 @@ const colors_array = [
   RED_BRIGHT,
   TEAL]
 
-const OPACITY = .6;
+let OPACITY = .6;
 
 setupMenu()
 
