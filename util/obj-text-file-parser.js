@@ -24,7 +24,7 @@ function parseVertexLines(text) {
     }
 
     const values = tokens.map((token) => Number.parseFloat(token).toPrecision(7));
-    vertices.push(...values);
+    vertices.push(values)
   });
 
   return vertices;
@@ -58,8 +58,4 @@ function parseFaceLines(text) {
   });
 
   return faces;
-}
-
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = {parseVertexLines, parseFaceLines};
 }

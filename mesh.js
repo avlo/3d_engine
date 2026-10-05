@@ -18,7 +18,7 @@ function render(dz, dy, dx, theta, mesh, z_offset) {
         {
           vertices_array,
           edges_array,
-          color: colors_array[i % colors_array.length],
+          color: facesArray[i].color,
           y_text_coord: 20
         })
     // draw_line(p1, p2, line_pixels_width, LINES_FOREGROUND)

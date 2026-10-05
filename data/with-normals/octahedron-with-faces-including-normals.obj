@@ -1,23 +1,25 @@
-v  1.000000  0.000000  0.000000  # octahedron vertices (w/ vertex normals, below)
+v  1.000000  0.000000  0.000000
 v -1.000000  0.000000  0.000000
 v  0.000000  1.000000  0.000000
 v  0.000000 -1.000000  0.000000
 v  0.000000  0.000000  1.000000
 v  0.000000  0.000000 -1.000000
 
-vn  1.000000  0.000000  0.000000 # Vertex Normals (Outward pointing unit vectors)
+vn  1.000000  0.000000  0.000000
 vn -1.000000  0.000000  0.000000
 vn 	0.000000  1.000000  0.000000
 vn 	0.000000 -1.000000  0.000000
 vn 	0.000000  0.000000  1.000000
 vn 	0.000000  0.000000 -1.000000
 
-f 5//5 1//1 3//3 				 # Top 4 triangular faces (vertex_index//normal_index)
+# Top 4 triangular faces (vertex_index//normal_index)
+f 5//5 1//1 3//3
 f 5//5 3//3 2//2
 f 5//5 2//2 4//4
 f 5//5 4//4 1//1
 
-f 6//6 3//3 1//1				 # Bottom 4 triangular faces
+# Bottom 4 triangular faces
+f 6//6 3//3 1//1
 f 6//6 2//2 3//3
 f 6//6 4//4 2//2
 f 6//6 1//1 4//4
