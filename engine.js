@@ -81,8 +81,6 @@ let increment = .05;
 const upArrow = String.fromCharCode(0x2B06)
 const downArrow = String.fromCharCode(0x2193)
 
-console.log("checkpoint")
-
 window.onload = function () {
   let interval = setInterval(bounce_entrypoint, timeout);
 

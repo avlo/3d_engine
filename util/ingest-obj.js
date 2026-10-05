@@ -34,10 +34,20 @@ function indexTranslatedFaces(data, verticesObjectsArray) {
   for (let i = 0; i < shiftIndexToZero.length; i++) {
     let face = shiftIndexToZero[i];
     let color = verticesObjectsArray[face[0]][1];
+    if (color === undefined)
+      color = getRandomColor() 
     set.push({face: face, color: color})
   }
   
   return set
+}
+
+function getRandomColor() {
+  var color = '#';
+  for (let i = 0; i < 6; i++) {
+    color += '0123456789ABCDEF'[Math.floor(Math.random() * 16)];
+  }
+  return color;
 }
 
 function createFace(edges_array, color) {
@@ -81,8 +91,7 @@ function asInputVerticesObjectArray(input_vertices_array) {
       rgb = rgb01_to_hex({r: r, g: g, b: b})
     }
     input_vertices.push([xyz, rgb])
-    console.log(JSON.stringify(input_vertices))
-    console.log("")
+    // console.log(JSON.stringify(input_vertices))
   }
   return input_vertices;
 }
